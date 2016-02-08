@@ -1,0 +1,25 @@
+
+        <h2>Welcome to SE3350b's Blog</h2>
+        <ul class="circle">
+            <ul>
+              {{#each model as |onePost|}}
+                  <div class="large-6 columns">
+                      <li>
+                        {{#link-to 'post' onePost.id}} {{onePost.title}}
+                        {{/link-to}}
+                      </li>
+                  </div>
+                  <div class="large-6 columns">
+                    {{delete-post ID=onePost.id}}
+                  </div>
+                  <div></div>
+              {{/each}}
+            </ul>
+        </ul>
+
+      {{add-new-post }}
+
+
+
+
+

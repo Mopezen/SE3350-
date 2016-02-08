@@ -1,0 +1,32 @@
+
+<h2>{{selectedPost.title}}</h2>
+{{#if isEditing}}
+    <form>
+        <div class="row">
+            <div class="large-12 columns">
+                <label>Tile
+                  {{input value=selectedPost.title type="text" }}
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="large-12 columns">
+                <label>Body
+                  {{textarea value=selectedPost.body rows="4"}}
+                </label>
+            </div>
+        </div>
+    </form>
+    <br>
+    <a href="#" class="button radius" {{action 'save' selectedPost.id}}>Save</a>
+{{else}}
+    <ul class="square">
+        <ul>
+            <li>{{selectedPost.body}}</li>
+        </ul>
+    </ul>
+    <br>
+    <a href="#" class="button radius" {{action 'edit'}}>Edit</a>
+    <a href="#" class="button radius" {{action 'cancel'}}>Cancel</a>
+    {{manage-comments ID = selectedPost.id}}
+{{/if}}
