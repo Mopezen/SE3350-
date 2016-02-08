@@ -24,6 +24,13 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 //app.use(express.static('public'));
 
+var studentsSchema = mongoose.Schema({
+    number: String,
+    firstName: String,
+    lastName: String,
+    DOB: String
+});
+
 var postsSchema = mongoose.Schema(
     {
         title: String,
@@ -40,8 +47,22 @@ var commentSchema = mongoose.Schema(
     }
 );
 
+var StudentsModel = mongoose.model('student', studentsSchema);
 var PostsModel = mongoose.model('post', postsSchema);
 var CommentsModel = mongoose.model('comment', commentSchema);
+
+app.get('/students', function (request, response) {
+    console.log('/students');
+    StudentsModel.find(function (error, students) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({student: students});
+        }
+
+    });
+});
 
 app.get('/posts', function (request, response) {
     console.log('/posts');
@@ -64,6 +85,23 @@ app.get('/posts/:post_id', function (request, response) {
         }
         else {
             response.json({post: post});
+        }
+    });
+});
+
+app.post('/students', function (request, response) {
+    var student = new StudentsModel({
+        number: request.body.student.number,
+        firstName: request.body.student.firstName,
+        lastName: request.body.student.lastName,
+        DOB: request.body.student.DOB
+    });
+    student.save(function (error) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.status(201).json({student: student});
         }
     });
 });
