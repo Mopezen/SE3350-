@@ -1,0 +1,18 @@
+<h2>Here you can enter Students</h2>
+<ul class="circle">
+    <ul>
+      {{#each model as |oneStudent|}}
+          <div class="large-6 columns">
+              <li>
+                {{oneStudent.firstName}}{{oneStudent.lastName}}
+              </li>
+          </div>
+          <div class="large-6 columns">
+            {{delete-post ID=oneStudent.id}}
+          </div>
+          <div></div>
+      {{/each}}
+    </ul>
+</ul>
+
+{{add-new-student }}
