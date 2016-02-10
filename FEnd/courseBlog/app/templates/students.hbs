@@ -4,8 +4,7 @@
       {{#each model as |oneStudent|}}
           <div class="large-6 columns">
               <li>
-                {{#link-to 'student' oneStudent.id}} {{oneStudent.title}}
-                {{/link-to}}
+                {{oneStudent.firstName}}{{oneStudent.lastName}}
               </li>
           </div>
           <div class="large-6 columns">
