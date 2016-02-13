@@ -5,7 +5,7 @@ export default Ember.Component.extend({
   store: Ember.inject.service(),
   routing: Ember.inject.service('-routing'),
 
-  genderModel : Ember.computed('isEditing', function(){
+  genderModel: Ember.computed('isEditing', function(){
       return this.get('store').findAll('gender');
   }),
 

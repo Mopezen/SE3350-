@@ -35,7 +35,8 @@
     "ember-cli-uglify": "^1.2.0",
     "ember-data": "2.3.0",
     "ember-disable-proxy-controllers": "^1.0.1",
-    "ember-export-application-global": "^1.0.4"
+    "ember-export-application-global": "^1.0.4",
+    "ember-truth-helpers": "1.2.0"
   },
   "dependencies": {
     "ember-data": "2.3.0"

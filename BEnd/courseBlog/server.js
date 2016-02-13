@@ -109,6 +109,18 @@ app.get('/students/:student_id', function (request, response) {
     });
 });
 
+app.get('/genders/:gender_id', function (request, response) {
+    console.log('/genders/:gender_id');
+    GendersModel.findById(request.params.gender_id, function (error, gender) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({gender: gender});
+        }
+    });
+});
+
 app.get('/posts/:post_id', function (request, response) {
     console.log('/posts/:post_id');
     PostsModel.findById(request.params.post_id, function (error, post) {
