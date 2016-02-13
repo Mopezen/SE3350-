@@ -34,7 +34,7 @@
                 <label>Gender:
                     <select id="gender">
                         {{#each genderModel as |oneGender|}}
-                            <option value={{oneGender.id}} selected={{eq selectedStudent.gender.id oneGender.id}}>{{oneGender.name}}</option>
+                            <option value={{oneGender.id}} selected={{eq genderID oneGender.id}}>{{oneGender.name}}</option>
                         {{/each}}
                     </select>
                 </label>

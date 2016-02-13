@@ -4,6 +4,7 @@ export default Ember.Component.extend({
 
   store: Ember.inject.service(),
   routing: Ember.inject.service('-routing'),
+  genderID: null,
   genderModel : Ember.computed('isEditing', function(){
       return this.get('store').findAll('gender');
   }),
@@ -11,7 +12,14 @@ export default Ember.Component.extend({
   actions: {
     edit: function(){
       this.set('isEditing', true);
-    },
+      var updatedStudent = this.get('selectedStudent');
+      var self = this;
+      updatedStudent.get('gender').then(function(res){
+        if (res) {
+          self.set ('genderID' , res.get('id'));
+        }
+      });
+    },  
     save: function(id){
       this.set('isEditing', false);
       var myStore = this.get('store');
