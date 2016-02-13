@@ -4,6 +4,6 @@ export default DS.Model.extend({
   number: DS.attr(),
   firstName: DS.attr(),
   lastName: DS.attr(),
-  DOB: DS.attr()
-  // gender: DS.belongsTo('gender',{ async: true })
+  DOB: DS.attr(),
+  gender: DS.belongsTo('gender',{ async: true })
 });

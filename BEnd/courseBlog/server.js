@@ -29,7 +29,7 @@ var studentsSchema = mongoose.Schema({
     firstName: String,
     lastName: String,
     DOB: String,
-    // gender: {type: mongoose.Schema.ObjectId, ref: ('GendersModel')}
+    gender: {type: mongoose.Schema.ObjectId, ref: ('GendersModel')}
 });
 
 var gendersSchema = mongoose.Schema({
@@ -66,6 +66,19 @@ app.get('/students', function (request, response) {
         }
         else {
             response.json({student: students});
+        }
+
+    });
+});
+
+app.get('/genders', function (request, response) {
+    console.log('/genders');
+    GendersModel.find(function (error, genders) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({gender: genders});
         }
 
     });
@@ -113,7 +126,8 @@ app.post('/students', function (request, response) {
         number: request.body.student.number,
         firstName: request.body.student.firstName,
         lastName: request.body.student.lastName,
-        DOB: request.body.student.DOB
+        DOB: request.body.student.DOB,
+        gender: request.body.student.gender
     });
     student.save(function (error) {
         if (error) {
@@ -177,7 +191,7 @@ app.put('/students/:student_id', function (request, response) {
             student.DOB = request.body.student.DOB;
             student.firstName = request.body.student.firstName;
             student.lastName = request.body.student.lastName;
-            // student.gender = request.body.student.gender;
+            student.gender = request.body.student.gender;
 
             // save the student
             student.save(function (error) {
@@ -204,7 +218,7 @@ app.patch('/students/:student_id', function (request, response) {
             student.DOB = request.body.student.DOB;
             student.firstName = request.body.student.firstName;
             student.lastName = request.body.student.lastName;
-            // student.gender = request.body.student.gender;
+            student.gender = request.body.student.gender;
             
             // save the student
             student.save(function (error) {

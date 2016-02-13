@@ -29,6 +29,17 @@
                 </label>
             </div>
         </div>
+        <div class="row">
+            <div class="large-12 columns">
+                <label>Gender:
+                    <select id="gender">
+                        {{#each genderModel as |oneGender|}}
+                            <option value={{oneGender.id}}>{{oneGender.name}}</option>
+                        {{/each}}
+                    </select>
+                </label>
+            </div>
+        </div>
     </form>
     <br>
     <a href="#" class="button radius" {{action 'saveStudent'}}>Save</a>
