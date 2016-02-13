@@ -28,7 +28,13 @@ var studentsSchema = mongoose.Schema({
     number: String,
     firstName: String,
     lastName: String,
-    DOB: String
+    DOB: String,
+    // gender: {type: mongoose.Schema.ObjectId, ref: ('GendersModel')}
+});
+
+var gendersSchema = mongoose.Schema({
+    name: String,
+    students: [{type: mongoose.Schema.ObjectId, ref: 'StudentsModel'}]
 });
 
 var postsSchema = mongoose.Schema(
@@ -50,6 +56,7 @@ var commentSchema = mongoose.Schema(
 var StudentsModel = mongoose.model('student', studentsSchema);
 var PostsModel = mongoose.model('post', postsSchema);
 var CommentsModel = mongoose.model('comment', commentSchema);
+var GendersModel = mongoose.model('gender',gendersSchema);
 
 app.get('/students', function (request, response) {
     console.log('/students');
@@ -74,6 +81,18 @@ app.get('/posts', function (request, response) {
             response.json({post: posts});
         }
 
+    });
+});
+
+app.get('/students/:student_id', function (request, response) {
+    console.log('/students/:student_id');
+    StudentsModel.findById(request.params.student_id, function (error, student) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({student: student});
+        }
     });
 });
 
@@ -146,6 +165,60 @@ app.put('/posts/:post_id', function (request, response) {
     });
 });
 
+app.put('/students/:student_id', function (request, response) {
+    // use our Posts model to find the post we want
+    StudentsModel.findById(request.params.student_id, function (error, student) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            // update the student info
+            student.number = request.body.student.number;
+            student.DOB = request.body.student.DOB;
+            student.firstName = request.body.student.firstName;
+            student.lastName = request.body.student.lastName;
+            // student.gender = request.body.student.gender;
+
+            // save the student
+            student.save(function (error) {
+                if (error) {
+                    response.send({error: error});
+                }
+                else {
+                    response.status(201).json({student: student});
+                }
+            });
+        }
+    });
+});
+
+app.patch('/students/:student_id', function (request, response) {
+    // use our students model to find the post we want
+    StudentsModel.findById(request.params.student_id, function (error, student) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            // update the student info
+            student.number = request.body.student.number;
+            student.DOB = request.body.student.DOB;
+            student.firstName = request.body.student.firstName;
+            student.lastName = request.body.student.lastName;
+            // student.gender = request.body.student.gender;
+            
+            // save the student
+            student.save(function (error) {
+                if (error) {
+                    response.send({error: error});
+                }
+                else {
+                    response.status(201).json({student: student});
+                }
+            });
+        }
+    });
+});
+
 app.patch('/posts/:post_id', function (request, response) {
     // use our Posts model to find the post we want
     PostsModel.findById(request.params.post_id, function (error, post) {
@@ -184,6 +257,18 @@ app.delete('/posts/:post_id', function (request, response) {
             });
         });
         response.status(200).json({post: deleted});
+    });
+
+});
+
+app.delete('/students/:student_id', function (request, response) {
+
+    StudentsModel.findById(request.params.student_id, function (error, student) {
+        var deleted = student;
+        StudentsModel.remove({_id: request.params.student_id}, function (error) {
+                if (error) response.send(error);
+        });
+        response.status(200).json({student: deleted});
     });
 
 });

@@ -3,28 +3,28 @@
     <form>
         <div class="row">
             <div class="large-12 columns">
-                <label>Number
+                <label>Student Number:
                   {{input value=number  id="number" type="text" }}
                 </label>
             </div>
         </div>
         <div class="row">
             <div class="large-12 columns">
-                <label>First Name
+                <label>First Name:
                   {{input value=firstName  id="firstName" type="text" }}
                 </label>
             </div>
         </div>
         <div class="row">
             <div class="large-12 columns">
-                <label>Last Name
+                <label>Last Name:
                   {{input value=lastName  id="lastName" type="text" }}
                 </label>
             </div>
         </div>
         <div class="row">
             <div class="large-12 columns">
-                <label>Date of Birth
+                <label>Date of Birth:
                   {{input value=DOB  id="DOB" type="text" }}
                 </label>
             </div>
@@ -36,5 +36,5 @@
 
 
 {{else}}
-    <a href="#" class="button round" {{action 'addNewStudent'}}>Add post</a>
+    <a href="#" class="button round" {{action 'addNewStudent'}}>Add a student</a>
 {{/if}}

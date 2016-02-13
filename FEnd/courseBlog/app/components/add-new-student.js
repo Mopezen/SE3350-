@@ -11,12 +11,12 @@ export default Ember.Component.extend({
         number: this.get('number'),
         firstName: this.get('firstName'),
         lastName: this.get('lastName'),
-        DOB: this.get('DOB')
+        DOB: this.get('DOB') 
       });
       newStudent.save();
 
       this.set('isEditing', false);
-      this.get('routing').transitionTo('students' );
+      this.get('routing').transitionTo('students');
 
     },
 

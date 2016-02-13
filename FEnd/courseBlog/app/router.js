@@ -16,6 +16,7 @@ Router.map(function() {
   this.route('post', { path: 'posts/:post_id'});
   this.route('login' , {path: '/'});
   this.route('students');
+  this.route('student', {path: 'students/:student_id'});
 });
 
 
