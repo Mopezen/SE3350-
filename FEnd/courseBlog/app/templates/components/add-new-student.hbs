@@ -52,6 +52,18 @@
             </div>
         </div>
         {{manage-academic-load}}
+        <div class="row">
+            <div class="large-12 columns">
+                <label>Residency:
+                    <select id="residency">
+                        {{#each residencyModel as |oneResidency|}}
+                            <option value={{oneResidency.id}}>{{oneResidency.name}}</option>
+                        {{/each}}
+                    </select>
+                </label>
+            </div>
+        </div>
+        {{manage-residency}}
 
     </form>
     <br>

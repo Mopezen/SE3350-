@@ -6,11 +6,15 @@ export default Ember.Component.extend({
   routing: Ember.inject.service('-routing'),
   genderID: null,
   academicLoadID: null,
+  residencyID: null,
   genderModel : Ember.computed('isEditing', function(){
       return this.get('store').findAll('gender');
   }),
   academicLoadModel: Ember.computed('isEditing', function(){
       return this.get('store').findAll('academic-load');
+  }),
+  residencyModel: Ember.computed('isEditing', function(){
+      return this.get('store').findAll('residency');
   }),
   isEditing: false,
   actions: {
@@ -28,18 +32,25 @@ export default Ember.Component.extend({
           self.set ('academicLoadID' , res.get('id'));
         }
       });
+      updatedStudent.get('residency').then(function(res){
+        if (res) {
+          self.set ('residencyID' , res.get('id'));
+        }
+      });
     },  
     save: function(id){
       this.set('isEditing', false);
       var myStore = this.get('store');
       var genderSelected = myStore.peekRecord('gender', this.$('#gender')[0].value);
       var academicLoadSelected = myStore.peekRecord('academic-load', this.$('#academicLoad')[0].value);
+      var residencySelected = myStore.peekRecord('residency', this.$('#residency')[0].value);
       var self = this;
       myStore.findRecord('student',id).then(function(student) {
         student.set('number',self.get('selectedStudent.number'));
         student.set('DOB', self.get('selectedStudent.DOB'));
         student.set('gender', genderSelected);
         student.set('studyLoad',academicLoadSelected);
+        student.set('residency',residencySelected);
         student.save();  // => PATCH to /posts/:post_id
       });
       //genderSelected.get('students').pushObject(myStore.findRecord('student',id));
