@@ -30,7 +30,8 @@ var studentsSchema = mongoose.Schema({
     lastName: String,
     DOB: String,
     gender: {type: mongoose.Schema.ObjectId, ref: ('GendersModel')},
-    studyLoad: {type: mongoose.Schema.ObjectId, ref: ('AcademicLoadsModel')}
+    studyLoad: {type: mongoose.Schema.ObjectId, ref: ('AcademicLoadsModel')},
+    residency: {type: mongoose.Schema.ObjectId, ref: ('ResidenciesModel')}
 });
 
 var gendersSchema = mongoose.Schema({
@@ -41,6 +42,11 @@ var gendersSchema = mongoose.Schema({
 var academicLoadsSchema = mongoose.Schema({
     name: String,
     students: [{type: mongoose.Schema.ObjectId, ref: 'StudentsModel'}]
+});
+
+var residenciesSchema = mongoose.Schema({
+	name: String,
+	students: [{type: mongoose.Schema.ObjectId, ref: 'StudentsModel'}]
 });
 
 var postsSchema = mongoose.Schema(
@@ -62,8 +68,9 @@ var commentSchema = mongoose.Schema(
 var StudentsModel = mongoose.model('student', studentsSchema);
 var PostsModel = mongoose.model('post', postsSchema);
 var CommentsModel = mongoose.model('comment', commentSchema);
-var GendersModel = mongoose.model('gender',gendersSchema);
-var AcademicLoadsModel = mongoose.model('academic-load',academicLoadsSchema);
+var GendersModel = mongoose.model('gender', gendersSchema);
+var AcademicLoadsModel = mongoose.model('academic-load', academicLoadsSchema);
+var ResidenciesModel = mongoose.model('residency', residenciesSchema);
 
 app.get('/students', function (request, response) {
     console.log('/students');
@@ -102,6 +109,18 @@ app.get('/academicLoads', function (request, response) {
         }
 
     });
+});
+
+app.get('/residencies', function (request, response) {
+	console.log('/residencies');
+	ResidenciesModel.find(function (error, residencies) {
+		if (error) {
+			response.send({error: error});
+		}
+		else {
+			response.json({residency: residencies})
+		}
+	});
 });
 
 app.get('/posts', function (request, response) {
@@ -153,6 +172,18 @@ app.get('/academicLoads/:academicLoad_id', function (request, response) {
     });
 });
 
+app.get('/residencies/:residency_id', function (request, response) {
+	console.log('/residencies/:residency_id');
+	ResidenciesModel.findById(request.params.residency_id, function (error, residency) {
+		if (error) {
+			response.send({error: error});
+		}
+		else {
+			response.json({residency: residency});
+		}
+	});
+});
+
 app.get('/posts/:post_id', function (request, response) {
     console.log('/posts/:post_id');
     PostsModel.findById(request.params.post_id, function (error, post) {
@@ -172,7 +203,8 @@ app.post('/students', function (request, response) {
         lastName: request.body.student.lastName,
         DOB: request.body.student.DOB,
         gender: request.body.student.gender,
-        studyLoad: request.body.student.studyLoad
+        studyLoad: request.body.student.studyLoad,
+        residency: request.body.student.residency
     });
     student.save(function (error) {
         if (error) {
@@ -219,6 +251,18 @@ app.post('/academicLoads', function (request, response) {
         }
         else {
             response.status(201).json({'academic-load': academicLoad});
+        }
+    });
+});
+
+app.post('/residencies', function (request, response) {
+    var residency = new ResidenciesModel(request.body.residency);
+    residency.save(function (error) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.status(201).json({residency: residency});
         }
     });
 });
@@ -317,6 +361,30 @@ app.put('/academicLoads/:academicLoad_id', function (request, response) {
                 }
                 else {
                     response.status(201).json({'academic-load': academicLoad});
+                }
+            });
+        }
+    });
+});
+
+app.put('/residencies/:residency_id', function (request, response) {
+    // use our Posts model to find the post we want
+    ResidenciesModel.findById(request.params.residency_id, function (error, gender) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            // update the student info
+            residency.name = request.body.residency.number;
+            residency.students = request.body.residency.students;
+
+            // save the student
+            residency.save(function (error) {
+                if (error) {
+                    response.send({error: error});
+                }
+                else {
+                    response.status(201).json({residency: residency});
                 }
             });
         }

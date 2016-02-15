@@ -6,5 +6,6 @@ export default DS.Model.extend({
   lastName: DS.attr(),
   DOB: DS.attr(),
   gender: DS.belongsTo('gender',{ async: true }),
-  studyLoad: DS.belongsTo('academic-load',{async: true})
+  studyLoad: DS.belongsTo('academic-load',{async: true}),
+  residency: DS.belongsTo('residency',{async: true})
 });
