@@ -31,6 +31,7 @@ export default Ember.Component.extend({
         student.set('gender', genderSelected);
         student.save();  // => PATCH to /posts/:post_id
       });
+      genderSelected.get('students').pushObject(myStore.findRecord('student',id));
       this.set('isEditing', false);
       this.get('routing').transitionTo('students');
     },

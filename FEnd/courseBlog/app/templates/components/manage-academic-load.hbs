@@ -1,0 +1,57 @@
+{{#if isManagingAcademicLoad}}
+    <div class="row">
+        <div class="large-12 columns">
+            <h4 align="center"> Manage Academic Load</h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="large-10  large-centered columns">
+            <div class="panel">
+              {{#if isAddingNewAcademicLoad}}
+                  <h2>Add new Academic Load</h2>
+                  <form>
+                      <div class="row">
+                          <div class="large-12 columns">
+                              <label>Name
+                                {{input value=name  type="text" }}
+                              </label>
+                          </div>
+                      </div>
+                  </form>
+                  <div class="row">
+                      <div class="large-12 columns">
+                          <a href="#" class="button radius" {{action 'saveNewAcademicLoad'}}>Save</a>
+                          <a href="#" class="button radius" {{action 'cancelAddNewAcademicLoad'}}>Cancel</a>
+                      </div>
+                  </div>
+                  <br>
+              {{else}}
+                <!-- {{#each AcademicLoadModel as |oneAcademicLoad|}}
+                    <div class="row">
+                        <li class="large-3 columns">  {{oneAcademicLoad.name}} </li>
+
+                        <div class="large-2 columns">
+                          {{delete-residency ID=oneAcademicLoad.id }}
+                        </div>
+                    </div>
+                {{/each}} -->
+                  <div class="row">
+                      <div class="large-12 columns">
+                          <br> <br> <br>
+                          <a href="#" class="button radius" {{action 'addNewAcademicLoad'}}>Add new Academic Load</a>
+                          <a href="#" class="button radius" {{action 'doneAcademicLoad'}}>Done</a>
+                      </div>
+                  </div>
+              {{/if}}
+            </div>
+        </div>
+    </div>
+
+{{else}}
+    <div class="large-2 columns">
+        <a href="#" class="button tiny" {{action 'manageAcademicLoad' }}>More</a>
+    </div>
+{{/if}}
+
+

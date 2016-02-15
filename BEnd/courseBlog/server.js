@@ -29,10 +29,16 @@ var studentsSchema = mongoose.Schema({
     firstName: String,
     lastName: String,
     DOB: String,
-    gender: {type: mongoose.Schema.ObjectId, ref: ('GendersModel')}
+    gender: {type: mongoose.Schema.ObjectId, ref: ('GendersModel')},
+    studyLoad: {type: mongoose.Schema.ObjectId, ref: ('AcademicLoadsModel')}
 });
 
 var gendersSchema = mongoose.Schema({
+    name: String,
+    students: [{type: mongoose.Schema.ObjectId, ref: 'StudentsModel'}]
+});
+
+var academicLoadsSchema = mongoose.Schema({
     name: String,
     students: [{type: mongoose.Schema.ObjectId, ref: 'StudentsModel'}]
 });
@@ -57,6 +63,7 @@ var StudentsModel = mongoose.model('student', studentsSchema);
 var PostsModel = mongoose.model('post', postsSchema);
 var CommentsModel = mongoose.model('comment', commentSchema);
 var GendersModel = mongoose.model('gender',gendersSchema);
+var AcademicLoadsModel = mongoose.model('academic-load',academicLoadsSchema);
 
 app.get('/students', function (request, response) {
     console.log('/students');
@@ -79,6 +86,19 @@ app.get('/genders', function (request, response) {
         }
         else {
             response.json({gender: genders});
+        }
+
+    });
+});
+
+app.get('/academicLoads', function (request, response) {
+    console.log('/academicLoads');
+    AcademicLoadsModel.find(function (error, academicLoads) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({'academic-load': academicLoads});
         }
 
     });
@@ -121,6 +141,18 @@ app.get('/genders/:gender_id', function (request, response) {
     });
 });
 
+app.get('/academicLoads/:academicLoad_id', function (request, response) {
+    console.log('/academicLoads/:academicLoad_id');
+    AcademicLoadsModel.findById(request.params.academicLoad_id, function (error, academicLoad) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({'academic-load': academicLoad});
+        }
+    });
+});
+
 app.get('/posts/:post_id', function (request, response) {
     console.log('/posts/:post_id');
     PostsModel.findById(request.params.post_id, function (error, post) {
@@ -139,7 +171,8 @@ app.post('/students', function (request, response) {
         firstName: request.body.student.firstName,
         lastName: request.body.student.lastName,
         DOB: request.body.student.DOB,
-        gender: request.body.student.gender
+        gender: request.body.student.gender,
+        studyLoad: request.body.student.studyLoad
     });
     student.save(function (error) {
         if (error) {
@@ -162,6 +195,30 @@ app.post('/posts', function (request, response) {
         }
         else {
             response.status(201).json({post: post});
+        }
+    });
+});
+
+app.post('/genders', function (request, response) {
+    var gender = new GendersModel(request.body.gender);
+    gender.save(function (error) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.status(201).json({gender: gender});
+        }
+    });
+});
+
+app.post('/academicLoads', function (request, response) {
+    var academicLoad = new AcademicLoadsModel(request.body.academicLoad);
+    academicLoad.save(function (error) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.status(201).json({'academic-load': academicLoad});
         }
     });
 });
@@ -204,7 +261,7 @@ app.put('/students/:student_id', function (request, response) {
             student.firstName = request.body.student.firstName;
             student.lastName = request.body.student.lastName;
             student.gender = request.body.student.gender;
-
+            student.studyLoad = request.body.student.studyLoad;
             // save the student
             student.save(function (error) {
                 if (error) {
@@ -212,6 +269,54 @@ app.put('/students/:student_id', function (request, response) {
                 }
                 else {
                     response.status(201).json({student: student});
+                }
+            });
+        }
+    });
+});
+
+app.put('/genders/:gender_id', function (request, response) {
+    // use our Posts model to find the post we want
+    GendersModel.findById(request.params.gender_id, function (error, gender) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            // update the student info
+            gender.name = request.body.gender.number;
+            gender.students = request.body.gender.students;
+
+            // save the student
+            gender.save(function (error) {
+                if (error) {
+                    response.send({error: error});
+                }
+                else {
+                    response.status(201).json({gender: gender});
+                }
+            });
+        }
+    });
+});
+
+app.put('/academicLoads/:academicLoad_id', function (request, response) {
+    // use our Posts model to find the post we want
+    AcademicLoadsModel.findById(request.params.academicLoad_id, function (error, academicLoad) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            // update the student info
+            academicLoad.name = request.body.academicLoad.number;
+            academicLoad.students = request.body.academicLoad.students;
+
+            // save the student
+            academicLoad.save(function (error) {
+                if (error) {
+                    response.send({error: error});
+                }
+                else {
+                    response.status(201).json({'academic-load': academicLoad});
                 }
             });
         }
@@ -231,6 +336,7 @@ app.patch('/students/:student_id', function (request, response) {
             student.firstName = request.body.student.firstName;
             student.lastName = request.body.student.lastName;
             student.gender = request.body.student.gender;
+            student.studyLoad = request.body.student.studyLoad
             
             // save the student
             student.save(function (error) {
@@ -239,6 +345,30 @@ app.patch('/students/:student_id', function (request, response) {
                 }
                 else {
                     response.status(201).json({student: student});
+                }
+            });
+        }
+    });
+});
+
+app.patch('/genders/:gender_id', function (request, response) {
+    // use our students model to find the post we want
+    GendersModel.findById(request.params.gender_id, function (error, gender) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            // update the student info
+            gender.name = request.body.gender.name;
+            gender.students = request.body.gender.students;
+            
+            // save the student
+            gender.save(function (error) {
+                if (error) {
+                    response.send({error: error});
+                }
+                else {
+                    response.status(201).json({gender: gender});
                 }
             });
         }
