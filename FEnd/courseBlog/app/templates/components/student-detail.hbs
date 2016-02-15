@@ -40,6 +40,17 @@
                 </label>
             </div>
         </div>
+        <div class="row">
+            <div class="large-12 columns">
+                <label>Academic Load:
+                    <select id="academicLoad">
+                        {{#each academicLoadModel as |oneAcademicLoad|}}
+                            <option value={{oneAcademicLoad.id}}  selected={{eq academicLoadID oneAcademicLoad.id}}>{{oneAcademicLoad.name}}</option>
+                        {{/each}}
+                    </select>
+                </label>
+            </div>
+        </div>
     </form>
     <br>
     <a href="#" class="button radius" {{action 'save' selectedStudent.id}}>Save</a>
