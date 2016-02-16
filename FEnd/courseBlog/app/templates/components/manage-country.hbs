@@ -1,0 +1,57 @@
+{{#if isManagingCountry}}
+    <div class="row">
+        <div class="large-12 columns">
+            <h4 align="center"> Manage Country</h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="large-10  large-centered columns">
+            <div class="panel">
+              {{#if isAddingNewCountry}}
+                  <h2>Add New Country</h2>
+                  <form>
+                      <div class="row">
+                          <div class="large-12 columns">
+                              <label>Name
+                                {{input value=name  type="text" }}
+                              </label>
+                          </div>
+                      </div>
+                  </form>
+                  <div class="row">
+                      <div class="large-12 columns">
+                          <a href="#" class="button radius" {{action 'saveNewCountry'}}>Save</a>
+                          <a href="#" class="button radius" {{action 'cancelAddNewCountry'}}>Cancel</a>
+                      </div>
+                  </div>
+                  <br>
+              {{else}}
+                <!-- {{#each CountryModel as |oneCountry|}}
+                    <div class="row">
+                        <li class="large-3 columns">  {{oneCountry.name}} </li>
+
+                        <div class="large-2 columns">
+                          {{delete-country ID=oneCountry.id }}
+                        </div>
+                    </div>
+                {{/each}} -->
+                  <div class="row">
+                      <div class="large-12 columns">
+                          <br> <br> <br>
+                          <a href="#" class="button radius" {{action 'addNewCountry'}}>Add New Country</a>
+                          <a href="#" class="button radius" {{action 'doneCountry'}}>Done</a>
+                      </div>
+                  </div>
+              {{/if}}
+            </div>
+        </div>
+    </div>
+
+{{else}}
+    <div class="large-2 columns">
+        <a href="#" class="button tiny" {{action 'manageCountry' }}>More</a>
+    </div>
+{{/if}}
+
+

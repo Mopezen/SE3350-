@@ -62,17 +62,53 @@
                 </label>
             </div>
         </div>
+        <div class="row">
+            <div class="large-12 columns">
+                <label>Country:
+                    <select id="country">
+                        {{#each countryModel as |oneCountry|}}
+                            <option value={{oneCountry.id}} selected={{eq countryID oneCountry.id}}>{{oneCountry.name}}</option>
+                        {{/each}}
+                    </select>
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="large-12 columns">
+                <label>Province:
+                    <select id="province">
+                        {{#each provinceModel as |oneProvince|}}
+                            <option value={{oneProvince.id}} selected={{eq provinceID oneProvince.id}}>{{oneProvince.name}}</option>
+                        {{/each}}
+                    </select>
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="large-12 columns">
+                <label>City:
+                    <select id="city">
+                        {{#each cityModel as |oneCity|}}
+                            <option value={{oneCity.id}} selected={{eq cityID oneCity.id}}>{{oneCity.name}}</option>
+                        {{/each}}
+                    </select>
+                </label>
+            </div>
+        </div>
     </form>
     <br>
     <a href="#" class="button radius" {{action 'save' selectedStudent.id}}>Save</a>
 {{else}}
     <ul class="square">
         <ul>
-            <li>Student Number:{{selectedStudent.number}}</li>
-            <li>Date Of Birth:{{selectedStudent.DOB}}</li>
-            <li>Gender:{{selectedStudent.gender.name}}</li>
-            <li>Academic Load:{{selectedStudent.studyLoad.name}}</li>
-            <li>Residency:{{selectedStudent.residency.name}}</li>
+            <li>Student Number: {{selectedStudent.number}}</li>
+            <li>Date Of Birth: {{selectedStudent.DOB}}</li>
+            <li>Gender: {{selectedStudent.gender.name}}</li>
+            <li>Academic Load: {{selectedStudent.studyLoad.name}}</li>
+            <li>Residency: {{selectedStudent.residency.name}}</li>
+            <li>Country: {{selectedStudent.country.name}}</li>
+            <li>Province: {{selectedStudent.province.name}}</li>
+            <li>City: {{selectedStudent.city.name}}</li>
         </ul>
     </ul>
     <br>
