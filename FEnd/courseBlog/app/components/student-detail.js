@@ -7,6 +7,8 @@ export default Ember.Component.extend({
   genderID: null,
   academicLoadID: null,
   residencyID: null,
+  countryID: null,
+  provinceID: null,
   genderModel : Ember.computed('isEditing', function(){
       return this.get('store').findAll('gender');
   }),
@@ -15,6 +17,12 @@ export default Ember.Component.extend({
   }),
   residencyModel: Ember.computed('isEditing', function(){
       return this.get('store').findAll('residency');
+  }),
+  countryModel: Ember.computed('isEditing', function(){
+      return this.get('store').findAll('country');
+  }),
+  provinceModel: Ember.computed('isEditing', function(){
+      return this.get('store').findAll('province');
   }),
   isEditing: false,
   actions: {
@@ -37,6 +45,16 @@ export default Ember.Component.extend({
           self.set ('residencyID' , res.get('id'));
         }
       });
+      updatedStudent.get('country').then(function(res){
+        if (res) {
+          self.set ('countryID' , res.get('id'));
+        }
+      });
+      updatedStudent.get('province').then(function(res){
+        if (res) {
+          self.set ('provinceID' , res.get('id'));
+        }
+      });
     },  
     save: function(id){
       this.set('isEditing', false);
@@ -44,6 +62,8 @@ export default Ember.Component.extend({
       var genderSelected = myStore.peekRecord('gender', this.$('#gender')[0].value);
       var academicLoadSelected = myStore.peekRecord('academic-load', this.$('#academicLoad')[0].value);
       var residencySelected = myStore.peekRecord('residency', this.$('#residency')[0].value);
+      var countrySelected = myStore.peekRecord('country', this.$('#country')[0].value);
+      var provinceSelected = myStore.peekRecord('province', this.$('#province')[0].value);
       var self = this;
       myStore.findRecord('student',id).then(function(student) {
         student.set('number',self.get('selectedStudent.number'));
@@ -51,6 +71,8 @@ export default Ember.Component.extend({
         student.set('gender', genderSelected);
         student.set('studyLoad',academicLoadSelected);
         student.set('residency',residencySelected);
+        student.set('country',countrySelected);
+        student.set('province',provinceSelected);
         student.save();  // => PATCH to /posts/:post_id
       });
       //genderSelected.get('students').pushObject(myStore.findRecord('student',id));

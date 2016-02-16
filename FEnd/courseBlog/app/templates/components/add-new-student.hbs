@@ -64,6 +64,30 @@
             </div>
         </div>
         {{manage-residency}}
+        <div class="row">
+            <div class="large-12 columns">
+                <label>Country:
+                    <select id="country">
+                        {{#each countryModel as |oneCountry|}}
+                            <option value={{oneCountry.id}}>{{oneCountry.name}}</option>
+                        {{/each}}
+                    </select>
+                </label>
+            </div>
+        </div>
+        {{manage-country}}
+        <div class="row">
+            <div class="large-12 columns">
+                <label>Province:
+                    <select id="province">
+                        {{#each provinceModel as |oneProvince|}}
+                            <option value={{oneProvince.id}}>{{oneProvince.name}}</option>
+                        {{/each}}
+                    </select>
+                </label>
+            </div>
+        </div>
+        {{manage-province}}
 
     </form>
     <br>

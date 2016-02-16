@@ -1,0 +1,57 @@
+{{#if isManagingProvince}}
+    <div class="row">
+        <div class="large-12 columns">
+            <h4 align="center"> Manage Province</h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="large-10  large-centered columns">
+            <div class="panel">
+              {{#if isAddingNewProvince}}
+                  <h2>Add New Province</h2>
+                  <form>
+                      <div class="row">
+                          <div class="large-12 columns">
+                              <label>Name
+                                {{input value=name  type="text" }}
+                              </label>
+                          </div>
+                      </div>
+                  </form>
+                  <div class="row">
+                      <div class="large-12 columns">
+                          <a href="#" class="button radius" {{action 'saveNewProvince'}}>Save</a>
+                          <a href="#" class="button radius" {{action 'cancelAddNewProvince'}}>Cancel</a>
+                      </div>
+                  </div>
+                  <br>
+              {{else}}
+                <!-- {{#each ProvinceModel as |oneProvince|}}
+                    <div class="row">
+                        <li class="large-3 columns">  {{oneProvince.name}} </li>
+
+                        <div class="large-2 columns">
+                          {{delete-province ID=oneProvince.id }}
+                        </div>
+                    </div>
+                {{/each}} -->
+                  <div class="row">
+                      <div class="large-12 columns">
+                          <br> <br> <br>
+                          <a href="#" class="button radius" {{action 'addNewProvince'}}>Add New Province</a>
+                          <a href="#" class="button radius" {{action 'doneProvince'}}>Done</a>
+                      </div>
+                  </div>
+              {{/if}}
+            </div>
+        </div>
+    </div>
+
+{{else}}
+    <div class="large-2 columns">
+        <a href="#" class="button tiny" {{action 'manageProvince' }}>More</a>
+    </div>
+{{/if}}
+
+
