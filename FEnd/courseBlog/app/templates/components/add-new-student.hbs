@@ -100,6 +100,18 @@
             </div>
         </div>
         {{manage-city}}
+        <div class="row">
+            <div class="large-12 columns">
+                <label>Intent to Register Programs:
+                    <select id="itrprogram">
+                        {{#each itrprogramModel as |oneITRProgram|}}
+                            <option value={{oneITRProgram.id}}>{{oneITRProgram.order}}</option>
+                        {{/each}}
+                    </select>
+                </label>
+            </div>
+        </div>
+        
 
     </form>
     <br>

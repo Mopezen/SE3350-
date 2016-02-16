@@ -34,7 +34,8 @@ var studentsSchema = mongoose.Schema({
     residency: {type: mongoose.Schema.ObjectId, ref: ('ResidenciesModel')},
     country: {type: mongoose.Schema.ObjectId, ref: ('CountriesModel')},
     province: {type: mongoose.Schema.ObjectId, ref: ('ProvincesModel')},
-    city: {type: mongoose.Schema.ObjectId, ref: ('CitiesModel')}
+    city: {type: mongoose.Schema.ObjectId, ref: ('CitiesModel')},
+    ITRList: [{type: mongoose.Schema.ObjectId, ref: 'ITRProgramsModel'}]
 });
 
 var gendersSchema = mongoose.Schema({
@@ -71,6 +72,11 @@ var citiesSchema = mongoose.Schema({
     province: {type: mongoose.Schema.ObjectId, ref: ('ProvincesModel')}
 });
 
+var itrprogramsSchema = mongoose.Schema({
+    name: String,
+    students: {type: mongoose.Schema.ObjectId, ref: ('StudentsModel')}
+});
+
 var postsSchema = mongoose.Schema(
     {
         title: String,
@@ -96,6 +102,7 @@ var ResidenciesModel = mongoose.model('residency', residenciesSchema);
 var CountriesModel = mongoose.model('country', countriesSchema);
 var ProvincesModel = mongoose.model('province', provincesSchema);
 var CitiesModel = mongoose.model('city', citiesSchema);
+var ITRProgramsModel = mongoose.model('itrprogram', itrprogramsSchema);
 
 app.get('/students', function (request, response) {
     console.log('/students');
@@ -197,6 +204,19 @@ app.get('/posts', function (request, response) {
     });
 });
 
+app.get('/itrprograms', function (request, response) {
+    console.log('/itrprograms');
+    ITRProgramsModel.find(function (error, itrprograms) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({'itrprogram': itrprograms});
+        }
+
+    });
+});
+
 app.get('/students/:student_id', function (request, response) {
     console.log('/students/:student_id');
     StudentsModel.findById(request.params.student_id, function (error, student) {
@@ -278,6 +298,18 @@ app.get('/cities/:city_id', function (request, response) {
         }
         else {
             response.json({city: city});
+        }
+    });
+});
+
+app.get('/itrprograms/:itrprogram_id', function (request, response) {
+    console.log('/itrprograms/:itrprogram_id');
+    ITRProgramsModel.findById(request.params.itrprogram_id, function (error, itrprogram) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({'itrprogram': itrprogram});
         }
     });
 });
@@ -404,6 +436,18 @@ app.post('/cities', function (request, response) {
     });
 });
 
+app.post('/itrprograms', function (request, response) {
+    var itrprogram = new ITRProgramsModel(request.body.itrprogram);
+    itrprogram.save(function (error) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.status(201).json({'itrprogram': itrprogram});
+        }
+    });
+});
+
 app.put('/posts/:post_id', function (request, response) {
     // use our Posts model to find the post we want
     PostsModel.findById(request.params.post_id, function (error, post) {
@@ -447,6 +491,7 @@ app.put('/students/:student_id', function (request, response) {
             student.country = request.body.student.country;
             student.province = request.body.student.province;
             student.city = request.body.student.city;
+            student.itrprogram = request.body.student.itrprogram;
             // save the student
             student.save(function (error) {
                 if (error) {
@@ -608,6 +653,31 @@ app.put('/cities/:city_id', function (request, response) {
     });
 });
 
+app.put('/itrprograms/:itrprogram_id', function (request, response) {
+    // use our Posts model to find the post we want
+    ITRProgramsModel.findById(request.params.itrprogram_id, function (error, itrprogram) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            // update the student info
+            itrprogram.order = request.body.itrprogram.order;
+            itrprogram.eligibility = request.body.itrprogram.eligibility;
+            itrprogram.students = request.body.itrprogram.students;
+
+            // save the student
+            itrprogram.save(function (error) {
+                if (error) {
+                    response.send({error: error});
+                }
+                else {
+                    response.status(201).json({'itrprogram': itrprogram});
+                }
+            });
+        }
+    });
+});
+
 app.patch('/students/:student_id', function (request, response) {
     // use our students model to find the post we want
     StudentsModel.findById(request.params.student_id, function (error, student) {
@@ -626,6 +696,7 @@ app.patch('/students/:student_id', function (request, response) {
             student.country = request.body.student.country;
             student.province = request.body.student.province;
             student.city = request.body.student.city;
+            student.itrprogram = request.body.student.itrprogram;
             
             // save the student
             student.save(function (error) {
