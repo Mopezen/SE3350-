@@ -33,7 +33,8 @@ var studentsSchema = mongoose.Schema({
     studyLoad: {type: mongoose.Schema.ObjectId, ref: ('AcademicLoadsModel')},
     residency: {type: mongoose.Schema.ObjectId, ref: ('ResidenciesModel')},
     country: {type: mongoose.Schema.ObjectId, ref: ('CountriesModel')},
-    province: {type: mongoose.Schema.ObjectId, ref: ('ProvincesModel')}
+    province: {type: mongoose.Schema.ObjectId, ref: ('ProvincesModel')},
+    city: {type: mongoose.Schema.ObjectId, ref: ('CitiesModel')}
 });
 
 var gendersSchema = mongoose.Schema({
@@ -60,7 +61,14 @@ var countriesSchema = mongoose.Schema({
 var provincesSchema = mongoose.Schema({
     name: String,
     students: [{type: mongoose.Schema.ObjectId, ref: 'StudentsModel'}],
-    country: {type: mongoose.Schema.ObjectId, ref: ('CountriesModel')}
+    country: {type: mongoose.Schema.ObjectId, ref: ('CountriesModel')},
+    city: [{type: mongoose.Schema.ObjectId, ref: 'CitiesModel'}]
+});
+
+var citiesSchema = mongoose.Schema({
+    name: String,
+    students: [{type: mongoose.Schema.ObjectId, ref: 'StudentsModel'}],
+    province: {type: mongoose.Schema.ObjectId, ref: ('ProvincesModel')}
 });
 
 var postsSchema = mongoose.Schema(
@@ -87,6 +95,7 @@ var AcademicLoadsModel = mongoose.model('academic-load', academicLoadsSchema);
 var ResidenciesModel = mongoose.model('residency', residenciesSchema);
 var CountriesModel = mongoose.model('country', countriesSchema);
 var ProvincesModel = mongoose.model('province', provincesSchema);
+var CitiesModel = mongoose.model('city', citiesSchema);
 
 app.get('/students', function (request, response) {
     console.log('/students');
@@ -159,6 +168,18 @@ app.get('/provinces', function (request, response) {
         }
         else {
             response.json({province: provinces})
+        }
+    });
+});
+
+app.get('/cities', function (request, response) {
+    console.log('/cities');
+    CitiesModel.find(function (error, cities) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({city: cities})
         }
     });
 });
@@ -249,6 +270,18 @@ app.get('/provinces/:province_id', function (request, response) {
     });
 });
 
+app.get('/cities/:city_id', function (request, response) {
+    console.log('/cities/:city_id');
+    CitiesModel.findById(request.params.city_id, function (error, city) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({city: city});
+        }
+    });
+});
+
 app.get('/posts/:post_id', function (request, response) {
     console.log('/posts/:post_id');
     PostsModel.findById(request.params.post_id, function (error, post) {
@@ -271,7 +304,8 @@ app.post('/students', function (request, response) {
         studyLoad: request.body.student.studyLoad,
         residency: request.body.student.residency,
         country: request.body.student.country,
-        province: request.body.student.province
+        province: request.body.student.province,
+        city: request.body.student.city
     });
     student.save(function (error) {
         if (error) {
@@ -358,6 +392,18 @@ app.post('/provinces', function (request, response) {
     });
 });
 
+app.post('/cities', function (request, response) {
+    var city = new CitiesModel(request.body.city);
+    city.save(function (error) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.status(201).json({city: city});
+        }
+    });
+});
+
 app.put('/posts/:post_id', function (request, response) {
     // use our Posts model to find the post we want
     PostsModel.findById(request.params.post_id, function (error, post) {
@@ -400,6 +446,7 @@ app.put('/students/:student_id', function (request, response) {
             student.residency = request.body.student.residency;
             student.country = request.body.student.country;
             student.province = request.body.student.province;
+            student.city = request.body.student.city;
             // save the student
             student.save(function (error) {
                 if (error) {
@@ -495,6 +542,7 @@ app.put('/countries/:country_id', function (request, response) {
             // update the student info
             country.name = request.body.country.number;
             country.students = request.body.country.students;
+            country.province = request.body.country.province;
 
             // save the student
             country.save(function (error) {
@@ -519,6 +567,8 @@ app.put('/provinces/:province_id', function (request, response) {
             // update the student info
             province.name = request.body.province.number;
             province.students = request.body.province.students;
+            province.country = request.body.province.country;
+            province.city = request.body.province.city;
 
             // save the student
             province.save(function (error) {
@@ -527,6 +577,31 @@ app.put('/provinces/:province_id', function (request, response) {
                 }
                 else {
                     response.status(201).json({province: province});
+                }
+            });
+        }
+    });
+});
+
+app.put('/cities/:city_id', function (request, response) {
+    // use our Posts model to find the post we want
+    CitiesModel.findById(request.params.city_id, function (error, city) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            // update the student info
+            city.name = request.body.city.number;
+            city.students = request.body.city.students;
+            city.province = request.body.city.province;
+
+            // save the student
+            city.save(function (error) {
+                if (error) {
+                    response.send({error: error});
+                }
+                else {
+                    response.status(201).json({city: city});
                 }
             });
         }
@@ -550,6 +625,7 @@ app.patch('/students/:student_id', function (request, response) {
             student.residency = request.body.student.residency;
             student.country = request.body.student.country;
             student.province = request.body.student.province;
+            student.city = request.body.student.city;
             
             // save the student
             student.save(function (error) {

@@ -20,6 +20,9 @@ export default Ember.Component.extend({
   provinceModel: Ember.computed('isEditing', function(){
       return this.get('store').findAll('province');
   }),
+  cityModel: Ember.computed('isEditing', function(){
+      return this.get('store').findAll('city');
+  }),
   actions: {
     saveStudent: function () {
       var myStore = this.get('store');
@@ -28,6 +31,7 @@ export default Ember.Component.extend({
       var residencySelected = myStore.peekRecord('residency', this.$('#residency')[0].value);
       var countrySelected = myStore.peekRecord('country', this.$('#country')[0].value);
       var provinceSelected = myStore.peekRecord('province', this.$('#province')[0].value);
+      var citySelected = myStore.peekRecord('city', this.$('#city')[0].value);
       var newStudent = myStore.createRecord('student', {
         number: this.get('number'),
         firstName: this.get('firstName'),
@@ -37,7 +41,8 @@ export default Ember.Component.extend({
         studyLoad: academicLoadSelected,
         residency: residencySelected,
         country: countrySelected,
-        province: provinceSelected
+        province: provinceSelected,
+        city: citySelected
       });
       //genderSelected.get('students').pushObject(newStudent);
       newStudent.save();

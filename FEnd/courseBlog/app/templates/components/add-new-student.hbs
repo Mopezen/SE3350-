@@ -88,6 +88,18 @@
             </div>
         </div>
         {{manage-province}}
+        <div class="row">
+            <div class="large-12 columns">
+                <label>City:
+                    <select id="city">
+                        {{#each cityModel as |oneCity|}}
+                            <option value={{oneCity.id}}>{{oneCity.name}}</option>
+                        {{/each}}
+                    </select>
+                </label>
+            </div>
+        </div>
+        {{manage-city}}
 
     </form>
     <br>
