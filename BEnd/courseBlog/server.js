@@ -73,8 +73,15 @@ var citiesSchema = mongoose.Schema({
 });
 
 var itrprogramsSchema = mongoose.Schema({
+    order: Number,
+    eligibilty: Boolean,
+    program: {type: mongoose.Schema.ObjectId, ref: ('AcademicProgramCodesModel')},
+    student: {type: mongoose.Schema.ObjectId, ref: 'StudentsModel'}
+});
+
+var academicprogramcodesSchema = mongoose.Schema({
     name: String,
-    students: {type: mongoose.Schema.ObjectId, ref: ('StudentsModel')}
+    ITR: [{type: mongoose.Schema.ObjectId, ref: ('ITRProgramsModel')}]
 });
 
 var postsSchema = mongoose.Schema(
@@ -103,6 +110,7 @@ var CountriesModel = mongoose.model('country', countriesSchema);
 var ProvincesModel = mongoose.model('province', provincesSchema);
 var CitiesModel = mongoose.model('city', citiesSchema);
 var ITRProgramsModel = mongoose.model('itrprogram', itrprogramsSchema);
+var AcademicProgramCodesModel = mongoose.model('academicprogramcode', academicprogramcodesSchema);
 
 app.get('/students', function (request, response) {
     console.log('/students');
@@ -217,6 +225,19 @@ app.get('/itrprograms', function (request, response) {
     });
 });
 
+app.get('/academicprogramcodes', function (request, response) {
+    console.log('/academicprogramcodes');
+    AcademicProgramCodesModel.find(function (error, academicprogramcodes) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({'academicprogramcodes': academicprogramcodes});
+        }
+
+    });
+});
+
 app.get('/students/:student_id', function (request, response) {
     console.log('/students/:student_id');
     StudentsModel.findById(request.params.student_id, function (error, student) {
@@ -310,6 +331,18 @@ app.get('/itrprograms/:itrprogram_id', function (request, response) {
         }
         else {
             response.json({'itrprogram': itrprogram});
+        }
+    });
+});
+
+app.get('/academicprogramcodes/:academicprogramcode_id', function (request, response) {
+    console.log('/academicprogramcodes/:academicprogramcode_id');
+    AcademicProgramCodesModel.findById(request.params.academicprogramcode_id, function (error, academicprogramcode) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({'academicprogramcode': academicprogramcode});
         }
     });
 });
@@ -444,6 +477,20 @@ app.post('/itrprograms', function (request, response) {
         }
         else {
             response.status(201).json({'itrprogram': itrprogram});
+        }
+    });
+});
+
+app.post('/academicprogramcodes', function (request, response) {
+    console.log("TO BE ADDED VALUE " + request.body.academicprogramcode.ITR);
+    console.log("ITR FULL VALUE" + JSON.stringify(request.body.academicprogramcode));
+    var academicprogramcode = new AcademicProgramCodesModel(request.body.academicprogramcode);
+    academicprogramcode.save(function (error) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.status(201).json({'academicprogramcode': academicprogramcode});
         }
     });
 });
@@ -663,6 +710,7 @@ app.put('/itrprograms/:itrprogram_id', function (request, response) {
             // update the student info
             itrprogram.order = request.body.itrprogram.order;
             itrprogram.eligibility = request.body.itrprogram.eligibility;
+            itrprogram.program = request.body.itrprogram.program;
             itrprogram.students = request.body.itrprogram.students;
 
             // save the student
@@ -672,6 +720,33 @@ app.put('/itrprograms/:itrprogram_id', function (request, response) {
                 }
                 else {
                     response.status(201).json({'itrprogram': itrprogram});
+                }
+            });
+        }
+    });
+});
+
+app.put('/academicprogramcodes/:academicprogramcodes_id', function (request, response) {
+    // use our Posts model to find the post we want
+    AcademicProgramCodesModel.findById(request.params.academicprogramcodes_id, function (error, academicprogramcode) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            // update the student info
+            console.log("CURRENT VALUE " + academicprogramcode.ITR);
+            console.log("NEW VALUE " + request.body.academicprogramcode.ITR);
+            console.log("ITR FULL VALUE" + JSON.stringify(request.body.academicprogramcode));
+            academicprogramcode.name = request.body.academicprogramcode.name;
+            academicprogramcode.ITR = request.body.academicprogramcode.ITR;
+
+            // save the student
+            academicprogramcode.save(function (error) {
+                if (error) {
+                    response.send({error: error});
+                }
+                else {
+                    response.status(201).json({'academicprogramcode': academicprogramcode});
                 }
             });
         }
@@ -729,6 +804,32 @@ app.patch('/genders/:gender_id', function (request, response) {
                 }
                 else {
                     response.status(201).json({gender: gender});
+                }
+            });
+        }
+    });
+});
+
+app.patch('/itrprograms/:itrprogram_id', function (request, response) {
+    // use our students model to find the post we want
+    ITRProgramsModel.findById(request.params.itrprogram_id, function (error, itrprogram) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            // update the student info
+            itrprogram.order = request.body.itrprogram.order;
+            itrprogram.eligibility = request.body.itrprogram.eligibility;
+            itrprogram.student = request.body.itrprogram.student;
+            itrprogram.program = request.body.itrprogram.program;
+            
+            // save the student
+            itrprogram.save(function (error) {
+                if (error) {
+                    response.send({error: error});
+                }
+                else {
+                    response.status(201).json({itrprogram: itrprogram});
                 }
             });
         }

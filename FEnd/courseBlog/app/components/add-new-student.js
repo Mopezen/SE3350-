@@ -4,6 +4,7 @@ export default Ember.Component.extend({
   isEditing: false,
   store: Ember.inject.service(),
   routing: Ember.inject.service('-routing'),
+  countryCur: null,
 
   genderModel: Ember.computed('isEditing', function(){
       return this.get('store').findAll('gender');
@@ -49,7 +50,7 @@ export default Ember.Component.extend({
         city: citySelected,
         itrprogram: itrprogramSelected
       });
-      //genderSelected.get('students').pushObject(newStudent);
+      genderSelected.get('students').pushObject(newStudent);
       newStudent.save();
       this.set('isEditing', false);
       this.get('routing').transitionTo('students');
@@ -62,6 +63,10 @@ export default Ember.Component.extend({
 
     cancel: function () {
       this.set('isEditing', false);
-    }
+    },
+
+    updateSelectedCountry: function () {
+      countryCur = this.get('store').peekRecord('country', this.$('#country')[0].value);
+    },
   },
 });

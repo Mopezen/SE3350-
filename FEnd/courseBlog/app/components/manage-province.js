@@ -5,6 +5,7 @@ export default Ember.Component.extend({
   isManagingProvince: false,
   isAddingNewProvince: false,
   dataModel: null,
+  countryModel: "TEMP",
 
   ProvinceModel: Ember.computed(function(){
     return this.get('store').findAll('province');
@@ -14,7 +15,8 @@ export default Ember.Component.extend({
     saveNewProvince: function (){
       var myStore = this.get('store');
       var newProvince = myStore.createRecord('province', {
-        name: this.get('name')
+        name: this.get('name'),
+        country: countryModel,
       });
       newProvince.save().then(() => {
         this.set('isAddingNewProvince', false);

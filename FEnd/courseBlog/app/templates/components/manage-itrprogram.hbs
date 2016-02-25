@@ -1,1 +1,37 @@
-{{yield}}
+<form>
+  <div class="row">
+      <div class="large-12 columns">
+          <label>Order
+            {{input value=order id="order" type="number"}}
+          </label>
+      </div>
+  </div>
+  <div class="row">
+      <div class="large-12 columns">
+          <label>Eligibilty:
+                <input type="radio" name="eligibilty" value='true'>Eligible
+                <input type="radio" name="eligibilty" value='false'>Ineligible
+          </label>
+      </div>
+  </div>
+  <div class="row">
+    <div class="large-8 columns">
+        <label>Program Name: <br>
+            <select id="program">
+                {{#each programModel as |oneProgram|}}
+                    <option value={{oneProgram.id}}>{{oneProgram.name}}</option>
+                {{/each}}
+            </select>
+        </label>
+    </div>
+    <br>
+    <a href="#" class="button tiny" {{action 'saveNewITR'}}>Save</a>
+    {{manage-academicprogramcode}}
+</div>
+
+
+
+</form>
+<br>
+
+
