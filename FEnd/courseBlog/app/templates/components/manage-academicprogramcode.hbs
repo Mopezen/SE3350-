@@ -17,7 +17,18 @@
                                 {{input value=name  type="text" }}
                               </label>
                           </div>
-                      </div>    
+                      </div>
+                      <!-- <div class="row">
+                          <div class="large-12 columns">
+                              <label>Choose the academic progam code's admission rule:
+                                  <select id="rule">
+                                      {{#each AdmissionRuleModel as |oneRule|}}
+                                          <option value={{oneRule.id}}>{{oneRule.description}}</option>
+                                      {{/each}}
+                                  </select>
+                              </label>
+                          </div>
+                      </div>  -->   
                   </form>
                   <div class="row">
                       <div class="large-12 columns">
@@ -27,7 +38,7 @@
                   </div>
                   <br>
               {{else}}
-                <!-- {{#each AcademicProgramCodeModel as |oneAcademicProgramCode|}}
+                {{#each AcademicProgramCodeModel as |oneAcademicProgramCode|}}
                     <div class="row">
                         <li class="large-3 columns">  {{oneAcademicProgramCode.name}} </li>
 
@@ -35,7 +46,7 @@
                           {{delete-AcademicProgramCode ID=oneAcademicProgramCode.id }}
                         </div>
                     </div>
-                {{/each}} -->
+                {{/each}}
                   <div class="row">
                       <div class="large-12 columns">
                           <br> <br> <br>
@@ -50,7 +61,7 @@
 
 {{else}}
     <div class="large-2 columns">
-        <a href="#" class="button tiny" {{action 'manageAcademicProgramCode' }}>More</a>
+        <a href="#" class="button radius" {{action 'manageAcademicProgramCode' }}>Manage Academic Program Codes</a>
     </div>
 {{/if}}
 

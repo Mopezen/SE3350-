@@ -9,13 +9,18 @@ export default Ember.Component.extend({
   AcademicProgramCodeModel: Ember.computed(function(){
     return this.get('store').findAll('academicprogramcode');
   }),
-
+  /*AdmissionRuleModel: Ember.computed(function(){
+    return this.get('store').findAll('admissionrule');
+  }),*/
   actions: {
     saveNewAcademicProgramCode: function (){
       var myStore = this.get('store');
+      //var selectedRule = myStore.peekRecord('admissionrule', this.$('#rule')[0].value);
       var newAcademicProgramCode = myStore.createRecord('academicprogramcode', {
         name: this.get('name'),
-        ITR: []
+        //rule: selectedRule,
+        ITR: [],
+        //dept: []
       });
       newAcademicProgramCode.save().then(() => {
         this.set('isAddingNewAcademicProgramCode', false);

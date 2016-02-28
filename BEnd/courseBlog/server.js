@@ -81,7 +81,20 @@ var itrprogramsSchema = mongoose.Schema({
 
 var academicprogramcodesSchema = mongoose.Schema({
     name: String,
-    ITR: [{type: mongoose.Schema.ObjectId, ref: ('ITRProgramsModel')}]
+    ITR: [{type: mongoose.Schema.ObjectId, ref: ('ITRProgramsModel')}],
+    dept: [{type: mongoose.Schema.ObjectId, ref: ('ProgramAdministrationsModel')}],
+    rule: [{type: mongoose.Schema.ObjectId, ref: ('AdmissionRulesModel')}]
+});
+
+var departmentsSchema = mongoose.Schema({
+    name: String,
+    programAdministration: [{type: mongoose.Schema.ObjectId, ref: ('ProgramAdministrationsModel')}],
+    faculty: {type: mongoose.Schema.ObjectId, ref: ('FacultiesModel')}
+});
+
+var facultiesSchema = mongoose.Schema({
+    name: String,
+    departments: [{type: mongoose.Schema.ObjectId, ref:('DepartmentsModel')}]
 });
 
 var postsSchema = mongoose.Schema(
@@ -111,6 +124,8 @@ var ProvincesModel = mongoose.model('province', provincesSchema);
 var CitiesModel = mongoose.model('city', citiesSchema);
 var ITRProgramsModel = mongoose.model('itrprogram', itrprogramsSchema);
 var AcademicProgramCodesModel = mongoose.model('academicprogramcode', academicprogramcodesSchema);
+var DepartmentsModel = mongoose.model('department',departmentsSchema);
+var FacultiesModel = mongoose.model('faculty',facultiesSchema);
 
 app.get('/students', function (request, response) {
     console.log('/students');
@@ -232,7 +247,33 @@ app.get('/academicprogramcodes', function (request, response) {
             response.send({error: error});
         }
         else {
-            response.json({'academicprogramcodes': academicprogramcodes});
+            response.json({'academicprogramcode': academicprogramcodes});
+        }
+
+    });
+});
+
+app.get('/departments', function (request, response) {
+    console.log('/departments');
+    DepartmentsModel.find(function (error, departments) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({'department': departments});
+        }
+
+    });
+});
+
+app.get('/faculties', function (request, response) {
+    console.log('/faculties');
+    FacultiesModel.find(function (error, faculties) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({'faculty': faculties});
         }
 
     });
@@ -343,6 +384,30 @@ app.get('/academicprogramcodes/:academicprogramcode_id', function (request, resp
         }
         else {
             response.json({'academicprogramcode': academicprogramcode});
+        }
+    });
+});
+
+app.get('/faculties/:faculty_id', function (request, response) {
+    console.log('/faculties/:faculty_id');
+    FacultiesModel.findById(request.params.faculty_id, function (error, faculty) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({'faculty': faculty});
+        }
+    });
+});
+
+app.get('/departments/:department_id', function (request, response) {
+    console.log('/departments/:department_id');
+    DepartmentsModel.findById(request.params.department_id, function (error, department) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({'department': department});
         }
     });
 });
@@ -481,9 +546,31 @@ app.post('/itrprograms', function (request, response) {
     });
 });
 
+app.post('/departments', function (request, response) {
+    var department = new DepartmentsModel(request.body.department);
+    department.save(function (error) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.status(201).json({'department': department});
+        }
+    });
+});
+
+app.post('/faculties', function (request, response) {
+    var faculty = new FacultiesModel(request.body.faculty);
+    faculty.save(function (error) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.status(201).json({'faculty': faculty});
+        }
+    });
+});
+
 app.post('/academicprogramcodes', function (request, response) {
-    console.log("TO BE ADDED VALUE " + request.body.academicprogramcode.ITR);
-    console.log("ITR FULL VALUE" + JSON.stringify(request.body.academicprogramcode));
     var academicprogramcode = new AcademicProgramCodesModel(request.body.academicprogramcode);
     academicprogramcode.save(function (error) {
         if (error) {
@@ -734,11 +821,10 @@ app.put('/academicprogramcodes/:academicprogramcodes_id', function (request, res
         }
         else {
             // update the student info
-            console.log("CURRENT VALUE " + academicprogramcode.ITR);
-            console.log("NEW VALUE " + request.body.academicprogramcode.ITR);
-            console.log("ITR FULL VALUE" + JSON.stringify(request.body.academicprogramcode));
             academicprogramcode.name = request.body.academicprogramcode.name;
             academicprogramcode.ITR = request.body.academicprogramcode.ITR;
+            academicprogramcode.dept = request.body.academicprogramcode.dept;
+            academicprogramcode.rule = request.body.academicprogramcode.rule;
 
             // save the student
             academicprogramcode.save(function (error) {
@@ -747,6 +833,55 @@ app.put('/academicprogramcodes/:academicprogramcodes_id', function (request, res
                 }
                 else {
                     response.status(201).json({'academicprogramcode': academicprogramcode});
+                }
+            });
+        }
+    });
+});
+
+app.put('/departments/department_id:', function (request, response) {
+    // use our Posts model to find the post we want
+    DepartmentsModel.findById(request.params.department_id, function (error, department) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            // update the student info
+            department.name = request.body.department.name;
+            department.programAdministration = request.body.department.programAdministration;
+            department.faculty = request.body.department.faculty;
+
+            // save the student
+            department.save(function (error) {
+                if (error) {
+                    response.send({error: error});
+                }
+                else {
+                    response.status(201).json({'department': department});
+                }
+            });
+        }
+    });
+});
+
+app.put('/faculties/:faculty_id', function (request, response) {
+    // use our Posts model to find the post we want
+    FacultiesModel.findById(request.params.faculty_id, function (error, faculty) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            // update the student info
+            faculty.name = request.body.faculty.name;
+            faculty.department = request.body.faculty.department;
+
+            // save the student
+            faculty.save(function (error) {
+                if (error) {
+                    response.send({error: error});
+                }
+                else {
+                    response.status(201).json({'faculty': faculty});
                 }
             });
         }
@@ -889,6 +1024,31 @@ app.delete('/students/:student_id', function (request, response) {
     });
 
 });
+
+app.delete('/faculties/:faculty_id', function (request, response) {
+
+    FacultiesModel.findById(request.params.faculty_id, function (error, faculty) {
+        var deleted = faculty;
+        FacultiesModel.remove({_id: request.params.faculty_id}, function (error) {
+                if (error) response.send(error);
+        });
+        response.status(200).json({faculty: deleted});
+    });
+
+});
+
+app.delete('/departments/:department_id', function (request, response) {
+
+    DepartmentsModel.findById(request.params.department_id, function (error, department) {
+        var deleted = department;
+        DepartmentsModel.remove({_id: request.params.department_id}, function (error) {
+                if (error) response.send(error);
+        });
+        response.status(200).json({department: deleted});
+    });
+
+});
+
 
 app.post('/comments', function (request, response) {
     var comment = new CommentsModel(request.body.comment);
