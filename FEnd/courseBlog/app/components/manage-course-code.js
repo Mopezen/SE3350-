@@ -16,7 +16,8 @@ export default Ember.Component.extend({
         code: this.get('code'),
         name: this.get('name'),
         number: this.get('number'),
-        unit: this.get('unit')        
+        unit: this.get('unit'),
+        grade: []
       });
       newCourseCode.save().then(() => {
 
