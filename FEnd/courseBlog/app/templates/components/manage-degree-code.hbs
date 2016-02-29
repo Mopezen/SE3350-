@@ -1,1 +1,51 @@
-{{yield}}
+{{#if isManagingDegreeCode}}
+    <div class="row">
+        <div class="large-12 columns">
+            <h4 align="center"> Manage Degrees</h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="large-10  large-centered columns">
+            <div class="panel">
+              {{#if isAddingNewDegreeCode}}
+                  <h2>Add New Degree</h2>
+                  <form>
+                      <div class="row">
+                          <div class="large-12 columns">
+                              <label>Name
+                                {{input value=name type="text" }}
+                              </label>
+                          </div>
+                      </div>
+                  </form>
+                  <div class="row">
+                      <div class="large-12 columns">
+                          <a href="#" class="button radius" {{action 'saveNewDegreeCode'}}>Save</a>
+                          <a href="#" class="button radius" {{action 'cancelAddNewDegreeCode'}}>Cancel</a>
+                      </div>
+                  </div>
+                  <br>
+              {{else}}
+                {{#each degreeCodeModel as |oneDegreeCode|}}
+                    <div class="row">
+                        {{oneDegreeCode.name}} {{delete-DegreeCode ID=oneDegreeCode.id }}
+                    </div>
+                {{/each}}
+                  <div class="row">
+                      <div class="large-12 columns">
+                          <br> <br> <br>
+                          <a href="#" class="button radius" {{action 'addNewDegreeCode'}}>Add New Degree</a>
+                          <a href="#" class="button radius" {{action 'doneDegreeCode'}}>Done</a>
+                      </div>
+                  </div>
+              {{/if}}
+            </div>
+        </div>
+    </div>
+
+{{else}}
+    <div class="large-2 columns">
+        <a href="#" class="button radius" {{action 'manageDegreeCode' }}>Manage Degrees</a>
+    </div>
+{{/if}}
