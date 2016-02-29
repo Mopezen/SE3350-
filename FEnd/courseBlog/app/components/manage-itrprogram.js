@@ -23,9 +23,9 @@ export default Ember.Component.extend({
         eligibilty: this.$('#eligibilty')[0].value,
         student: this.get('currentStudent'),
         rule: null
-      }); 
+      });
+      this.get('currentStudent').get('ITRList').pushObject(newITR); 
       newITR.save().then(() => {
-        this.get('currentStudent').get('ITRList').pushObject(newITR);
         this.set('isAddingNewITR', false);
       });
     },

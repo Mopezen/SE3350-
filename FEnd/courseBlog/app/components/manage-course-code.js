@@ -19,7 +19,6 @@ export default Ember.Component.extend({
         unit: this.get('unit')        
       });
       newCourseCode.save().then(() => {
-
         this.set('isAddingNewCourseCode', false);
       });
     },

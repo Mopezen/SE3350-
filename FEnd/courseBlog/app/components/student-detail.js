@@ -86,6 +86,7 @@ export default Ember.Component.extend({
       var countrySelected = myStore.peekRecord('country', this.$('#country')[0].value);
       var provinceSelected = myStore.peekRecord('province', this.$('#province')[0].value);
       var citySelected = myStore.peekRecord('city', this.$('#city')[0].value);
+      var ITR = this.get('selectedStudent.ITRList');
       var self = this;
       myStore.findRecord('student',id).then(function(student) {
         student.set('number',self.get('selectedStudent.number'));
