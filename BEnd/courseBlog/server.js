@@ -35,8 +35,7 @@ var studentsSchema = mongoose.Schema({
     country: {type: mongoose.Schema.ObjectId, ref: ('CountriesModel')},
     province: {type: mongoose.Schema.ObjectId, ref: ('ProvincesModel')},
     city: {type: mongoose.Schema.ObjectId, ref: ('CitiesModel')},
-    ITRList: [{type: mongoose.Schema.ObjectId, ref: 'ITRProgramsModel'}],
-    mark: [{type: mongoose.Schema.ObjectId, ref: 'GradesModel'}]
+    ITRList: [{type: mongoose.Schema.ObjectId, ref: 'ITRProgramsModel'}]
 });
 
 var gendersSchema = mongoose.Schema({
@@ -77,42 +76,7 @@ var itrprogramsSchema = mongoose.Schema({
     order: Number,
     eligibilty: Boolean,
     program: {type: mongoose.Schema.ObjectId, ref: ('AcademicProgramCodesModel')},
-    students: {type: mongoose.Schema.ObjectId, ref: 'StudentsModel'}
-});
-
-var gradesSchema = mongoose.Schema({
-    mark: String, // maybe change to float or double
-    section: String,
-    students: {type: mongoose.Schema.ObjectId, ref: ('StudentsModel')},
-    courseNo: {type: mongoose.Schema.ObjectId, ref: ('CourseCodesModel')},
-    level: {type: mongoose.Schema.ObjectId, ref: ('ProgramRecordsModel')}
-});
-
-var courseCodeSchema = mongoose.Schema({
-    code: String, 
-    number: String,
-    name: String,
-    unit: String,
-    grade: [{type: mongoose.Schema.ObjectId, ref: 'GradesModel'}]
-});
-
-var programRecordSchema = mongoose.Schema({
-    level: String, 
-    status: String,
-    comment: String,
-    grade: [{type: mongoose.Schema.ObjectId, ref: 'GradesModel'}],
-    degreeCode: {type: mongoose.Schema.ObjectId, ref: 'DegreeCodesModel'},
-    termCode: {type: mongoose.Schema.ObjectId, ref: 'TermCodesModel'}
-});
-
-var degreeCodeSchema = mongoose.Schema({
-    name: String,
-    programRecord: [{type: mongoose.Schema.ObjectId, ref: 'ProgramRecordsModel'}]
-});
-
-var termCodeSchema = mongoose.Schema({
-    name: String,
-    programRecord: [{type: mongoose.Schema.ObjectId, ref: 'ProgramRecordsModel'}]
+    student: {type: mongoose.Schema.ObjectId, ref: 'StudentsModel'}
 });
 
 var academicprogramcodesSchema = mongoose.Schema({
@@ -159,11 +123,6 @@ var CountriesModel = mongoose.model('country', countriesSchema);
 var ProvincesModel = mongoose.model('province', provincesSchema);
 var CitiesModel = mongoose.model('city', citiesSchema);
 var ITRProgramsModel = mongoose.model('itrprogram', itrprogramsSchema);
-var GradesModel = mongoose.model('grade', gradesSchema);
-var CourseCodesModel = mongoose.model('courseCode', courseCodeSchema);
-var ProgramRecordsModel = mongoose.model('programRecord', programRecordSchema);
-var DegreeCodesModel = mongoose.model('degreeCode', degreeCodeSchema);
-var TermCodesModel = mongoose.model('termCode', termCodeSchema);
 var AcademicProgramCodesModel = mongoose.model('academicprogramcode', academicprogramcodesSchema);
 var DepartmentsModel = mongoose.model('department',departmentsSchema);
 var FacultiesModel = mongoose.model('faculty',facultiesSchema);
@@ -276,71 +235,6 @@ app.get('/itrprograms', function (request, response) {
         }
         else {
             response.json({'itrprogram': itrprograms});
-        }
-
-    });
-});
-
-app.get('/grades', function (request, response) {
-    console.log('/grades');
-    GradesModel.find(function (error, grades) {
-        if (error) {
-            response.send({error: error});
-        }
-        else {
-            response.json({'grade': grades});
-        }
-
-    });
-});
-
-app.get('/courseCodes', function (request, response) {
-    console.log('/courseCodes');
-    CourseCodesModel.find(function (error, courseCodes) {
-        if (error) {
-            response.send({error: error});
-        }
-        else {
-            response.json({'courseCode': courseCodes});
-        }
-
-    });
-});
-
-app.get('/programRecords', function (request, response) {
-    console.log('/programRecords');
-    ProgramRecordsModel.find(function (error, programRecords) {
-        if (error) {
-            response.send({error: error});
-        }
-        else {
-            response.json({'programRecord': programRecords});
-        }
-
-    });
-});
-
-app.get('/degreeCodes', function (request, response) {
-    console.log('/degreeCodes');
-    DegreeCodesModel.find(function (error, degreeCodes) {
-        if (error) {
-            response.send({error: error});
-        }
-        else {
-            response.json({'degreeCode': degreeCodes});
-        }
-
-    });
-});
-
-app.get('/termCodes', function (request, response) {
-    console.log('/termCodes');
-    TermCodesModel.find(function (error, termCodes) {
-        if (error) {
-            response.send({error: error});
-        }
-        else {
-            response.json({'termCode': termCodes});
         }
 
     });
@@ -482,67 +376,6 @@ app.get('/itrprograms/:itrprogram_id', function (request, response) {
     });
 });
 
-app.get('/grades/:grade_id', function (request, response) {
-    console.log('/grades/:grade_id');
-    GradesModel.findById(request.params.grade_id, function (error, grade) {
-        if (error) {
-            response.send({error: error});
-        }
-        else {
-            response.json({'grade': grade});
-        }
-    });
-});
-
-app.get('/courseCodes/:courseCode_id', function (request, response) {
-    console.log('/courseCodes/:courseCode_id');
-    CourseCodesModel.findById(request.params.courseCode_id, function (error, courseCode) {
-        if (error) {
-            response.send({error: error});
-        }
-        else {
-            response.json({'courseCode': courseCode});
-        }
-    });
-});
-
-app.get('/programRecords/:programRecord_id', function (request, response) {
-    console.log('/programRecords/:programRecord_id');
-    ProgramRecordsModel.findById(request.params.programRecord_id, function (error, programRecord) {
-        if (error) {
-            response.send({error: error});
-        }
-        else {
-            response.json({'programRecord': programRecord});
-        }
-    });
-});
-
-app.get('/degreeCodes/:degreeCode_id', function (request, response) {
-    console.log('/degreeCodes/:degreeCode_id');
-    DegreeCodesModel.findById(request.params.degreeCode_id, function (error, degreeCode) {
-        if (error) {
-            response.send({error: error});
-        }
-        else {
-            response.json({'degreeCode': degreeCode});
-        }
-    });
-});
-
-app.get('/termCodes/:termCode_id', function (request, response) {
-    console.log('/termCodes/:termCode_id');
-    TermCodesModel.findById(request.params.termCode_id, function (error, termCode) {
-        if (error) {
-            response.send({error: error});
-        }
-        else {
-            response.json({'termCode': termCode});
-        }
-    });
-});
-
-
 app.get('/academicprogramcodes/:academicprogramcode_id', function (request, response) {
     console.log('/academicprogramcodes/:academicprogramcode_id');
     AcademicProgramCodesModel.findById(request.params.academicprogramcode_id, function (error, academicprogramcode) {
@@ -602,8 +435,7 @@ app.post('/students', function (request, response) {
         residency: request.body.student.residency,
         country: request.body.student.country,
         province: request.body.student.province,
-        city: request.body.student.city,
-        mark: request.body.student.mark
+        city: request.body.student.city
     });
     student.save(function (error) {
         if (error) {
@@ -714,66 +546,6 @@ app.post('/itrprograms', function (request, response) {
     });
 });
 
-app.post('/grades', function (request, response) {
-    var grade = new GradesModel(request.body.grade);
-    grade.save(function (error) {
-        if (error) {
-            response.send({error: error});
-        }
-        else {
-            response.status(201).json({'grade': grade});
-        }
-    });
-});
-
-app.post('/courseCodes', function (request, response) {
-    var courseCode = new CourseCodesModel(request.body.courseCode);
-    courseCode.save(function (error) {
-        if (error) {
-            response.send({error: error});
-        }
-        else {
-            response.status(201).json({'courseCode': courseCode});
-        }
-    });
-});
-
-app.post('/programRecords', function (request, response) {
-    var programRecord = new ProgramRecordsModel(request.body.programRecord);
-    programRecord.save(function (error) {
-        if (error) {
-            response.send({error: error});
-        }
-        else {
-            response.status(201).json({'programRecord': programRecord});
-        }
-    });
-});
-
-app.post('/degreeCodes', function (request, response) {
-    var degreeCode = new DegreeCodesModel(request.body.degreeCode);
-    degreeCode.save(function (error) {
-        if (error) {
-            response.send({error: error});
-        }
-        else {
-            response.status(201).json({'degreeCode': degreeCode});
-        }
-    });
-});
-
-app.post('/termCodes', function (request, response) {
-    var termCode = new TermCodesModel(request.body.termCode);
-    termCode.save(function (error) {
-        if (error) {
-            response.send({error: error});
-        }
-        else {
-            response.status(201).json({'termCode': termCode});
-        }
-    });
-});
-
 app.post('/departments', function (request, response) {
     var department = new DepartmentsModel(request.body.department);
     department.save(function (error) {
@@ -854,7 +626,6 @@ app.put('/students/:student_id', function (request, response) {
             student.province = request.body.student.province;
             student.city = request.body.student.city;
             student.itrprogram = request.body.student.itrprogram;
-            student.grade = request.body.student.grade;
             // save the student
             student.save(function (error) {
                 if (error) {
@@ -1042,136 +813,6 @@ app.put('/itrprograms/:itrprogram_id', function (request, response) {
     });
 });
 
-app.put('/grades/:grade_id', function (request, response) {
-    // use our Posts model to find the post we want
-    GradesModel.findById(request.params.grade_id, function (error, grade) {
-        if (error) {
-            response.send({error: error});
-        }
-        else {
-            // update the student info
-            grade.mark = request.body.grade.mark;
-            grade.section = request.body.grade.section;
-            grade.students = request.body.grade.students;
-            grade.courseCode = request.body.grade.courseCode;
-            grade.programRecord = request.body.grade.programRecord;
-
-            // save the student
-            grade.save(function (error) {
-                if (error) {
-                    response.send({error: error});
-                }
-                else {
-                    response.status(201).json({'grade': grade});
-                }
-            });
-        }
-    });
-});
-
-app.put('/courseCodes/:courseCode_id', function (request, response) {
-    // use our Posts model to find the post we want
-    CourseCodesModel.findById(request.params.courseCode_id, function (error, courseCode) {
-        if (error) {
-            response.send({error: error});
-        }
-        else {
-            // update the student info
-            courseCode.code = request.body.courseCode.code;
-            courseCode.number = request.body.courseCode.number;
-            courseCode.name = request.body.courseCode.name;
-            courseCode.unit = request.body.courseCode.unit;
-            courseCode.grade = request.body.courseCode.grade;
-
-            // save the student
-            courseCode.save(function (error) {
-                if (error) {
-                    response.send({error: error});
-                }
-                else {
-                    response.status(201).json({'courseCode': courseCode});
-                }
-            });
-        }
-    });
-});
-
-app.put('/programRecords/:programRecord_id', function (request, response) {
-    // use our Posts model to find the post we want
-    ProgramRecordsModel.findById(request.params.programRecord_id, function (error, programRecord) {
-        if (error) {
-            response.send({error: error});
-        }
-        else {
-            // update the student info
-            programRecord.level = request.body.programRecord.level;
-            programRecord.status = request.body.programRecord.status;
-            programRecord.comment = request.body.programRecord.comment;
-            programRecord.grade = request.body.programRecord.grade;
-            programRecord.degreeCode = request.body.programRecord.degreeCode;
-            programRecord.termCode = request.body.programRecord.termCode;
-
-            // save the student
-            programRecord.save(function (error) {
-                if (error) {
-                    response.send({error: error});
-                }
-                else {
-                    response.status(201).json({'programRecord': programRecord});
-                }
-            });
-        }
-    });
-});
-
-app.put('/degreeCodes/:degreeCode_id', function (request, response) {
-    // use our Posts model to find the post we want
-    DegreeCodeModel.findById(request.params.degreeCode_id, function (error, degreeCode) {
-        if (error) {
-            response.send({error: error});
-        }
-        else {
-            // update the student info
-            degreeCode.name = request.body.degreeCode.name;
-            degreeCode.programRecord = request.body.degreeCode.programRecord;
-
-            // save the student
-            degreeCode.save(function (error) {
-                if (error) {
-                    response.send({error: error});
-                }
-                else {
-                    response.status(201).json({'degreeCode': degreeCode});
-                }
-            });
-        }
-    });
-});
-
-app.put('/termCodes/:termCode_id', function (request, response) {
-    // use our Posts model to find the post we want
-    TermCodeModel.findById(request.params.termCode_id, function (error, termCode) {
-        if (error) {
-            response.send({error: error});
-        }
-        else {
-            // update the student info
-            termCode.name = request.body.termCode.name;
-            termCode.programRecord = request.body.termCode.programRecord;
-
-            // save the student
-            degreeCode.save(function (error) {
-                if (error) {
-                    response.send({error: error});
-                }
-                else {
-                    response.status(201).json({'termCode': termCode});
-                }
-            });
-        }
-    });
-});
-
 app.put('/academicprogramcodes/:academicprogramcodes_id', function (request, response) {
     // use our Posts model to find the post we want
     AcademicProgramCodesModel.findById(request.params.academicprogramcodes_id, function (error, academicprogramcode) {
@@ -1266,7 +907,6 @@ app.patch('/students/:student_id', function (request, response) {
             student.province = request.body.student.province;
             student.city = request.body.student.city;
             student.itrprogram = request.body.student.itrprogram;
-            student.mark = request.body.student.mark;
             
             // save the student
             student.save(function (error) {
