@@ -4,6 +4,7 @@ export default Ember.Component.extend({
   isEditing: false,
   store: Ember.inject.service(),
   routing: Ember.inject.service('-routing'),
+  countryCur: null,
 
   genderModel: Ember.computed('isEditing', function(){
       return this.get('store').findAll('gender');
@@ -35,7 +36,7 @@ export default Ember.Component.extend({
       var countrySelected = myStore.peekRecord('country', this.$('#country')[0].value);
       var provinceSelected = myStore.peekRecord('province', this.$('#province')[0].value);
       var citySelected = myStore.peekRecord('city', this.$('#city')[0].value);
-      var itrprogramSelected = myStore.peekRecord('itrprogram', this.$('#itrprogram')[0].value);
+      //var itrprogramSelected = myStore.peekRecord('itrprogram', this.$('#itrprogram')[0].value);
       var newStudent = myStore.createRecord('student', {
         number: this.get('number'),
         firstName: this.get('firstName'),
@@ -47,9 +48,9 @@ export default Ember.Component.extend({
         country: countrySelected,
         province: provinceSelected,
         city: citySelected,
-        itrprogram: itrprogramSelected
+        itrprogram: []
       });
-      //genderSelected.get('students').pushObject(newStudent);
+      genderSelected.get('students').pushObject(newStudent);
       newStudent.save();
       this.set('isEditing', false);
       this.get('routing').transitionTo('students');
@@ -62,6 +63,10 @@ export default Ember.Component.extend({
 
     cancel: function () {
       this.set('isEditing', false);
-    }
+    },
+
+    updateSelectedCountry: function () {
+      countryCur = this.get('store').peekRecord('country', this.$('#country')[0].value);
+    },
   },
 });

@@ -73,8 +73,28 @@ var citiesSchema = mongoose.Schema({
 });
 
 var itrprogramsSchema = mongoose.Schema({
+    order: Number,
+    eligibilty: Boolean,
+    program: {type: mongoose.Schema.ObjectId, ref: ('AcademicProgramCodesModel')},
+    student: {type: mongoose.Schema.ObjectId, ref: 'StudentsModel'}
+});
+
+var academicprogramcodesSchema = mongoose.Schema({
     name: String,
-    students: {type: mongoose.Schema.ObjectId, ref: ('StudentsModel')}
+    ITR: [{type: mongoose.Schema.ObjectId, ref: ('ITRProgramsModel')}],
+    dept: [{type: mongoose.Schema.ObjectId, ref: ('ProgramAdministrationsModel')}],
+    rule: [{type: mongoose.Schema.ObjectId, ref: ('AdmissionRulesModel')}]
+});
+
+var departmentsSchema = mongoose.Schema({
+    name: String,
+    programAdministration: [{type: mongoose.Schema.ObjectId, ref: ('ProgramAdministrationsModel')}],
+    faculty: {type: mongoose.Schema.ObjectId, ref: ('FacultiesModel')}
+});
+
+var facultiesSchema = mongoose.Schema({
+    name: String,
+    departments: [{type: mongoose.Schema.ObjectId, ref:('DepartmentsModel')}]
 });
 
 var postsSchema = mongoose.Schema(
@@ -103,6 +123,9 @@ var CountriesModel = mongoose.model('country', countriesSchema);
 var ProvincesModel = mongoose.model('province', provincesSchema);
 var CitiesModel = mongoose.model('city', citiesSchema);
 var ITRProgramsModel = mongoose.model('itrprogram', itrprogramsSchema);
+var AcademicProgramCodesModel = mongoose.model('academicprogramcode', academicprogramcodesSchema);
+var DepartmentsModel = mongoose.model('department',departmentsSchema);
+var FacultiesModel = mongoose.model('faculty',facultiesSchema);
 
 app.get('/students', function (request, response) {
     console.log('/students');
@@ -217,6 +240,45 @@ app.get('/itrprograms', function (request, response) {
     });
 });
 
+app.get('/academicprogramcodes', function (request, response) {
+    console.log('/academicprogramcodes');
+    AcademicProgramCodesModel.find(function (error, academicprogramcodes) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({'academicprogramcode': academicprogramcodes});
+        }
+
+    });
+});
+
+app.get('/departments', function (request, response) {
+    console.log('/departments');
+    DepartmentsModel.find(function (error, departments) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({'department': departments});
+        }
+
+    });
+});
+
+app.get('/faculties', function (request, response) {
+    console.log('/faculties');
+    FacultiesModel.find(function (error, faculties) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({'faculty': faculties});
+        }
+
+    });
+});
+
 app.get('/students/:student_id', function (request, response) {
     console.log('/students/:student_id');
     StudentsModel.findById(request.params.student_id, function (error, student) {
@@ -314,6 +376,42 @@ app.get('/itrprograms/:itrprogram_id', function (request, response) {
     });
 });
 
+app.get('/academicprogramcodes/:academicprogramcode_id', function (request, response) {
+    console.log('/academicprogramcodes/:academicprogramcode_id');
+    AcademicProgramCodesModel.findById(request.params.academicprogramcode_id, function (error, academicprogramcode) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({'academicprogramcode': academicprogramcode});
+        }
+    });
+});
+
+app.get('/faculties/:faculty_id', function (request, response) {
+    console.log('/faculties/:faculty_id');
+    FacultiesModel.findById(request.params.faculty_id, function (error, faculty) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({'faculty': faculty});
+        }
+    });
+});
+
+app.get('/departments/:department_id', function (request, response) {
+    console.log('/departments/:department_id');
+    DepartmentsModel.findById(request.params.department_id, function (error, department) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({'department': department});
+        }
+    });
+});
+
 app.get('/posts/:post_id', function (request, response) {
     console.log('/posts/:post_id');
     PostsModel.findById(request.params.post_id, function (error, post) {
@@ -337,7 +435,8 @@ app.post('/students', function (request, response) {
         residency: request.body.student.residency,
         country: request.body.student.country,
         province: request.body.student.province,
-        city: request.body.student.city
+        city: request.body.student.city,
+        ITRList: request.body.student.ITRList
     });
     student.save(function (error) {
         if (error) {
@@ -448,6 +547,42 @@ app.post('/itrprograms', function (request, response) {
     });
 });
 
+app.post('/departments', function (request, response) {
+    var department = new DepartmentsModel(request.body.department);
+    department.save(function (error) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.status(201).json({'department': department});
+        }
+    });
+});
+
+app.post('/faculties', function (request, response) {
+    var faculty = new FacultiesModel(request.body.faculty);
+    faculty.save(function (error) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.status(201).json({'faculty': faculty});
+        }
+    });
+});
+
+app.post('/academicprogramcodes', function (request, response) {
+    var academicprogramcode = new AcademicProgramCodesModel(request.body.academicprogramcode);
+    academicprogramcode.save(function (error) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.status(201).json({'academicprogramcode': academicprogramcode});
+        }
+    });
+});
+
 app.put('/posts/:post_id', function (request, response) {
     // use our Posts model to find the post we want
     PostsModel.findById(request.params.post_id, function (error, post) {
@@ -491,7 +626,7 @@ app.put('/students/:student_id', function (request, response) {
             student.country = request.body.student.country;
             student.province = request.body.student.province;
             student.city = request.body.student.city;
-            student.itrprogram = request.body.student.itrprogram;
+            student.ITRList = request.body.student.ITRList;
             // save the student
             student.save(function (error) {
                 if (error) {
@@ -663,7 +798,9 @@ app.put('/itrprograms/:itrprogram_id', function (request, response) {
             // update the student info
             itrprogram.order = request.body.itrprogram.order;
             itrprogram.eligibility = request.body.itrprogram.eligibility;
+            itrprogram.program = request.body.itrprogram.program;
             itrprogram.students = request.body.itrprogram.students;
+            itrprogram.rule = request.body.itrprogram.rule;
 
             // save the student
             itrprogram.save(function (error) {
@@ -672,6 +809,81 @@ app.put('/itrprograms/:itrprogram_id', function (request, response) {
                 }
                 else {
                     response.status(201).json({'itrprogram': itrprogram});
+                }
+            });
+        }
+    });
+});
+
+app.put('/academicprogramcodes/:academicprogramcodes_id', function (request, response) {
+    // use our Posts model to find the post we want
+    AcademicProgramCodesModel.findById(request.params.academicprogramcodes_id, function (error, academicprogramcode) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            // update the student info
+            academicprogramcode.name = request.body.academicprogramcode.name;
+            academicprogramcode.ITR = request.body.academicprogramcode.ITR;
+            academicprogramcode.dept = request.body.academicprogramcode.dept;
+            academicprogramcode.rule = request.body.academicprogramcode.rule;
+
+            // save the student
+            academicprogramcode.save(function (error) {
+                if (error) {
+                    response.send({error: error});
+                }
+                else {
+                    response.status(201).json({'academicprogramcode': academicprogramcode});
+                }
+            });
+        }
+    });
+});
+
+app.put('/departments/department_id:', function (request, response) {
+    // use our Posts model to find the post we want
+    DepartmentsModel.findById(request.params.department_id, function (error, department) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            // update the student info
+            department.name = request.body.department.name;
+            department.programAdministration = request.body.department.programAdministration;
+            department.faculty = request.body.department.faculty;
+
+            // save the student
+            department.save(function (error) {
+                if (error) {
+                    response.send({error: error});
+                }
+                else {
+                    response.status(201).json({'department': department});
+                }
+            });
+        }
+    });
+});
+
+app.put('/faculties/:faculty_id', function (request, response) {
+    // use our Posts model to find the post we want
+    FacultiesModel.findById(request.params.faculty_id, function (error, faculty) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            // update the student info
+            faculty.name = request.body.faculty.name;
+            faculty.department = request.body.faculty.department;
+
+            // save the student
+            faculty.save(function (error) {
+                if (error) {
+                    response.send({error: error});
+                }
+                else {
+                    response.status(201).json({'faculty': faculty});
                 }
             });
         }
@@ -696,7 +908,7 @@ app.patch('/students/:student_id', function (request, response) {
             student.country = request.body.student.country;
             student.province = request.body.student.province;
             student.city = request.body.student.city;
-            student.itrprogram = request.body.student.itrprogram;
+            student.ITRList = request.body.student.ITRList;
             
             // save the student
             student.save(function (error) {
@@ -729,6 +941,33 @@ app.patch('/genders/:gender_id', function (request, response) {
                 }
                 else {
                     response.status(201).json({gender: gender});
+                }
+            });
+        }
+    });
+});
+
+app.patch('/itrprograms/:itrprogram_id', function (request, response) {
+    // use our students model to find the post we want
+    ITRProgramsModel.findById(request.params.itrprogram_id, function (error, itrprogram) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            // update the student info
+            itrprogram.order = request.body.itrprogram.order;
+            itrprogram.eligibility = request.body.itrprogram.eligibility;
+            itrprogram.student = request.body.itrprogram.student;
+            itrprogram.program = request.body.itrprogram.program;
+            itrprogram.rule = request.body.itrprogram.rule;
+            
+            // save the student
+            itrprogram.save(function (error) {
+                if (error) {
+                    response.send({error: error});
+                }
+                else {
+                    response.status(201).json({itrprogram: itrprogram});
                 }
             });
         }
@@ -788,6 +1027,43 @@ app.delete('/students/:student_id', function (request, response) {
     });
 
 });
+
+app.delete('/faculties/:faculty_id', function (request, response) {
+
+    FacultiesModel.findById(request.params.faculty_id, function (error, faculty) {
+        var deleted = faculty;
+        FacultiesModel.remove({_id: request.params.faculty_id}, function (error) {
+                if (error) response.send(error);
+        });
+        response.status(200).json({faculty: deleted});
+    });
+
+});
+
+app.delete('/departments/:department_id', function (request, response) {
+
+    DepartmentsModel.findById(request.params.department_id, function (error, department) {
+        var deleted = department;
+        DepartmentsModel.remove({_id: request.params.department_id}, function (error) {
+                if (error) response.send(error);
+        });
+        response.status(200).json({department: deleted});
+    });
+
+});
+
+app.delete('/academicprogramcodes/:academicprogramcodes_id', function (request, response) {
+
+    AcademicProgramCodesModel.findById(request.params.academicprogramcodes_id, function (error, academicprogramcode) {
+        var deleted = academicprogramcode;
+        AcademicProgramCodesModel.remove({_id: request.params.academicprogramcodes_id}, function (error) {
+                if (error) response.send(error);
+        });
+        response.status(200).json({acdemicprogramcode: deleted});
+    });
+
+});
+
 
 app.post('/comments', function (request, response) {
     var comment = new CommentsModel(request.body.comment);

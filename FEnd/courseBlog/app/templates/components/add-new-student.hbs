@@ -69,7 +69,7 @@
                 <label>Country:
                     <select id="country">
                         {{#each countryModel as |oneCountry|}}
-                            <option value={{oneCountry.id}}>{{oneCountry.name}}</option>
+                            <option value={{oneCountry.id}} onchange={{action 'updateSelectedCountry'}} >{{oneCountry.name}}</option>
                         {{/each}}
                     </select>
                 </label>
@@ -87,7 +87,7 @@
                 </label>
             </div>
         </div>
-        {{manage-province}}
+        {{manage-province countryModel = countryCur}}
         <div class="row">
             <div class="large-12 columns">
                 <label>City:
@@ -100,18 +100,8 @@
             </div>
         </div>
         {{manage-city}}
-        <div class="row">
-            <div class="large-12 columns">
-                <label>Intent to Register Programs:
-                    <select id="itrprogram">
-                        {{#each itrprogramModel as |oneITRProgram|}}
-                            <option value={{oneITRProgram.id}}>{{oneITRProgram.order}}</option>
-                        {{/each}}
-                    </select>
-                </label>
-            </div>
-        </div>
         
+        <!-- {{manage-itrprogram}} -->
 
     </form>
     <br>

@@ -1,0 +1,68 @@
+{{#if isManagingAcademicProgramCode}}
+    <div class="row">
+        <div class="large-12 columns">
+            <h4 align="center"> Manage Academic Program Codes</h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="large-10  large-centered columns">
+            <div class="panel">
+              {{#if isAddingNewAcademicProgramCode}}
+                  <h2>Add New AcademicProgramCode Program</h2>
+                  <form>
+                      <div class="row">
+                          <div class="large-12 columns">
+                              <label>Name
+                                {{input value=name  type="text" }}
+                              </label>
+                          </div>
+                      </div>
+                      <!-- <div class="row">
+                          <div class="large-12 columns">
+                              <label>Choose the academic progam code's admission rule:
+                                  <select id="rule">
+                                      {{#each AdmissionRuleModel as |oneRule|}}
+                                          <option value={{oneRule.id}}>{{oneRule.description}}</option>
+                                      {{/each}}
+                                  </select>
+                              </label>
+                          </div>
+                      </div>  -->   
+                  </form>
+                  <div class="row">
+                      <div class="large-12 columns">
+                          <a href="#" class="button radius" {{action 'saveNewAcademicProgramCode'}}>Save</a>
+                          <a href="#" class="button radius" {{action 'cancelAddNewAcademicProgramCode'}}>Cancel</a>
+                      </div>
+                  </div>
+                  <br>
+              {{else}}
+                {{#each AcademicProgramCodeModel as |oneAcademicProgramCode|}}
+                    <div class="row">
+                        <li class="large-3 columns">  {{oneAcademicProgramCode.name}} </li>
+
+                        <div class="large-2 columns">
+                          {{delete-AcademicProgramCode ID=oneAcademicProgramCode.id }}
+                        </div>
+                    </div>
+                {{/each}}
+                  <div class="row">
+                      <div class="large-12 columns">
+                          <br> <br> <br>
+                          <a href="#" class="button radius" {{action 'addNewAcademicProgramCode'}}>Add New Academic Program Code</a>
+                          <a href="#" class="button radius" {{action 'doneAcademicProgramCode'}}>Done</a>
+                      </div>
+                  </div>
+              {{/if}}
+            </div>
+        </div>
+    </div>
+
+{{else}}
+    <div class="large-2 columns">
+        <a href="#" class="button radius" {{action 'manageAcademicProgramCode' }}>Manage Academic Program Codes</a>
+    </div>
+{{/if}}
+
+

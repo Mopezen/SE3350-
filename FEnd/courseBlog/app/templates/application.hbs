@@ -1,10 +1,6 @@
 {{#if oudaAuth.isAuthenticated}}
     <div class="row">
-
-        <div class="large-12 columns">
-            <img src="assets/images/webby-logo.PNG">
-        </div>
-        <h4> Logged in as:  {{oudaAuth.userName}}</h4>
+        <h2> Logged in as:  {{oudaAuth.userName}}</h2>
     </div>
 
     <nav class="top-bar" data-topbar role="navigation">
@@ -19,7 +15,8 @@
         <section class="top-bar-section">
             <!-- Right Nav Section -->
             <ul class="right">
-                <li >{{#link-to 'about'}}About{{/link-to}}</li>
+                <li><img src="assets/images/webby-logo.PNG" width="60px" height="auto"></li>
+                <li>{{#link-to 'about'}}About{{/link-to}}</li>
                 <li> {{log-out}} </li>
 
             </ul>
@@ -28,6 +25,13 @@
             <ul class="left">
                 <li>{{#link-to 'contact'}}Contact{{/link-to}}</li>
                 <li>{{#link-to 'students'}}Students{{/link-to}}</li>
+                <li class="has-dropdown">
+                    <a href="edit">Add/Edit</a>
+                    <ul class="dropdown">
+                        <li><a href="#">{{#link-to 'edit' Faculty}}Faculty{{/link-to}}</a></li>
+                        <li><a href="#">Active link in dropdown</a></li>
+                    </ul>
+                </li>
             </ul>
         </section>
     </nav>

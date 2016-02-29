@@ -17,6 +17,7 @@ Router.map(function() {
   this.route('login' , {path: '/'});
   this.route('students');
   this.route('student', {path: 'students/:student_id'});
+  this.route('edit');
 });
 
 
