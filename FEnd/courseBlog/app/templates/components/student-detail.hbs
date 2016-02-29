@@ -113,7 +113,7 @@
             <li>City: {{selectedStudent.city.name}}</li>
             {{#each itrprogramModel as |oneITR|}}
                 {{#if (eq oneITR.student.id selectedStudent.id)}}
-                    <li>Program Choice Number {{oneITR.order}} = {{oneITR.program.name}}</li>
+                    <li>Program Choice Number {{oneITR.order}} = {{oneITR.program}}</li>
                 {{/if}}
             {{/each}}
         </ul>
