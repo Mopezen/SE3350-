@@ -1,36 +1,37 @@
 <form>
-  <div class="row">
-      <div class="large-12 columns">
-          <label>Order
-            {{input value=order id="order" type="number"}}
-          </label>
-      </div>
-  </div>
-  <div class="row">
-      <div class="large-12 columns">
-          <label>Eligibilty:
-                <input type="radio" name="eligibilty" value='true'>Eligible
-                <input type="radio" name="eligibilty" value='false'>Ineligible
-          </label>
-      </div>
-  </div>
+  <div class="panel">
+    <h3>Program Chooses:</h3>
     <div class="row">
-    <div class="large-8 columns">
-        <label>Program Name: <br>
-            <select id="program">
-                {{#each programModel as |oneProgram|}}
-                    <option value={{oneProgram.id}}>{{oneProgram.name}}</option>
-                {{/each}}
-            </select>
+      <div class="large-12 columns">
+        <label>Order
+        {{input value=order id="order" type="number"}}
         </label>
+      </div>
     </div>
-    <br>
+    <div class="row">
+      <div class="large-12 columns">
+        <label>ITR Program Eligibilty:
+          <select id="eligibilty">
+            <option value=true>Eligible</option>
+            <option value=false>Ineligible</option>
+          </select>
+        </label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="large-8 columns">
+        <label>Choice:
+          <select id="program">
+            {{#each programModel as |oneProgram|}}
+              <option value={{oneProgram.id}}>{{oneProgram.name}}</option>
+            {{/each}}
+          </select>
+        </label>
+      </div>
+    </div>
     <a href="#" class="button tiny" {{action 'saveNewITR'}}>Save</a>
-</div>
-
-
-
+  </div>
 </form>
-<br>
+
 
 

@@ -95,17 +95,8 @@
                 </label>
             </div>
         </div>
-        <div class="row">
-            <div class="large-12 columns">
-                <label>Intent to Register Programs:
-                    <select id="itrprogram">
-                        {{#each itrprogramModel as |oneITRProgram|}}
-                            <option value={{oneITRProgram.id}} selected={{eq itrprogramID oneITRProgram.id}}>{{oneITRProgram.order}}</option>
-                        {{/each}}
-                    </select>
-                </label>
-            </div>
-        </div>
+        <br>
+        {{manage-itrprogram currentStudent = selectedStudent}}
     </form>
     <br>
     <a href="#" class="button radius" {{action 'save' selectedStudent.id}}>Save</a>

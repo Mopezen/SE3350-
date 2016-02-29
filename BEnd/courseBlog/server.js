@@ -435,7 +435,8 @@ app.post('/students', function (request, response) {
         residency: request.body.student.residency,
         country: request.body.student.country,
         province: request.body.student.province,
-        city: request.body.student.city
+        city: request.body.student.city,
+        ITRList: request.body.student.ITRList
     });
     student.save(function (error) {
         if (error) {
@@ -625,7 +626,7 @@ app.put('/students/:student_id', function (request, response) {
             student.country = request.body.student.country;
             student.province = request.body.student.province;
             student.city = request.body.student.city;
-            student.itrprogram = request.body.student.itrprogram;
+            student.ITRList = request.body.student.ITRList;
             // save the student
             student.save(function (error) {
                 if (error) {
@@ -799,6 +800,7 @@ app.put('/itrprograms/:itrprogram_id', function (request, response) {
             itrprogram.eligibility = request.body.itrprogram.eligibility;
             itrprogram.program = request.body.itrprogram.program;
             itrprogram.students = request.body.itrprogram.students;
+            itrprogram.rule = request.body.itrprogram.rule;
 
             // save the student
             itrprogram.save(function (error) {
@@ -906,7 +908,7 @@ app.patch('/students/:student_id', function (request, response) {
             student.country = request.body.student.country;
             student.province = request.body.student.province;
             student.city = request.body.student.city;
-            student.itrprogram = request.body.student.itrprogram;
+            student.ITRList = request.body.student.ITRList;
             
             // save the student
             student.save(function (error) {
@@ -957,6 +959,7 @@ app.patch('/itrprograms/:itrprogram_id', function (request, response) {
             itrprogram.eligibility = request.body.itrprogram.eligibility;
             itrprogram.student = request.body.itrprogram.student;
             itrprogram.program = request.body.itrprogram.program;
+            itrprogram.rule = request.body.itrprogram.rule;
             
             // save the student
             itrprogram.save(function (error) {
@@ -1045,6 +1048,18 @@ app.delete('/departments/:department_id', function (request, response) {
                 if (error) response.send(error);
         });
         response.status(200).json({department: deleted});
+    });
+
+});
+
+app.delete('/academicprogramcodes/:academicprogramcodes_id', function (request, response) {
+
+    AcademicProgramCodesModel.findById(request.params.academicprogramcodes_id, function (error, academicprogramcode) {
+        var deleted = academicprogramcode;
+        AcademicProgramCodesModel.remove({_id: request.params.academicprogramcodes_id}, function (error) {
+                if (error) response.send(error);
+        });
+        response.status(200).json({acdemicprogramcode: deleted});
     });
 
 });
