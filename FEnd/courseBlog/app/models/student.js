@@ -10,5 +10,6 @@ export default DS.Model.extend({
   residency: DS.belongsTo('residency',{async: true}),
   country: DS.belongsTo('country',{async: true}),
   province: DS.belongsTo('province',{async: true}),
-  city: DS.belongsTo('city',{async: true})
+  city: DS.belongsTo('city',{async: true}),
+  mark: DS.hasMany('grade',{async: true})
 });
