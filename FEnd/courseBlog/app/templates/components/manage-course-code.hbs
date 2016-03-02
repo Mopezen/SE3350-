@@ -48,9 +48,9 @@
                   </div>
                   <br>
               {{else}}
-                {{#each courseCodeModel as |oneCourseCode|}}
+                {{#each CourseCodeModel as |oneCourseCode|}}
                     <div class="row">
-                        {{oneCourseCode.name}} {{delete-CourseCode ID=oneCourseCode.id }}
+                        {{oneCourseCode.name}} {{delete-course-code ID=oneCourseCode.id }}
                     </div>
                 {{/each}}
                   <div class="row">

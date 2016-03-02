@@ -27,9 +27,9 @@
                   </div>
                   <br>
               {{else}}
-                {{#each termCodeModel as |oneTermCode|}}
+                {{#each TermCodeModel as |oneTermCode|}}
                     <div class="row">
-                        {{oneTermCode.name}} {{delete-TermCode ID=oneTermCode.id }}
+                        {{oneTermCode.name}} {{delete-term-code ID=oneTermCode.id }}
                     </div>
                 {{/each}}
                   <div class="row">
