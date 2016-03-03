@@ -87,6 +87,19 @@ var academicprogramcodesSchema = mongoose.Schema({
     rule: [{type: mongoose.Schema.ObjectId, ref: ('AdmissionRulesModel')}]
 });
 
+var AdmissionRuleSchema = mongoose.Schema({
+    description: String,
+    testExpression: [{type: mongoose.Schema.ObjectId, ref: ('logicalexpression')}],
+    acadamicprogramcodes: [{type: mongoose.Schema.ObjectId, ref: ('acadamicprogramcodes')}]
+});
+
+var ProgramAdministrationSchema = mongoose.Schema({
+    name: String,
+    position: String,
+    acadamicCode: [{type: mongoose.Schema.ObjectId, ref: ('acadamicCode')}],
+    dept: [{type: mongoose.Schema.ObjectId, ref: ('department')}]
+});
+
 var departmentsSchema = mongoose.Schema({
     name: String,
     programAdministration: [{type: mongoose.Schema.ObjectId, ref: ('ProgramAdministrationsModel')}],
@@ -167,6 +180,8 @@ var CourseCodesModel = mongoose.model('courseCode', courseCodeSchema);
 var ProgramRecordsModel = mongoose.model('programRecord', programRecordSchema);
 var DegreeCodesModel = mongoose.model('degreeCode', degreeCodeSchema);
 var TermCodesModel = mongoose.model('termCode', termCodeSchema);
+var AdmissionRuleModel = mongoose.model('addmissionrule', AdmissionRuleSchema);
+var ProgramAdministrationModel = mongoose.model('programadministration', ProgramAdministrationSchema);
 
 app.get('/students', function (request, response) {
     console.log('/students');
@@ -189,6 +204,32 @@ app.get('/genders', function (request, response) {
         }
         else {
             response.json({gender: genders});
+        }
+
+    });
+});
+
+app.get('/admissionrule', function (request, response) {
+    console.log('/admissionrule');
+    AdmissionRuleModel.find(function (error, admissionrule) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({admissionrule: admissionrule});
+        }
+
+    });
+});
+
+app.get('/programadministration', function (request, response) {
+    console.log('/programadministration');
+    ProgramAdministrationModel.find(function (error, programadministration) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({programadministration: programadministration});
         }
 
     });
@@ -749,6 +790,30 @@ app.post('/academicprogramcodes', function (request, response) {
     });
 });
 
+app.post('/programadministration', function (request, response) {
+    var programadministration = new ProgramAdministrationModel(request.body.programadministration);
+    programadministration.save(function (error) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.status(201).json({'programadministration': programadministration});
+        }
+    });
+});
+
+app.post('/addmissionrule', function (request, response) {
+    var addmissionrule = new AddmissionRuleModel(request.body.addmissionrule);
+    addmissionrule.save(function (error) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.status(201).json({'addmissionrule': addmissionrule});
+        }
+    });
+});
+
 app.post('/grades', function (request, response) {
     var grade = new GradesModel(request.body.grade);
     grade.save(function (error) {
@@ -1061,6 +1126,57 @@ app.put('/academicprogramcodes/:academicprogramcodes_id', function (request, res
                 }
                 else {
                     response.status(201).json({'academicprogramcode': academicprogramcode});
+                }
+            });
+        }
+    });
+});
+
+app.put('/programadministration/:programadministration_id', function (request, response) {
+    // use our Posts model to find the post we want
+    ProgramAdministrationModel.findById(request.params.programadministration_id, function (error, programadministration) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            // update the student info
+            programadministration.name = request.body.programadministration.name;
+            programadministration.position = request.body.programadministration.position;
+            programadministration.dept = request.body.programadministration.dept;
+            programadministration.academicProgramcode = request.body.programadministration.academicProgramcode;
+
+            // save the student
+            programadministration.save(function (error) {
+                if (error) {
+                    response.send({error: error});
+                }
+                else {
+                    response.status(201).json({'programadministration': programadministration});
+                }
+            });
+        }
+    });
+});
+
+app.put('/admissionrule/:admissionrule_id', function (request, response) {
+    // use our Posts model to find the post we want
+    AdmissionRuleModel.findById(request.params.admissionrule_id, function (error, admissionrule) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            // update the student info
+            admissionrule.description = request.body.admissionrule.description;
+            admissionrule.testExpression = request.body.admissionrule.testExpression;
+            admissionrule.acadamicCode = request.body.admissionrule.acadamicCode;
+
+            // save the student
+            admissionrule.save(function (error) {
+                if (error) {
+                    response.send({error: error});
+                }
+                else {
+                    response.status(201).json({'admissionrule': admissionrule});
                 }
             });
         }
@@ -1390,6 +1506,18 @@ app.delete('/faculties/:faculty_id', function (request, response) {
         var deleted = faculty;
         FacultiesModel.remove({_id: request.params.faculty_id}, function (error) {
                 if (error) response.send(error);
+        });
+        response.status(200).json({faculty: deleted});
+    });
+
+});
+
+app.delete('/programRecord/:programRecord_id', function (request, response) {
+
+    ProgramRecordsModel.findById(request.params.programRecord_id, function (error, programRecord) {
+        var deleted = programRecord;
+        ProgramRecordsModel.remove({_id: request.params.programRecord_id}, function (error) {
+            if (error) response.send(error);
         });
         response.status(200).json({faculty: deleted});
     });
