@@ -38,13 +38,6 @@
                   </div>
                   <br>
               {{else}}
-                <div class="row">
-                      <div class="large-12 columns">
-                          <a href="#" class="button radius" {{action 'addNewAcademicProgramCode'}}>Add New Academic Program Code</a>
-                          <a href="#" class="button radius" {{action 'doneAcademicProgramCode'}}>Done</a>
-                          <br> <br> <br>
-                      </div>
-                </div>
                 {{#each AcademicProgramCodeModel as |oneAcademicProgramCode|}}
                     <div class="row">
                         <li class="large-3 columns">  {{oneAcademicProgramCode.name}} </li>

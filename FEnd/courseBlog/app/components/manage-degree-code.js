@@ -7,15 +7,15 @@ export default Ember.Component.extend({
   dataModel: null,
 
   ProgramRecordModel: Ember.computed(function(){
-    return this.get('store').findAll('program-record');
+    return this.get('store').findAll('programRecord');
   }),
   DegreeCodeModel: Ember.computed('isEditing', function(){
-      return this.get('store').findAll('degree-code');
+      return this.get('store').findAll('degreeCode');
   }),
   actions: {
     saveNewDegreeCode: function (){
       var myStore = this.get('store');
-      var newDegreeCode = myStore.createRecord('degree-code', {
+      var newDegreeCode = myStore.createRecord('degreeCode', {
         name: this.get('name'),
         programRecord: []
       }); 
