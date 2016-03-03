@@ -7,12 +7,12 @@ export default Ember.Component.extend({
   dataModel: null,
 
   CourseCodeModel: Ember.computed(function(){
-    return this.get('store').findAll('courseCode');
+    return this.get('store').findAll('course-code');
   }),
   actions: {
     saveNewCourseCode: function (){
       var myStore = this.get('store');
-      var newCourseCode = myStore.createRecord('courseCode', {
+      var newCourseCode = myStore.createRecord('course-code', {
         code: this.get('code'),
         name: this.get('name'),
         number: this.get('number'),
