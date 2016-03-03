@@ -2,44 +2,44 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   store: Ember.inject.service(),
-  isManagingAddmissionRule: false,
-  isAddingNewAddmissionRule: false,
+  isManagingAdmissionRule: false,
+  isAddingNewAdmissionRule: false,
   dataModel: null,
 
-  AddmissionRuleModel: Ember.computed(function(){
+  AdmissionRuleModel: Ember.computed(function(){
     return this.get('store').findAll('addmissionrule');
   }),
   /*AdmissionRuleModel: Ember.computed(function(){
    return this.get('store').findAll('admissionrule');
    }),*/
   actions: {
-    saveNewAddmissionRule: function (){
+    saveNewAdmissionRule: function (){
       var myStore = this.get('store');
       //var selectedRule = myStore.peekRecord('admissionrule', this.$('#rule')[0].value);
-      var newAddmissionRule = myStore.createRecord('addmissionrule', {
+      var newAdmissionRule = myStore.createRecord('addmissionrule', {
         description: this.get('description'),
-        //rule: selectedRule,
+        logicalExpression: [],
         acadamicprogramcodes: [],
-        //dept: []
+        dept: []
       });
-      newAddmissionRule.save().then(() => {
-        this.set('isAddingNewAddmissionRule', false);
+      newAdmissionRule.save().then(() => {
+        this.set('isAddingNewAdmissionRule', false);
       });
     },
 
-    cancelAddNewAddmissionRule() {
-      this.set('isAddingNewAddmissionRule', false);
+    cancelAddNewAdmissionRule() {
+      this.set('isAddingNewAdmissionRule', false);
     },
 
-    manageAddmissionRule() {
-      this.set('isManagingAddmissionRule', true);
+    manageAdmissionRule() {
+      this.set('isManagingAdmissionRule', true);
     },
 
-    addNewAddmissionRule() {
-      this.set('isAddingNewAddmissionRule', true);
+    addNewAdmissionRule() {
+      this.set('isAddingNewAdmissionRule', true);
     },
-    doneAddmissionRule(){
-      this.set('isManagingAddmissionRule', false);
+    doneAdmissionRule(){
+      this.set('isManagingAdmissionRule', false);
     }
 
   }

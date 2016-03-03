@@ -21,7 +21,7 @@ export default Ember.Component.extend({
         position: this.get('position'),
         //rule: selectedRule,
         acadamicprogramcodes: [],
-        //dept: []
+        dept: []
       });
       newProgramAdministration.save().then(() => {
         this.set('isAddingNewProgramAdministration', false);
