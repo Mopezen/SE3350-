@@ -149,6 +149,14 @@ var termCodeSchema = mongoose.Schema({
     programRecord: [{type: mongoose.Schema.ObjectId, ref: 'ProgramRecordsModel'}]
 });
 
+var logicalExpressionsSchema = mongoose.Schema({
+    booleanExp: String,
+    logicalLink: String,
+    children: [{type: mongoose.Schema.ObjectId, ref: 'LogicalExpressionsModel'}],
+    parent: {type: mongoose.Schema.ObjectId, ref: 'LogicalExpressionsModel'},
+    admissionRule: {type: mongoose.Schema.ObjectId, ref: 'AdmissionRulesModel'}
+});
+
 var StudentsModel = mongoose.model('student', studentsSchema);
 var PostsModel = mongoose.model('post', postsSchema);
 var CommentsModel = mongoose.model('comment', commentSchema);
@@ -167,6 +175,7 @@ var CourseCodesModel = mongoose.model('courseCode', courseCodeSchema);
 var ProgramRecordsModel = mongoose.model('programRecord', programRecordSchema);
 var DegreeCodesModel = mongoose.model('degreeCode', degreeCodeSchema);
 var TermCodesModel = mongoose.model('termCode', termCodeSchema);
+var LogicalExpressionsModel = mongoose.model('logicalexpression', logicalExpressionsSchema);
 
 app.get('/students', function (request, response) {
     console.log('/students');
@@ -385,6 +394,19 @@ app.get('/termCodes', function (request, response) {
     });
 });
 
+app.get('/logicalexpressions', function (request, response) {
+    console.log('/logicalexpressions');
+    LogicalExpressionsModel.find(function (error, logicalexpressions) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({'logicalexpression': logicalexpressions});
+        }
+
+    });
+});
+
 app.get('/students/:student_id', function (request, response) {
     console.log('/students/:student_id');
     StudentsModel.findById(request.params.student_id, function (error, student) {
@@ -514,6 +536,18 @@ app.get('/departments/:department_id', function (request, response) {
         }
         else {
             response.json({'department': department});
+        }
+    });
+});
+
+app.get('/logicalexpressions/:logicalexpression_id', function (request, response) {
+    console.log('/logicalexpressions/:logicalexpression_id');
+    LogicalExpressionsModel.findById(request.params.logicalexpression_id, function (error, logicalexpression) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({'logicalexpression': logicalexpression});
         }
     });
 });
@@ -746,6 +780,18 @@ app.post('/academicprogramcodes', function (request, response) {
         }
         else {
             response.status(201).json({'academicprogramcode': academicprogramcode});
+        }
+    });
+});
+
+app.post('/logicalexpressions', function (request, response) {
+    var logicalexpression = new LogicalExpressionsModel(request.body.logicalexpression);
+    logicalexpression.save(function (error) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.status(201).json({'logicalexpression': logicalexpression});
         }
     });
 });
@@ -1119,6 +1165,33 @@ app.put('/faculties/:faculty_id', function (request, response) {
     });
 });
 
+app.put('/logicalexpressions/:logicalexpression_id', function (request, response) {
+    // use our Posts model to find the post we want
+    LogicalExpressionsModel.findById(request.params.logicalexpression_id, function (error, logicalexpression) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            // update the student info
+            logicalexpression.booleanExp = request.body.logicalexpression.booleanExp;
+            logicalexpression.logicalLink = request.body.logicalexpression.logicalLink;
+            logicalexpression.children = request.body.logicalexpression.children;
+            logicalexpression.parent = request.body.logicalexpression.parent;
+            logicalexpression.admissionRule = request.body.logicalexpression.admissionRule;
+
+            // save the student
+            logicalexpression.save(function (error) {
+                if (error) {
+                    response.send({error: error});
+                }
+                else {
+                    response.status(201).json({'logicalexpression': logicalexpression});
+                }
+            });
+        }
+    });
+});
+
 app.put('/grades/:grade_id', function (request, response) {
     // use our Posts model to find the post we want
     GradesModel.findById(request.params.grade_id, function (error, grade) {
@@ -1267,12 +1340,8 @@ app.patch('/students/:student_id', function (request, response) {
             student.country = request.body.student.country;
             student.province = request.body.student.province;
             student.city = request.body.student.city;
-<<<<<<< HEAD
-            student.itrprogram = request.body.student.itrprogram;
             student.mark = request.body.student.mark;
-=======
             student.ITRList = request.body.student.ITRList;
->>>>>>> master
             
             // save the student
             student.save(function (error) {
@@ -1416,7 +1485,6 @@ app.delete('/departments/:department_id', function (request, response) {
 
 });
 
-<<<<<<< HEAD
 app.delete('/courseCodes/:courseCode_id', function (request, response) {
 
     CourseCodesModel.findById(request.params.courseCode_id, function (error, courseCode) {
@@ -1425,7 +1493,7 @@ app.delete('/courseCodes/:courseCode_id', function (request, response) {
                 if (error) response.send(error);
         });
         response.status(200).json({courseCode: deleted});
-=======
+
 app.delete('/academicprogramcodes/:academicprogramcodes_id', function (request, response) {
 
     AcademicProgramCodesModel.findById(request.params.academicprogramcodes_id, function (error, academicprogramcode) {
@@ -1434,12 +1502,19 @@ app.delete('/academicprogramcodes/:academicprogramcodes_id', function (request, 
                 if (error) response.send(error);
         });
         response.status(200).json({acdemicprogramcode: deleted});
->>>>>>> master
+
+app.delete('/logicalexpressions/:logicalexpression_id', function (request, response) {
+
+    LogicalExpressionsModel.findById(request.params.logicalexpression_id, function (error, logicalexpression) {
+        var deleted = logicalexpression;
+        LogicalExpressionsModel.remove({_id: request.params.logicalexpression_id}, function (error) {
+                if (error) response.send(error);
+        });
+        response.status(200).json({logicalexpression: deleted});
     });
 
 });
 
-<<<<<<< HEAD
 app.delete('/grades/:grade_id', function (request, response) {
 
     GradesModel.findById(request.params.grade_id, function (error, grade) {
@@ -1487,8 +1562,6 @@ app.delete('/termCodes/:termCode_id', function (request, response) {
     });
 
 });
-=======
->>>>>>> master
 
 app.post('/comments', function (request, response) {
     var comment = new CommentsModel(request.body.comment);
