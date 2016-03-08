@@ -1200,7 +1200,7 @@ app.put('/programRecords/:programRecord_id', function (request, response) {
 
 app.put('/degreeCodes/:degreeCode_id', function (request, response) {
     // use our Posts model to find the post we want
-    DegreeCodeModel.findById(request.params.degreeCode_id, function (error, degreeCode) {
+    DegreeCodesModel.findById(request.params.degreeCode_id, function (error, degreeCode) {
         if (error) {
             response.send({error: error});
         }
@@ -1224,7 +1224,7 @@ app.put('/degreeCodes/:degreeCode_id', function (request, response) {
 
 app.put('/termCodes/:termCode_id', function (request, response) {
     // use our Posts model to find the post we want
-    TermCodeModel.findById(request.params.termCode_id, function (error, termCode) {
+    TermCodesModel.findById(request.params.termCode_id, function (error, termCode) {
         if (error) {
             response.send({error: error});
         }
@@ -1408,6 +1408,65 @@ app.delete('/departments/:department_id', function (request, response) {
 
 });
 
+app.delete('/courseCodes/:courseCode_id', function (request, response) {
+
+    CourseCodesModel.findById(request.params.courseCode_id, function (error, courseCode) {
+        var deleted = courseCode;
+        CourseCodesModel.remove({_id: request.params.courseCode_id}, function (error) {
+                if (error) response.send(error);
+        });
+        response.status(200).json({courseCode: deleted});
+    });
+
+});
+
+app.delete('/grades/:grade_id', function (request, response) {
+
+    GradesModel.findById(request.params.grade_id, function (error, grade) {
+        var deleted = grade;
+        GradesModel.remove({_id: request.params.grade_id}, function (error) {
+                if (error) response.send(error);
+        });
+        response.status(200).json({grade: deleted});
+    });
+
+});
+
+app.delete('/programRecords/:programRecord_id', function (request, response) {
+
+    ProgramRecordsModel.findById(request.params.programRecord_id, function (error, programRecord) {
+        var deleted = programRecord;
+        ProgramRecordsModel.remove({_id: request.params.programRecord_id}, function (error) {
+                if (error) response.send(error);
+        });
+        response.status(200).json({programRecord: deleted});
+    });
+
+});
+
+app.delete('/degreeCodes/:degreeCode_id', function (request, response) {
+
+    DegreeCodesModel.findById(request.params.degreeCode_id, function (error, degreeCode) {
+        var deleted = degreeCode;
+        DegreeCodesModel.remove({_id: request.params.degreeCode_id}, function (error) {
+                if (error) response.send(error);
+        });
+        response.status(200).json({degreeCode: deleted});
+    });
+
+});
+
+app.delete('/termCodes/:termCode_id', function (request, response) {
+
+    TermCodesModel.findById(request.params.termCode_id, function (error, termCode) {
+        var deleted = termCode;
+        TermCodesModel.remove({_id: request.params.termCode_id}, function (error) {
+                if (error) response.send(error);
+        });
+        response.status(200).json({termCode: deleted});
+    });
+
+});
 
 app.post('/comments', function (request, response) {
     var comment = new CommentsModel(request.body.comment);
