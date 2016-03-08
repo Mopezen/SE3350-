@@ -15,24 +15,19 @@ export default Ember.Component.extend({
   actions: {
     saveNewITR: function (){
       var myStore = this.get('store');
-      var test = this.$('#eligibilty').value;
-      var ele = (this.$('#eligibilty').value === 'true');
+      //var ele = this.get('eligibilty').value
       var programSelected = myStore.peekRecord('academicprogramcode', this.$('#program')[0].value);
       var newITR = myStore.createRecord('itrprogram', {
         order: this.get('order'),
         program: programSelected,
-        eligibilty: ele
-      }); 
+        eligibilty: this.$('#eligibilty')[0].value,
+        student: this.get('currentStudent'),
+        rule: null
+      });
+      this.get('currentStudent').get('ITRList').pushObject(newITR); 
       newITR.save().then(() => {
         this.set('isAddingNewITR', false);
       });
-/*	  myStore.findRecord('academicprogramcode', this.$('#program')[0].value).then(function(academicprogramcode) {
-		// ...after the record has loaded
-		var pArray = academicprogramcode.get('ITR');
-		pArray.pushObject(newITR);
-		academicprogramcode.set('ITR', pArray);
-		academicprogramcode.save();
-	  });*/
     },
 
     cancelAddNewITR() {
