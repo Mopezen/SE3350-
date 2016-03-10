@@ -27,14 +27,8 @@
                   </div>
                   <br>
               {{else}}
-                <div class="row">
-                      <div class="large-12 columns">
-                          <a href="#" class="button radius" {{action 'addNewFaculty'}}>Add New Faculty</a>
-                          <a href="#" class="button radius" {{action 'doneFaculty'}}>Done</a>
-                          <br> <br> <br>
-                      </div>
-                  </div>
                 {{#each facultyModel as |oneFaculty|}}
+
                     <div class="row">
                         {{oneFaculty.name}} {{delete-Faculty ID=oneFaculty.id }}
                     </div>
