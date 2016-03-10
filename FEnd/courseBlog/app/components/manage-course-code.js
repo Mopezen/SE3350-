@@ -20,7 +20,6 @@ export default Ember.Component.extend({
         grade: [],
       });
       newCourseCode.save().then(() => {
-
         this.set('isAddingNewCourseCode', false);
       });
     },

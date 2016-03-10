@@ -162,6 +162,14 @@ var termCodeSchema = mongoose.Schema({
     programRecord: [{type: mongoose.Schema.ObjectId, ref: 'ProgramRecordsModel'}]
 });
 
+var logicalExpressionsSchema = mongoose.Schema({
+    booleanExp: String,
+    logicalLink: String,
+    children: [{type: mongoose.Schema.ObjectId, ref: 'LogicalExpressionsModel'}],
+    parent: {type: mongoose.Schema.ObjectId, ref: 'LogicalExpressionsModel'},
+    admissionRule: {type: mongoose.Schema.ObjectId, ref: 'AdmissionRulesModel'}
+});
+
 var StudentsModel = mongoose.model('student', studentsSchema);
 var PostsModel = mongoose.model('post', postsSchema);
 var CommentsModel = mongoose.model('comment', commentSchema);
@@ -182,6 +190,7 @@ var DegreeCodesModel = mongoose.model('degreeCode', degreeCodeSchema);
 var TermCodesModel = mongoose.model('termCode', termCodeSchema);
 var AdmissionRuleModel = mongoose.model('addmissionrule', AdmissionRuleSchema);
 var ProgramAdministrationModel = mongoose.model('programadministration', ProgramAdministrationSchema);
+var LogicalExpressionsModel = mongoose.model('logicalexpression', logicalExpressionsSchema);
 
 app.get('/students', function (request, response) {
     console.log('/students');
@@ -383,7 +392,6 @@ app.get('/courseCodes', function (request, response) {
         else {
             response.json({'courseCode': courseCodes});
         }
-
     });
 });
 
@@ -421,6 +429,19 @@ app.get('/termCodes', function (request, response) {
         }
         else {
             response.json({'termCode': termCodes});
+        }
+
+    });
+});
+
+app.get('/logicalexpressions', function (request, response) {
+    console.log('/logicalexpressions');
+    LogicalExpressionsModel.find(function (error, logicalexpressions) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({'logicalexpression': logicalexpressions});
         }
 
     });
@@ -559,6 +580,18 @@ app.get('/departments/:department_id', function (request, response) {
     });
 });
 
+app.get('/logicalexpressions/:logicalexpression_id', function (request, response) {
+    console.log('/logicalexpressions/:logicalexpression_id');
+    LogicalExpressionsModel.findById(request.params.logicalexpression_id, function (error, logicalexpression) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({'logicalexpression': logicalexpression});
+        }
+    });
+});
+
 app.get('/posts/:post_id', function (request, response) {
     console.log('/posts/:post_id');
     PostsModel.findById(request.params.post_id, function (error, post) {
@@ -643,7 +676,8 @@ app.post('/students', function (request, response) {
         country: request.body.student.country,
         province: request.body.student.province,
         city: request.body.student.city,
-        mark: request.body.student.mark
+        mark: request.body.student.mark,
+        ITRList: request.body.student.ITRList
     });
     student.save(function (error) {
         if (error) {
@@ -802,6 +836,18 @@ app.post('/programadministration', function (request, response) {
     });
 });
 
+app.post('/logicalexpressions', function (request, response) {
+    var logicalexpression = new LogicalExpressionsModel(request.body.logicalexpression);
+    logicalexpression.save(function (error) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.status(201).json({'logicalexpression': logicalexpression});
+        }
+    });
+});
+
 app.post('/addmissionrule', function (request, response) {
     var addmissionrule = new AddmissionRuleModel(request.body.addmissionrule);
     addmissionrule.save(function (error) {
@@ -917,8 +963,8 @@ app.put('/students/:student_id', function (request, response) {
             student.country = request.body.student.country;
             student.province = request.body.student.province;
             student.city = request.body.student.city;
-            student.itrprogram = request.body.student.itrprogram;
             student.grade = request.body.student.grade;
+            student.ITRList = request.body.student.ITRList;
             // save the student
             student.save(function (error) {
                 if (error) {
@@ -1092,6 +1138,7 @@ app.put('/itrprograms/:itrprogram_id', function (request, response) {
             itrprogram.eligibility = request.body.itrprogram.eligibility;
             itrprogram.program = request.body.itrprogram.program;
             itrprogram.students = request.body.itrprogram.students;
+            itrprogram.rule = request.body.itrprogram.rule;
 
             // save the student
             itrprogram.save(function (error) {
@@ -1226,6 +1273,33 @@ app.put('/faculties/:faculty_id', function (request, response) {
                 }
                 else {
                     response.status(201).json({'faculty': faculty});
+                }
+            });
+        }
+    });
+});
+
+app.put('/logicalexpressions/:logicalexpression_id', function (request, response) {
+    // use our Posts model to find the post we want
+    LogicalExpressionsModel.findById(request.params.logicalexpression_id, function (error, logicalexpression) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            // update the student info
+            logicalexpression.booleanExp = request.body.logicalexpression.booleanExp;
+            logicalexpression.logicalLink = request.body.logicalexpression.logicalLink;
+            logicalexpression.children = request.body.logicalexpression.children;
+            logicalexpression.parent = request.body.logicalexpression.parent;
+            logicalexpression.admissionRule = request.body.logicalexpression.admissionRule;
+
+            // save the student
+            logicalexpression.save(function (error) {
+                if (error) {
+                    response.send({error: error});
+                }
+                else {
+                    response.status(201).json({'logicalexpression': logicalexpression});
                 }
             });
         }
@@ -1380,8 +1454,8 @@ app.patch('/students/:student_id', function (request, response) {
             student.country = request.body.student.country;
             student.province = request.body.student.province;
             student.city = request.body.student.city;
-            student.itrprogram = request.body.student.itrprogram;
             student.mark = request.body.student.mark;
+            student.ITRList = request.body.student.ITRList;
             
             // save the student
             student.save(function (error) {
@@ -1432,6 +1506,7 @@ app.patch('/itrprograms/:itrprogram_id', function (request, response) {
             itrprogram.eligibility = request.body.itrprogram.eligibility;
             itrprogram.student = request.body.itrprogram.student;
             itrprogram.program = request.body.itrprogram.program;
+            itrprogram.rule = request.body.itrprogram.rule;
             
             // save the student
             itrprogram.save(function (error) {
@@ -1512,18 +1587,6 @@ app.delete('/faculties/:faculty_id', function (request, response) {
 
 });
 
-app.delete('/programRecord/:programRecord_id', function (request, response) {
-
-    ProgramRecordsModel.findById(request.params.programRecord_id, function (error, programRecord) {
-        var deleted = programRecord;
-        ProgramRecordsModel.remove({_id: request.params.programRecord_id}, function (error) {
-            if (error) response.send(error);
-        });
-        response.status(200).json({faculty: deleted});
-    });
-
-});
-
 app.delete('/departments/:department_id', function (request, response) {
 
     DepartmentsModel.findById(request.params.department_id, function (error, department) {
@@ -1532,6 +1595,64 @@ app.delete('/departments/:department_id', function (request, response) {
                 if (error) response.send(error);
         });
         response.status(200).json({department: deleted});
+    });
+
+});
+
+app.delete('/courseCodes/:courseCode_id', function (request, response) {
+
+    CourseCodesModel.findById(request.params.courseCode_id, function (error, courseCode) {
+        var deleted = courseCode;
+        CourseCodesModel.remove({_id: request.params.courseCode_id}, function (error) {
+                if (error) response.send(error);
+        });
+        response.status(200).json({courseCode: deleted});
+	});
+});
+
+
+app.delete('/academicprogramcodes/:academicprogramcodes_id', function (request, response) {
+
+    AcademicProgramCodesModel.findById(request.params.academicprogramcodes_id, function (error, academicprogramcode) {
+        var deleted = academicprogramcode;
+        AcademicProgramCodesModel.remove({_id: request.params.academicprogramcodes_id}, function (error) {
+                if (error) response.send(error);
+        });
+        response.status(200).json({acdemicprogramcode: deleted});
+	});
+});
+
+app.delete('/logicalexpressions/:logicalexpression_id', function (request, response) {
+
+    LogicalExpressionsModel.findById(request.params.logicalexpression_id, function (error, logicalexpression) {
+        var deleted = logicalexpression;
+        LogicalExpressionsModel.remove({_id: request.params.logicalexpression_id}, function (error) {
+                if (error) response.send(error);
+        });
+        response.status(200).json({logicalexpression: deleted});
+    });
+
+});
+
+app.delete('/grades/:grade_id', function (request, response) {
+
+    GradesModel.findById(request.params.grade_id, function (error, grade) {
+        var deleted = grade;
+        GradesModel.remove({_id: request.params.grade_id}, function (error) {
+                if (error) response.send(error);
+        });
+        response.status(200).json({grade: deleted});
+    });
+
+});
+
+app.delete('/programRecords/:programRecord_id', function (request, response) {
+    ProgramRecordsModel.findById(request.params.programRecord_id, function (error, programRecord) {
+        var deleted = programRecord;
+        ProgramRecordsModel.remove({_id: request.params.programRecord_id}, function (error) {
+            if (error) response.send(error);
+        });
+        response.status(200).json({faculty: deleted});
     });
 
 });
@@ -1588,4 +1709,3 @@ app.get('/comments', function (request, response) {
 app.listen(3700, function () {
     console.log('Listening on port 3700');
 });
-

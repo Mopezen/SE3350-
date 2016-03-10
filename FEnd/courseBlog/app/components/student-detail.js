@@ -1,9 +1,19 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-
   store: Ember.inject.service(),
+  genders: null,
   routing: Ember.inject.service('-routing'),
+  init: function(){
+    this._super();
+    this.loadModels();
+  },
+  loadModels: function(){
+    this.genders = this.get('store').findAll('gender');
+    this.get('store').findAll('itrprogram');
+    this.get('store').findAll('academic-load');
+    this.rerender();
+  },
   genderID: null,
   academicLoadID: null,
   residencyID: null,
@@ -68,11 +78,6 @@ export default Ember.Component.extend({
           self.set ('cityID' , res.get('id'));
         }
       });
-      updatedStudent.get('itrprogram').then(function(res){
-        if (res) {
-          self.set ('itrprogramID' , res.get('id'));
-        }
-      });
     },  
     save: function(id){
       this.set('isEditing', false);
@@ -83,7 +88,7 @@ export default Ember.Component.extend({
       var countrySelected = myStore.peekRecord('country', this.$('#country')[0].value);
       var provinceSelected = myStore.peekRecord('province', this.$('#province')[0].value);
       var citySelected = myStore.peekRecord('city', this.$('#city')[0].value);
-      var itrprogramSelected = myStore.peekRecord('itrprogram', this.$('#itrprogram')[0].value);
+      var ITR = this.get('selectedStudent.ITRList');
       var self = this;
       myStore.findRecord('student',id).then(function(student) {
         student.set('number',self.get('selectedStudent.number'));
@@ -94,7 +99,7 @@ export default Ember.Component.extend({
         student.set('country',countrySelected);
         student.set('province',provinceSelected);
         student.set('city',citySelected);
-        student.set('itrprogram',itrprogramSelected);
+        student.set('ITRList',ITR);
         student.save();  // => PATCH to /posts/:post_id
       });
       //genderSelected.get('students').pushObject(myStore.findRecord('student',id));

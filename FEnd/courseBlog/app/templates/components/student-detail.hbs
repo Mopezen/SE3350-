@@ -95,17 +95,8 @@
                 </label>
             </div>
         </div>
-        <div class="row">
-            <div class="large-12 columns">
-                <label>Intent to Register Programs:
-                    <select id="itrprogram">
-                        {{#each itrprogramModel as |oneITRProgram|}}
-                            <option value={{oneITRProgram.id}} selected={{eq itrprogramID oneITRProgram.id}}>{{oneITRProgram.order}}</option>
-                        {{/each}}
-                    </select>
-                </label>
-            </div>
-        </div>
+        <br>
+        {{manage-itrprogram currentStudent = selectedStudent}}
     </form>
     <br>
     <a href="#" class="button radius" {{action 'save' selectedStudent.id}}>Save</a>
@@ -114,12 +105,20 @@
         <ul>
             <li>Student Number: {{selectedStudent.number}}</li>
             <li>Date Of Birth: {{selectedStudent.DOB}}</li>
-            <li>Gender: {{selectedStudent.gender.name}}</li>
-            <li>Academic Load: {{selectedStudent.studyLoad.name}}</li>
             <li>Residency: {{selectedStudent.residency.name}}</li>
             <li>Country: {{selectedStudent.country.name}}</li>
             <li>Province: {{selectedStudent.province.name}}</li>
             <li>City: {{selectedStudent.city.name}}</li>
+            <li>Gender: {{selectedStudent.gender.name}}</li>
+            <li>Academic Load: {{selectedStudent.studyLoad.name}}</li>
+            <!-- {{#each itrprogramModel as |oneITR|}}
+                {{#if (eq oneITR.student.id selectedStudent.id)}}
+                    <li>Program Choice Number {{oneITR.order}} = {{oneITR.program.name}}</li>
+                {{/if}}
+            {{/each}} -->
+            {{#each getITRPrograms as |oneITR|}}
+                <li>Program Choice Number {{oneITR.order}} = {{oneITR.program.name}}</li>      
+            {{/each}}
         </ul>
     </ul>
     <br>
