@@ -27,16 +27,9 @@
                   </div>
                   <br>
               {{else}}
-                <div class="row">
-                      <div class="large-12 columns">
-                          <a href="#" class="button radius" {{action 'addNewDegreeCode'}}>Add New Degree</a>
-                          <a href="#" class="button radius" {{action 'doneDegreeCode'}}>Done</a>
-                          <br> <br> <br>
-                      </div>
-                </div>
-                {{#each DegreeCodeModel as |oneDegreeCode|}}
+                {{#each degreeCodeModel as |oneDegreeCode|}}
                     <div class="row">
-                        {{oneDegreeCode.name}} {{delete-degree-code ID=oneDegreeCode.id }}
+                        {{oneDegreeCode.name}} {{delete-DegreeCode ID=oneDegreeCode.id }}
                     </div>
                 {{/each}}
                   <div class="row">

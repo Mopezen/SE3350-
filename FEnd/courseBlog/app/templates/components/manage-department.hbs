@@ -39,13 +39,6 @@
                   </div>
                   <br>
               {{else}}
-                  <div class="row">
-                      <div class="large-12 columns">
-                          <a href="#" class="button radius" {{action 'addNewDepartment'}}>Add New Department</a>
-                          <a href="#" class="button radius" {{action 'doneDepartment'}}>Done</a>
-                          <br> <br> <br>
-                      </div>
-                  </div>
                   {{#each DepartmentModel as |oneDepartment|}}
                       <div class="row">
                           <li class="large-3 columns">  {{oneDepartment.name}} </li>

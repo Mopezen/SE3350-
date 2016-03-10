@@ -1,0 +1,63 @@
+{{#if isManagingProgramAdministration}}
+    <div class="row">
+        <div class="large-12 columns">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="large-10  large-centered columns">
+            <div class="panel">
+              {{#if isAddingProgramAdministration}}
+                  <form>
+                      <div class="row">
+                          <div class="large-12 columns">
+                              <label>Name
+                                {{input value=name  type="text" }}
+                              </label>
+                          </div>
+                      </div>
+                      <!-- <div class="row">
+                          <div class="large-12 columns">
+                              <label>Choose the academic progam code's admission rule:
+                                  <select id="rule">
+
+                                  </select>
+                              </label>
+                          </div>
+                      </div>  -->
+                      <div class="row">
+                          <div class="large-12 columns">
+                              <label>Pos.
+                                {{input value=position  type="text" }}
+                              </label>
+                          </div>
+                      </div>
+                  </form>
+                  <div class="row">
+                      <div class="large-12 columns">
+                          <a href="#" class="button radius" {{action 'saveNewProgramAdministration'}}>Save</a>
+                          <a href="#" class="button radius" {{action 'cancelAddNewProgramAdministration'}}>Cancel</a>
+                      </div>
+                  </div>
+                  <br>
+              {{else}}
+
+                  <div class="row">
+                      <div class="large-12 columns">
+                          <br> <br> <br>
+                          <a href="#" class="button radius" {{action 'addNewProgramAdministration'}}>Add New </a>
+                          <a href="#" class="button radius" {{action 'doneProgramAdministration'}}>Done</a>
+                      </div>
+                  </div>
+              {{/if}}
+            </div>
+        </div>
+    </div>
+
+{{else}}
+    <div class="large-2 columns">
+        <a href="#" class="button radius" {{action 'manageProgramAdministration' }}>Manage </a>
+    </div>
+{{/if}}
+
+
