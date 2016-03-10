@@ -11,9 +11,7 @@ export default Ember.Component.extend({
       if (confirm ('Are you sure?')) {
         myStore.findRecord('student',id).then(function(student) {
           student.destroyRecord(); // => DELETE to /posts/:post_id
-
         });
-
         this.get('routing').transitionTo('students');
       }
     }

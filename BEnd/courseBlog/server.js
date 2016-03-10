@@ -351,7 +351,6 @@ app.get('/courseCodes', function (request, response) {
         else {
             response.json({'courseCode': courseCodes});
         }
-
     });
 });
 
@@ -899,7 +898,6 @@ app.put('/students/:student_id', function (request, response) {
             student.country = request.body.student.country;
             student.province = request.body.student.province;
             student.city = request.body.student.city;
-            student.itrprogram = request.body.student.itrprogram;
             student.grade = request.body.student.grade;
             student.ITRList = request.body.student.ITRList;
             // save the student
@@ -1493,6 +1491,9 @@ app.delete('/courseCodes/:courseCode_id', function (request, response) {
                 if (error) response.send(error);
         });
         response.status(200).json({courseCode: deleted});
+	});
+});
+
 
 app.delete('/academicprogramcodes/:academicprogramcodes_id', function (request, response) {
 
@@ -1502,6 +1503,8 @@ app.delete('/academicprogramcodes/:academicprogramcodes_id', function (request, 
                 if (error) response.send(error);
         });
         response.status(200).json({acdemicprogramcode: deleted});
+	});
+});
 
 app.delete('/logicalexpressions/:logicalexpression_id', function (request, response) {
 
@@ -1614,4 +1617,3 @@ app.get('/comments', function (request, response) {
 app.listen(3700, function () {
     console.log('Listening on port 3700');
 });
-
