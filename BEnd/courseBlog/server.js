@@ -1483,6 +1483,66 @@ app.delete('/departments/:department_id', function (request, response) {
 
 });
 
+app.delete('/residencies/:residency_id', function (request, response) {
+
+    ResidenciesModel.findById(request.params.residency_id, function (error, residency) {
+        var deleted = residency;
+        ResidenciesModel.remove({_id: request.params.residency_id}, function (error) {
+            if (error) response.send(error);
+        });
+        response.status(200).json({residency: deleted});
+    });
+
+});
+
+app.delete('/cities/:city_id', function (request, response) {
+
+    CitiesModel.findById(request.params.city_id, function (error, city) {
+        var deleted = city;
+        CitiesModel.remove({_id: request.params.city_id}, function (error) {
+            if (error) response.send(error);
+        });
+        response.status(200).json({city: deleted});
+    });
+
+});
+
+app.delete('/provinces/:province_id', function (request, response) {
+
+    ProvincesModel.findById(request.params.province_id, function (error, province) {
+        var deleted = province;
+        ProvincesModel.remove({_id: request.params.province_id}, function (error) {
+            if (error) response.send(error);
+        });
+        response.status(200).json({province: deleted});
+    });
+
+});
+
+app.delete('/countries/:country_id', function (request, response) {
+
+    CountriesModel.findById(request.params.country_id, function (error, country) {
+        var deleted = country;
+        CountriesModel.remove({_id: request.params.country_id}, function (error) {
+            if (error) response.send(error);
+        });
+        response.status(200).json({country: deleted});
+    });
+
+});
+
+app.delete('/academicLoads/:academicLoad_id', function (request, response) {
+
+    AcademicLoadsModel.findById(request.params.academicLoad_id, function (error, academicLoad) {
+        var deleted = academicLoad;
+        AcademicLoadsModel.remove({_id: request.params.academicLoad_id}, function (error) {
+            if (error) response.send(error);
+        });
+        response.status(200).json({academicLoad: deleted});
+    });
+
+});
+
 app.delete('/courseCodes/:courseCode_id', function (request, response) {
 
     CourseCodesModel.findById(request.params.courseCode_id, function (error, courseCode) {
@@ -1505,6 +1565,8 @@ app.delete('/academicprogramcodes/:academicprogramcodes_id', function (request, 
         response.status(200).json({acdemicprogramcode: deleted});
 	});
 });
+
+
 
 app.delete('/logicalexpressions/:logicalexpression_id', function (request, response) {
 

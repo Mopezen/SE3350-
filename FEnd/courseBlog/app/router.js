@@ -18,6 +18,7 @@ Router.map(function() {
   this.route('students');
   this.route('student', {path: 'students/:student_id'});
   this.route('edit');
+  this.route('deleteAcademicLoad');
 });
 
 
