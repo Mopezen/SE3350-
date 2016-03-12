@@ -83,26 +83,26 @@ var itrprogramsSchema = mongoose.Schema({
 var academicprogramcodesSchema = mongoose.Schema({
     name: String,
     ITR: [{type: mongoose.Schema.ObjectId, ref: ('ITRProgramsModel')}],
-    dept: [{type: mongoose.Schema.ObjectId, ref: ('ProgramAdministrationModel')}],
-    rule: [{type: mongoose.Schema.ObjectId, ref: ('AdmissionRuleModel')}]
+    dept: [{type: mongoose.Schema.ObjectId, ref: ('ProgramAdministrationsModel')}],
+    rule: [{type: mongoose.Schema.ObjectId, ref: ('AdmissionRulesModel')}]
 });
 
 var AdmissionRuleSchema = mongoose.Schema({
     description: String,
-    testExpression: [{type: mongoose.Schema.ObjectId, ref: ('LogicalExpressionsModel')}],
-    acadamicprogramcodes: [{type: mongoose.Schema.ObjectId, ref: ('AcademicProgramCodesModel')}]
+    testExpression: [{type: mongoose.Schema.ObjectId, ref: ('logicalexpression')}],
+    acadamicprogramcodes: [{type: mongoose.Schema.ObjectId, ref: ('acadamicprogramcodes')}]
 });
 
 var ProgramAdministrationSchema = mongoose.Schema({
     name: String,
     position: String,
-    acadamicCode: [{type: mongoose.Schema.ObjectId, ref: ('AcademicProgramCodesModel')}],
-    dept: [{type: mongoose.Schema.ObjectId, ref: ('DepartmentsModel')}]
+    acadamicCode: [{type: mongoose.Schema.ObjectId, ref: ('acadamicCode')}],
+    dept: [{type: mongoose.Schema.ObjectId, ref: ('department')}]
 });
 
 var departmentsSchema = mongoose.Schema({
     name: String,
-    programAdministration: [{type: mongoose.Schema.ObjectId, ref: ('ProgramAdministrationModel')}],
+    programAdministration: [{type: mongoose.Schema.ObjectId, ref: ('ProgramAdministrationsModel')}],
     faculty: {type: mongoose.Schema.ObjectId, ref: ('FacultiesModel')}
 });
 
@@ -167,7 +167,7 @@ var logicalExpressionsSchema = mongoose.Schema({
     logicalLink: String,
     children: [{type: mongoose.Schema.ObjectId, ref: 'LogicalExpressionsModel'}],
     parent: {type: mongoose.Schema.ObjectId, ref: 'LogicalExpressionsModel'},
-    admissionRule: {type: mongoose.Schema.ObjectId, ref: 'AdmissionRuleModel'}
+    admissionRule: {type: mongoose.Schema.ObjectId, ref: 'AdmissionRulesModel'}
 });
 
 var StudentsModel = mongoose.model('student', studentsSchema);
@@ -218,27 +218,27 @@ app.get('/genders', function (request, response) {
     });
 });
 
-app.get('/addmissionrules', function (request, response) {
-    console.log('/addmissionrules');
-    AdmissionRuleModel.find(function (error, admissionrules) {
+app.get('/admissionrule', function (request, response) {
+    console.log('/admissionrule');
+    AdmissionRuleModel.find(function (error, admissionrule) {
         if (error) {
             response.send({error: error});
         }
         else {
-            response.json({addmissionrule: admissionrules});
+            response.json({admissionrule: admissionrule});
         }
 
     });
 });
 
-app.get('/programadministrations', function (request, response) {
-    console.log('/programadministrations');
-    ProgramAdministrationModel.find(function (error, programadministrations) {
+app.get('/programadministration', function (request, response) {
+    console.log('/programadministration');
+    ProgramAdministrationModel.find(function (error, programadministration) {
         if (error) {
             response.send({error: error});
         }
         else {
-            response.json({programadministration: programadministrations});
+            response.json({programadministration: programadministration});
         }
 
     });
@@ -1190,7 +1190,7 @@ app.put('/programadministration/:programadministration_id', function (request, r
             programadministration.name = request.body.programadministration.name;
             programadministration.position = request.body.programadministration.position;
             programadministration.dept = request.body.programadministration.dept;
-            programadministration.acadamicProgramcodes = request.body.programadministration.acadamicProgramcodes;
+            programadministration.academicProgramcode = request.body.programadministration.academicProgramcode;
 
             // save the student
             programadministration.save(function (error) {
@@ -1436,7 +1436,7 @@ app.put('/termCodes/:termCode_id', function (request, response) {
     });
 });
 
-/*app.patch('/students/:student_id', function (request, response) {
+app.patch('/students/:student_id', function (request, response) {
     // use our students model to find the post we want
     StudentsModel.findById(request.params.student_id, function (error, student) {
         if (error) {
@@ -1519,7 +1519,7 @@ app.patch('/itrprograms/:itrprogram_id', function (request, response) {
             });
         }
     });
-});*/
+});
 
 app.patch('/posts/:post_id', function (request, response) {
     // use our Posts model to find the post we want
