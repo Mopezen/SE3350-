@@ -1,6 +1,6 @@
 import { moduleForModel, test } from 'ember-qunit';
 
-moduleForModel('programadministration', 'Unit | Model | programadministration', {
+moduleForModel('degree-code', 'Unit | Model | degree code', {
   // Specify the other units that are required for this test.
   needs: []
 });

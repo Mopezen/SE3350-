@@ -5,5 +5,5 @@ export default DS.Model.extend({
 	number: DS.attr(),
 	name: DS.attr(),
 	unit: DS.attr(),
-  grade: DS.hasMany('grade', { async: true })
+  	grade: DS.hasMany('grade', { async: true })
 });

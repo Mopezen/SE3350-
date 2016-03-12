@@ -27,7 +27,6 @@ export default Ember.Component.extend({
   itrprogramModel: Ember.computed('isEditing', function(){
       return this.get('store').findAll('itrprogram');
   }),
-
   actions: {
     saveStudent: function () {
       var myStore = this.get('store');

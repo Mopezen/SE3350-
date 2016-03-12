@@ -6,11 +6,12 @@ export default Ember.Component.extend({
   routing: Ember.inject.service('-routing'),
 
   actions: {
-    deleteAddmissionRule: function(id){
+    deleteTermCode: function(id){
       var myStore = this.get('store');
       if (confirm ('Are you sure?')) {
-        myStore.findRecord('addmissionrule',id).then(function(addmissionrule) {
-          addmissionrule.destroyRecord();
+        myStore.findRecord('term-code',id).then(function(termCode) {
+          termCode.destroyRecord(); // => DELETE to /faculties/:faculty_id
+
         });
 
         this.get('routing').transitionTo('edit');

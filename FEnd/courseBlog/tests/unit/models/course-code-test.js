@@ -1,6 +1,6 @@
 import { moduleForModel, test } from 'ember-qunit';
 
-moduleForModel('addmissionrule', 'Unit | Model | addmissionrule', {
+moduleForModel('course-code', 'Unit | Model | course code', {
   // Specify the other units that are required for this test.
   needs: []
 });
