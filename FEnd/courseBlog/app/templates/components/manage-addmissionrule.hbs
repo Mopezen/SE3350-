@@ -1,0 +1,54 @@
+{{#if isManagingAdmissionRule}}
+    <div class="row">
+        <div class="large-12 columns">
+            <h4 align="center"> Admission Rule</h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="large-10  large-centered columns">
+            <div class="panel">
+              {{#if isAddingNewAdmissionRule}}
+                  <h2>Add New Admission Rule</h2>
+                  <form>
+                      <div class="row">
+                          <div class="large-12 columns">
+                              <label>Description
+                                {{input value=description type="text" }}
+                              </label>
+                          </div>
+                      </div>
+                  </form>
+                  <div class="row">
+                      <div class="large-12 columns">
+                          <a href="#" class="button radius" {{action 'saveNewAdmissionRule'}}>Save</a>
+                          <a href="#" class="button radius" {{action 'cancelAddNewAdmissionRule'}}>Cancel</a>
+                      </div>
+                  </div>
+                  <br>
+              {{else}}
+                {{#each AdmissionRuleModel as |oneAdmissionRule|}}
+
+                    <div class="row">
+                      {{oneAdmissionRule.description}} {{delete-AdmissionRule ID=oneAdmissionRule.id }}
+                    </div>
+                {{/each}}
+                  <div class="row">
+                      <div class="large-12 columns">
+                          <br> <br> <br>
+                          <a href="#" class="button radius" {{action 'addNewAdmissionRule'}}>Add New Admission Rule</a>
+                          <a href="#" class="button radius" {{action 'doneAdmissionRule'}}>Done</a>
+                      </div>
+                  </div>
+              {{/if}}
+            </div>
+        </div>
+    </div>
+
+{{else}}
+    <div class="large-2 columns">
+        <a href="#" class="button radius" {{action 'manageAdmissionRule' }}>Manage Admission Rules</a>
+    </div>
+{{/if}}
+
+
