@@ -1,12 +1,21 @@
 var express = require('express');
 var mongoose = require('mongoose');
-
-mongoose.connect('mongodb://SE3350:ouda@ds059115.mongolab.com:59115/se3350');
-
-var app = express();
-
 var bodyParser = require('body-parser');
 var logger = require('./logger');
+var app = express();
+//var students = require('./routes/students');
+//var residencies = require('./routes/residencies');
+var users = require('./routes/users');
+var passwords = require('./routes/passwords');
+var roleCodes = require('./routes/roleCodes');
+var userRoles = require('./routes/usersRoles');
+var rolePermissions = require('./routes/rolePermissions');
+var logins = require('./routes/logins');
+var roots = require('./routes/roots');
+
+mongoose.createConnection('mongodb://SE3350:ouda@ds059115.mongolab.com:59115/se3350');
+
+
 
 
 app.use(function (request, response, next) {
@@ -22,6 +31,13 @@ app.use(logger);
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+app.use('/users', users);
+app.use('/passwords', passwords);
+app.use('/roleCodes', roleCodes);
+app.use('/userRoles', userRoles);
+app.use('/rolePermissions', rolePermissions);
+app.use('/logins', logins);
+app.use('/roots', roots);
 //app.use(express.static('public'));
 
 var studentsSchema = mongoose.Schema({
