@@ -27,15 +27,16 @@
                   </div>
                   <br>
               {{else}}
-                <!-- {{#each ProvinceModel as |oneProvince|}}
+
+                {{#each ProvinceModel as |oneProvince|}}
                     <div class="row">
                         <li class="large-3 columns">  {{oneProvince.name}} </li>
 
                         <div class="large-2 columns">
-                          {{delete-province ID=oneProvince.id }}
+                          {{delete-Province ID=oneProvince.id }}
                         </div>
                     </div>
-                {{/each}} -->
+                {{/each}}
                   <div class="row">
                       <div class="large-12 columns">
                           <br> <br> <br>

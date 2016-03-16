@@ -1,43 +1,43 @@
-{{#if isManagingFaculty}}
+{{#if isManagingAdmissionRule}}
     <div class="row">
         <div class="large-12 columns">
-            <h4 align="center"> Manage Faculty</h4>
+            <h4 align="center"> Admission Rule</h4>
         </div>
     </div>
 
     <div class="row">
         <div class="large-10  large-centered columns">
             <div class="panel">
-              {{#if isAddingNewFaculty}}
-                  <h2>Add New Faculty</h2>
+              {{#if isAddingNewAdmissionRule}}
+                  <h2>Add New Admission Rule</h2>
                   <form>
                       <div class="row">
                           <div class="large-12 columns">
-                              <label>Name
-                                {{input value=name type="text" }}
+                              <label>Description
+                                {{input value=description type="text" }}
                               </label>
                           </div>
                       </div>
                   </form>
                   <div class="row">
                       <div class="large-12 columns">
-                          <a href="#" class="button radius" {{action 'saveNewFaculty'}}>Save</a>
-                          <a href="#" class="button radius" {{action 'cancelAddNewFaculty'}}>Cancel</a>
+                          <a href="#" class="button radius" {{action 'saveNewAdmissionRule'}}>Save</a>
+                          <a href="#" class="button radius" {{action 'cancelAddNewAdmissionRule'}}>Cancel</a>
                       </div>
                   </div>
                   <br>
               {{else}}
-                {{#each facultyModel as |oneFaculty|}}
+                {{#each AdmissionRuleModel as |oneAdmissionRule|}}
 
                     <div class="row">
-                        {{oneFaculty.name}} {{delete-Faculty ID=oneFaculty.id }}
+                      {{oneAdmissionRule.description}} {{delete-AdmissionRule ID=oneAdmissionRule.id }}
                     </div>
                 {{/each}}
                   <div class="row">
                       <div class="large-12 columns">
                           <br> <br> <br>
-                          <a href="#" class="button radius" {{action 'addNewFaculty'}}>Add New Faculty</a>
-                          <a href="#" class="button radius" {{action 'doneFaculty'}}>Done</a>
+                          <a href="#" class="button radius" {{action 'addNewAdmissionRule'}}>Add New Admission Rule</a>
+                          <a href="#" class="button radius" {{action 'doneAdmissionRule'}}>Done</a>
                       </div>
                   </div>
               {{/if}}
@@ -47,7 +47,7 @@
 
 {{else}}
     <div class="large-2 columns">
-        <a href="#" class="button radius" {{action 'manageFaculty' }}>Manage Faculties</a>
+        <a href="#" class="button radius" {{action 'manageAdmissionRule' }}>Manage Admission Rules</a>
     </div>
 {{/if}}
 

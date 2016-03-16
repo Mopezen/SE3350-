@@ -27,15 +27,16 @@
                   </div>
                   <br>
               {{else}}
-                <!-- {{#each AcademicLoadModel as |oneAcademicLoad|}}
+
+                {{#each AcademicLoadModel as |oneAcademicLoad|}}
                     <div class="row">
                         <li class="large-3 columns">  {{oneAcademicLoad.name}} </li>
 
                         <div class="large-2 columns">
-                          {{delete-residency ID=oneAcademicLoad.id }}
+                          {{delete-AcademicLoad ID=oneAcademicLoad.id }}
                         </div>
                     </div>
-                {{/each}} -->
+                {{/each}}
                   <div class="row">
                       <div class="large-12 columns">
                           <br> <br> <br>

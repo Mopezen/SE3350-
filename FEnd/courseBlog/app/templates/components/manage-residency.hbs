@@ -27,15 +27,17 @@
                   </div>
                   <br>
               {{else}}
-                <!-- {{#each ResidencyModel as |oneResidency|}}
-                    <div class="row">
-                        <li class="large-3 columns">  {{oneResidency.name}} </li>
 
-                        <div class="large-2 columns">
-                          {{delete-residency ID=oneResidency.id }}
+                {{#each ResidencyModel as |oneResidency|}}
+                        <div class="row">
+                            <li class="large-3 columns">  {{oneResidency.name}} </li>
+
+                            <div class="large-2 columns">
+                              {{delete-Residency ID=oneResidency.id }}
+                            </div>
                         </div>
-                    </div>
-                {{/each}} -->
+
+                {{/each}}
                   <div class="row">
                       <div class="large-12 columns">
                           <br> <br> <br>

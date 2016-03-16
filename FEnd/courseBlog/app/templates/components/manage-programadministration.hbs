@@ -1,0 +1,77 @@
+{{#if isManagingProgramAdministration}}
+    <div class="row">
+        <div class="large-12 columns">
+            <h4 align="center"> Manage Program Administration</h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="large-10  large-centered columns">
+            <div class="panel">
+              {{#if isAddingNewProgramAdministration}}
+                  <h2>Add New Program Administration</h2>
+                  <form>
+                      <div class="row">
+                          <div class="large-12 columns">
+                              <label>name
+                                {{input value=name type="text" }}
+                              </label>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="large-12 columns">
+                              <label>Position
+                                {{input value=position type="text" }}
+                              </label>
+                          </div>
+                      </div>
+
+                      <!-- <div class="row">
+			            <div class="large-12 columns">
+			                <label>Choose the logical expression's admission rule:
+			                    <select id="admissionrule">
+			                        {{#each ProgramAdministrationModel as |oneProgramAdministration|}}
+			                            <option value={{oneProgramAdministration.id}}>{{oneProgramAdministration.name}}</option>
+			                        {{/each}}
+			                    </select>
+			                </label>
+			            </div>
+			        </div> -->
+                  </form>
+                  <br>
+                  <div class="row">
+                      <div class="large-12 columns">
+                          <a href="#" class="button radius" {{action 'saveNewProgramAdministration'}}>Save</a>
+                          <a href="#" class="button radius" {{action 'cancelAddNewProgramAdministration'}}>Cancel</a>
+                      </div>
+                  </div>
+                  <br>
+              {{else}}
+                {{#each ProgramAdministrationModel as |oneProgramAdministration|}}
+                    <div class="row">
+                        <li class="large-3 columns">  {{oneProgramAdministration.position}} </li>
+
+                        <div class="large-2 columns">
+                          {{delete-ProgramAdministration ID=oneProgramAdministration.id }}
+                        </div>
+                    </div>
+                {{/each}}
+                  <div class="row">
+                      <div class="large-12 columns">
+                          <br> <br> <br>
+                          <a href="#" class="button radius" {{action 'addNewProgramAdministration'}}>Add New Program Administration</a>
+                          <a href="#" class="button radius" {{action 'doneProgramAdministration'}}>Done</a>
+                      </div>
+                  </div>
+              {{/if}}
+            </div>
+        </div>
+    </div>
+
+{{else}}
+    <div class="large-2 columns">
+        <a href="#" class="button radius" {{action 'manageProgramAdministration' }}>Manage Program Administration</a>
+    </div>
+{{/if}}
+
+
