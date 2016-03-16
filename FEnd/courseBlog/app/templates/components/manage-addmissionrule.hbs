@@ -30,7 +30,8 @@
                 {{#each AdmissionRuleModel as |oneAdmissionRule|}}
 
                     <div class="row">
-                      {{oneAdmissionRule.description}} {{delete-AdmissionRule ID=oneAdmissionRule.id }}
+                      <li class="large-3 columns"> {{oneAdmissionRule.description}} <!-- {{delete-AdmissionRule ID=oneAdmissionRule.id }} --></li>
+                      
                     </div>
                 {{/each}}
                   <div class="row">

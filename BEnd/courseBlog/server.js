@@ -98,15 +98,15 @@ var itrprogramsSchema = mongoose.Schema({
 
 var admissionrulesSchema = mongoose.Schema({
     description: String,
-    testExpression: {type: mongoose.Schema.ObjectId, ref: ('LogicalExpressionModel')},
-    academicProgramCode: {type: mongoose.Schema.ObjectId, ref: 'AcademicProgramCodesModel'}
+    testExpression: [{type: mongoose.Schema.ObjectId, ref: 'LogicalExpressionsModel'}],
+    academicProgramCode: [{type: mongoose.Schema.ObjectId, ref: 'AcademicProgramCodesModel'}]
 });
 
 var programadministrationsSchema = mongoose.Schema({
     name: String,
     position: String,
     academicProgramCode: {type: mongoose.Schema.ObjectId, ref: ('AcademicProgramCodesModel')},
-    dept: {type: mongoose.Schema.ObjectId, ref: 'DepartmentModel'}
+    dept: {type: mongoose.Schema.ObjectId, ref: 'DepartmentsModel'}
 });
 
 var academicprogramcodesSchema = mongoose.Schema({
@@ -205,8 +205,8 @@ var ProgramRecordsModel = mongoose.model('programRecord', programRecordSchema);
 var DegreeCodesModel = mongoose.model('degreeCode', degreeCodeSchema);
 var TermCodesModel = mongoose.model('termCode', termCodeSchema);
 var LogicalExpressionsModel = mongoose.model('logicalexpression', logicalExpressionsSchema);
-var AdmissionRuleModel = mongoose.model('addmissionrule', admissionrulesSchema);
-var ProgramAdministrationModel = mongoose.model('programadministration', programadministrationsSchema);
+var AdmissionRulesModel = mongoose.model('admissionrule', admissionrulesSchema);
+var ProgramAdministrationsModel = mongoose.model('programadministration', programadministrationsSchema);
 
 app.get('/students', function (request, response) {
     console.log('/students');
@@ -223,7 +223,7 @@ app.get('/students', function (request, response) {
 
 app.get('/admissionrules', function (request, response) {
     console.log('/admissionrules');
-    AdmissionRuleModel.find(function (error, admissionrules) {
+    AdmissionRulesModel.find(function (error, admissionrules) {
         if (error) {
             response.send({error: error});
         }
@@ -236,7 +236,7 @@ app.get('/admissionrules', function (request, response) {
 
 app.get('/programadministrations', function (request, response) {
     console.log('/programadministrations');
-    ProgramAdministrationModel.find(function (error, programadministrations) {
+    ProgramAdministrationsModel.find(function (error, programadministrations) {
         if (error) {
             response.send({error: error});
         }
@@ -811,6 +811,7 @@ app.post('/departments', function (request, response) {
             response.send({error: error});
         }
         else {
+        	console.log(department);
             response.status(201).json({'department': department});
         }
     });
@@ -853,7 +854,7 @@ app.post('/logicalexpressions', function (request, response) {
 });
 
 app.post('/programadministrations', function (request, response) {
-    var programadministration = new ProgramAdministrationModel(request.body.programadministration);
+    var programadministration = new ProgramAdministrationsModel(request.body.programadministration);
     programadministration.save(function (error) {
         if (error) {
             response.send({error: error});
@@ -865,10 +866,12 @@ app.post('/programadministrations', function (request, response) {
 });
 
 app.post('/admissionrules', function (request, response) {
-    var admissionrule = new AdmissionRuleModel(request.body.admissionrule);
+    var admissionrule = new AdmissionRulesModel(request.body.admissionrule);
     admissionrule.save(function (error) {
         if (error) {
+        	console.log("reached error");
             response.send({error: error});
+            console.log(admissionrule);
         }
         else {
             response.status(201).json({'admissionrule': admissionrule});
@@ -1273,7 +1276,7 @@ app.put('/logicalexpressions/:logicalexpression_id', function (request, response
 
 app.put('/programadministrations/:programadministration_id', function (request, response) {
     // use our Posts model to find the post we want
-    ProgramAdministrationModel.findById(request.params.programadministration_id, function (error, programadministration) {
+    ProgramAdministrationsModel.findById(request.params.programadministration_id, function (error, programadministration) {
         if (error) {
             response.send({error: error});
         }
@@ -1299,7 +1302,7 @@ app.put('/programadministrations/:programadministration_id', function (request, 
 
 app.put('/admissionrules/:admissionrule_id', function (request, response) {
     // use our Posts model to find the post we want
-    AdmissionRuleModel.findById(request.params.admissionrule_id, function (error, admissionrule) {
+    AdmissionRulesModel.findById(request.params.admissionrule_id, function (error, admissionrule) {
         if (error) {
             response.send({error: error});
         }
@@ -1665,9 +1668,9 @@ app.delete('/countries/:country_id', function (request, response) {
 
 app.delete('/programadministrations/:programadministration_id', function (request, response) {
 
-    ProgramAdministrationModel.findById(request.params.programadministration_id, function (error, programadministration) {
+    ProgramAdministrationsModel.findById(request.params.programadministration_id, function (error, programadministration) {
         var deleted = programadministration;
-        ProgramAdministrationModel.remove({_id: request.params.programadministration_id}, function (error) {
+        ProgramAdministrationsModel.remove({_id: request.params.programadministration_id}, function (error) {
             if (error) response.send(error);
         });
         response.status(200).json({programadministration: deleted});
@@ -1677,9 +1680,9 @@ app.delete('/programadministrations/:programadministration_id', function (reques
 
 app.delete('/admissionrules/:admissionrule_id', function (request, response) {
 
-    AdmissionRuleModel.findById(request.params.admissionrule_id, function (error, admissionrule) {
+    AdmissionRulesModel.findById(request.params.admissionrule_id, function (error, admissionrule) {
         var deleted = admissionrule;
-        AdmissionRuleModel.remove({_id: request.params.admissionrule_id}, function (error) {
+        AdmissionRulesModel.remove({_id: request.params.admissionrule_id}, function (error) {
             if (error) response.send(error);
         });
         response.status(200).json({admissionrule: deleted});

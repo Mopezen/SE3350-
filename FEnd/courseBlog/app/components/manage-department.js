@@ -18,7 +18,7 @@ export default Ember.Component.extend({
       var facultySelected = myStore.peekRecord('faculty', this.$('#faculty')[0].value);
       var newDepartment = myStore.createRecord('department', {
         name: this.get('name'),
-        //programAdministration: [],
+        programAdministration: [],
         faculty: facultySelected
       });
       facultySelected.get('department').pushObject(newDepartment); 

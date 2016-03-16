@@ -18,7 +18,7 @@ export default Ember.Component.extend({
   actions: {
     saveNewProgramAdministration: function (){
       var myStore = this.get('store');
-      var deptSelected = myStore.peekRecord('depatrment', this.$('#depatrment')[0].value);
+      var deptSelected = myStore.peekRecord('department', this.$('#department')[0].value);
       var APCSelected = myStore.peekRecord('academicprogramcode', this.$('#academicprogramcode')[0].value);
 
       var newProgramAdministration = myStore.createRecord('programadministration', {
@@ -27,8 +27,6 @@ export default Ember.Component.extend({
         academicProgramCode: APCSelected,
         dept: deptSelected
       });
-      deptSelected.get('programadministration').pushObject(newProgramAdministration);
-      APCSelected.get('programadministration').pushObject(newProgramAdministration);
       newProgramAdministration.save().then(() => {
 
         this.set('isAddingProgramAdministration', false);

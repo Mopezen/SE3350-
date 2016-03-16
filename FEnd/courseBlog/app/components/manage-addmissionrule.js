@@ -7,7 +7,7 @@ export default Ember.Component.extend({
   dataModel: null,
 
   AdmissionRuleModel: Ember.computed(function(){
-    return this.get('store').findAll('addmissionrule');
+    return this.get('store').findAll('admissionrule');
   }),
   AcademicProgramCodeModel: Ember.computed(function(){
     return this.get('store').findAll('academicprogramcode');
@@ -19,7 +19,7 @@ export default Ember.Component.extend({
   actions: {
     saveNewAdmissionRule: function (){
       var myStore = this.get('store');
-      var newAdmissionRule = myStore.createRecord('addmissionrule', {
+      var newAdmissionRule = myStore.createRecord('admissionrule', {
         description: this.get('description'),
         academicProgramCode: [],
         testExpression: []
