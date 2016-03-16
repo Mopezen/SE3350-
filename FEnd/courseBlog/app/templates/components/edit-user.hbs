@@ -1,0 +1,133 @@
+
+{{#if  isUserFormEditing }}
+  {{#if EU001IsPermitted }}
+      <hr/>
+      <div class="row">
+          <div class="large-12 columns">
+              <h3 align="center">Modify User Profile for {{userRecord.firstName}} {{userRecord.lastName}}</h3>
+              <br/>
+              <form>
+                  <div class="row">
+                      <div class="large-12 columns">
+                          <div class="row">
+                              <div class="small-3 columns">
+                                  <label class="right">First Name</label>
+                              </div>
+                              <div class="small-9 columns" class="left">
+                                {{input value=userRecord.firstName type="text" placeholder="enter first name" }}
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="small-3 columns">
+                                  <label class="right">Last Name</label>
+                              </div>
+                              <div class="small-9 columns" class="left">
+                                {{input value=userRecord.lastName type="text" placeholder="enter last name"}}
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="small-3 columns">
+                                  <label class="right">EMail Address</label>
+                              </div>
+                              <div class="small-9 columns" class="left">
+                                {{input value=userRecord.email type="text" placeholder="enter email address"}}
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="small-3 columns">
+                                  <label class="right">User Name</label>
+                              </div>
+                              <div class="small-9 columns" class="left">
+                                  <input value={{userName}} type="text" placeholder="enter user name">
+                              </div>
+                          </div>
+                        {{#if  isResettingPassword }}
+                          {{#if EU002IsPermitted}}
+                              <div class="row">
+                                  <div class="small-3 columns">
+                                      <label class="right">Temp. Password</label>
+                                  </div>
+                                  <div class="small-9 columns" class="left">
+                                    {{input value=tempPassword type="text" placeholder="enter temporary password"}}
+                                  </div>
+                                  <div class="small-3 columns">
+                                      <a href="#" class="button radius tiny" {{action 'cancelResetPassword'}}>Cancel</a>
+                                  </div>
+                              </div>
+                          {{else}}
+                              <div class="row">
+                                  <div class="large-8 large-centered columns alert-box info radius">
+                                      <p>This feature (EU002) is not allowed for your account, please contact the system administrator for more information.</p>
+                                      <a href="#" class="button alert tiny" {{action 'cancelResetPassword'}}>OK</a>
+                                  </div>
+                              </div>
+
+                          {{/if}}
+
+                        {{else}}
+                            <div class="row">
+                                <div class="small-3 columns">
+                                    <label class="right">Password</label>
+                                </div>
+                                <div class="small-9 columns" class="left">
+                                    <a href="#" class="button success tiny" {{action 'resetPassword'}}>Reset password</a>
+                                </div>
+                            </div>
+
+                        {{/if}}
+
+                          <div class="row">
+                              <div class="small-3 columns">
+                                  <label class="right">Account Expiry Date</label>
+                              </div>
+                              <div class="small-9 columns" class="left">
+                                  <input value={{selectedDate}} type="date" onchange={{action 'assignDate' value="target.value"}}>
+                              </div>
+                          </div>
+
+
+                      </div>
+                  </div>
+              </form>
+              <br>
+              <a href="#" class="button radius" {{action 'saveUser'}}>Save</a>
+              <a href="#" class="button radius" {{action 'cancel'}}>Cancel</a>
+          </div>
+      </div>
+      <hr/>
+  {{else}}
+
+      <div class="row">
+          <div class="large-8 large-centered columns alert-box info radius">
+              <p>This feature (EU001) is not allowed for your account, please contact the system administrator for more information.</p>
+              <a href="#" class="button alert tiny" {{action 'cancel'}}>OK</a>
+          </div>
+      </div>
+
+  {{/if}}
+{{else}}
+
+    <div class="row">
+        <div class="large-12 large-centered columns">
+          {{yield}}
+            <div class="large-2 columns">
+                <a href="#" class="button success tiny" {{action 'editUser'}}>Edit</a>
+            </div>
+            <div class="large-2 columns">
+              {{#if EU003IsPermitted }}
+                  <a href="#" class="button alert tiny" {{action 'deleteUser' ID}}>Delete</a>
+              {{else}}
+                  <span data-tooltip aria-haspopup="true" class="has-tip" title="This feature (EU003) is disabled">
+                      <div class="button alert tiny" disabled>Delete</div>
+                  </span>
+              {{/if}}
+            </div>
+            <div class="large-2 columns">
+              {{enable-disable-user ID=ID status=status}}
+            </div>
+        </div>
+    </div>
+{{/if}}
+
+
+

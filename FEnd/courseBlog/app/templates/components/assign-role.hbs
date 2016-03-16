@@ -1,0 +1,66 @@
+{{#if isManagingUserRole}}
+  {{#if MR001IsPermitted }}
+    <hr/>
+    <div class="row">
+        <div class="large-12 columns">
+            <h4 align="center"> Assign Roles for {{userName}}</h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="large-10  large-centered columns">
+            <div class="panel">
+                <div class="row">
+                    <div class="large-12 columns">
+                        <br>
+                        <!-- display a list of assigned roles names -->
+                        <!-- for the current user                   -->
+                      {{#each userRoleModel as |oneRole|}}
+                          <div class="row">
+                              <li class="large-8 columns"> {{oneRole.name}}</li>
+                              <a href="#" class="button alert tiny" {{action 'deleteRole' oneRole.id ID}}>Delete</a>
+                          </div>
+                      {{/each}}
+                        <!-- display a dropdown list to assign a new  user role  -->
+                        <br> <br>
+                        <select onchange={{action 'selectRole' value="target.value"}}>
+                            <option value="" disabled selected> -- Select System Role --</option>
+                          {{#each roleCodeModel as |roleChoice|}}
+                              <option value={{roleChoice.id}}>{{roleChoice.name}}</option>
+                          {{/each}}
+                        </select>
+
+                        <br> <br>
+                        <a href="#" class="button radius" {{action 'done'}}>Done</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <hr/>
+{{else}}
+
+    <div class="row">
+        <div class="large-8 large-centered columns alert-box info radius">
+            <p>This feature (MR001) is not allowed for your account, please contact the system administrator for more information.</p>
+            <a href="#" class="button alert tiny" {{action 'done'}}>OK</a>
+        </div>
+    </div>
+
+{{/if}}
+{{else}}
+  {{#edit-user ID=ID status=status}}
+      <div class="large-4 columns">
+          <ul class="circle">
+            {{yield}}
+          </ul>
+      </div>
+      <div class="large-2 columns">
+          <a href="#" class="button tiny" {{action 'manageRoles' ID}}>Manage Roles</a>
+      </div>
+  {{/edit-user  }}
+
+{{/if}}
+
+

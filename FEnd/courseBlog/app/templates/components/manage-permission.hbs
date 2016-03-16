@@ -1,0 +1,58 @@
+{{#if isManagingPermission}}
+    <hr/>
+    <div class="row">
+        <div class="large-12 columns">
+            <h4 align="center"> Assign Capabilities for {{roleName}}</h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="large-10  large-centered columns">
+            <div class="panel">
+                <div class="row">
+                    <div class="large-12 columns">
+                        <br>
+                        <!-- display a list of assigned system features names -->
+                        <!-- for the current user role                        -->
+                      {{#each sysFeatureModel as |oneFeature|}}
+                          <div class="row">
+                              <li class="large-8 columns"> {{oneFeature.code}} {{oneFeature.sysFeature}} </li>
+                              <a href="#" class="button alert tiny" {{action 'deleteRoleCode' oneFeature.id}}>Delete</a>
+                          </div>
+                      {{/each}}
+                        <!-- display a dropdown list to assign a new  system features  -->
+                        <br> <br>
+                        <select onchange={{action 'selectPermission' value="target.value"}}>
+                            <option value="" disabled selected> -- Select Permission --</option>
+                          {{#each rolePermissionModel as |permissionChoice|}}
+                              <option value={{permissionChoice.id}}>{{permissionChoice.code}} {{permissionChoice.sysFeature}}</option>
+                          {{/each}}
+                        </select>
+
+                        <br> <br>
+                        <a href="#" class="button radius" {{action 'done'}}>Done</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <hr/>
+{{else}}
+    <div class="row">
+        <div class="large-12 large-centered columns">
+            <div class="large-5 columns">
+              {{yield}}
+            </div>
+            <div class="large-4 columns">
+                <a href="#" class="button tiny" {{action 'managePermission'}}>Manage Permissions</a>
+            </div>
+            <div class="large-3 columns">
+              {{delete-role key=code}}
+            </div>
+        </div>
+    </div>
+{{/if}}
+
+
+

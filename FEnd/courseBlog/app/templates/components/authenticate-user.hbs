@@ -1,31 +1,61 @@
 <!-- Display the login screen with the main application background -->
+{{#if isPasswordChanging}}
+    <section class="hero">
+        <div class="row intro">
+            <div  >
+                <div class="row">
+                    <div class="large-10  large-centered columns">
+                        <div class="panel">
+                            <h3>Please change your password and login again</h3>
+                            <br>
+                            <div class="row">
+                                <div class="small-3 columns">
+                                    <label class="right">Enter Password</label>
+                                </div>
+                                <div class="small-7 columns" class="left">
+                                  {{input value=firstPassword type="password" }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="small-3 columns">
+                                    <label class="right">Reenter Password</label>
+                                </div>
+                                <div class="small-7 columns" class="left">
+                                  {{input value=secondPassword type="password" }}
+                                </div>
+                            </div>
+                            <br> <br>
+                            <a href="#" class="button radius" {{action 'save'}}>Save</a>
+                        </div>
 
-<section class="hero">
-    <div class="row intro">
-        <div  >
-            <div class="row">
-                <div class="medium-6 medium-centered large-4 large-uncentered columns">
-                    <form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+{{else}}
+    <section class="hero">
+        <div class="row intro">
+            <div  >
+                <div class="row">
+                    <div class="medium-6 medium-centered large-4 large-uncentered columns">
                         <div class="row column log-in-form">
-                            <h3 class="text-center">Log in to <br> SE3350b Course Blog</h3>
+                            <h3 class="text-center">Log in to <br> *** Sample SAS ***</h3>
                             <label>User Name
                               {{input value=name  type="text" placeholder="user name"}}
                             </label>
                             <label>Password
                               {{input value=password  type="password" placeholder="password"}}
                             </label>
-                            <input id="show-password" type="checkbox"><label for="show-password">Show password</label>
-
                             <p><a href="#" class="button radius" {{action 'login'}}>Log In</a></p>
-
-                            <p class="text-center"><a href="#">Forgot your password?</a></p>
+                            <p> {{errorMessage}}</p>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
-
-
+    </section>
+{{/if}}
 

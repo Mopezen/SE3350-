@@ -1,0 +1,29 @@
+{{#if ADM01IsPermitted }}
+    <div class="panel callout">
+        <ul class="button-group even-3">
+            <li><a href="#" class="button secondary" {{action "manageUsers"}}>Users Accounts</a></li>
+            <li><a href="#" class="button secondary" {{action "manageRoles"}}>System Roles</a></li>
+            <li><a href="#" class="button secondary" {{action "manageFeatures"}}>System Features/Privileges</a></li>
+        </ul>
+      {{#if isUsersShowing}}
+          <br>
+        {{manage-users}}
+      {{/if}}
+      {{#if isRolesEditing }}
+          <br>
+        {{manage-roles}}
+      {{/if}}
+      {{#if isFeaturesEditing }}
+          <br>
+        {{manage-features}}
+      {{/if}}
+    </div>
+{{else}}
+    <div>
+        <br>
+        <h3>Admin Portal functionality (ADM01) is not available for your account.</h3>
+        <h3>Please contact the system administrator for more details.</h3>
+    </div>
+{{/if}}
+
+
