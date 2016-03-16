@@ -1,0 +1,84 @@
+{{#if  isUserFormEditing }}
+  {{#if ANU01IsPermitted }}
+    <br>
+    <hr/>
+    <h3>Create User Account</h3>
+    <form>
+        <div class="row">
+            <div class="large-6 columns">
+                <div class="row">
+                    <div class="small-3 columns">
+                        <label class="right">First Name</label>
+                    </div>
+                    <div class="small-7 columns" class="left">
+                      {{input value=firstName type="text" placeholder="enter first name" }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="small-3 columns">
+                        <label class="right">Last Name</label>
+                    </div>
+                    <div class="small-7 columns" class="left">
+                      {{input value=lastName type="text" placeholder="enter last name"}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="small-3 columns">
+                        <label class="right">EMail Address</label>
+                    </div>
+                    <div class="small-7 columns" class="left">
+                      {{input value=email type="text" placeholder="enter email address"}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="small-3 columns">
+                        <label class="right">User Name</label>
+                    </div>
+                    <div class="small-7 columns" class="left">
+                      {{input value=userName type="text" placeholder="enter user name"}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="small-3 columns">
+                        <label class="right">Password</label>
+                    </div>
+                    <div class="small-7 columns" class="left">
+                      {{input value=password type="password" placeholder="enter password"}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="small-3 columns">
+                        <label class="right">Account Expiry Date</label>
+                    </div>
+                    <div class="small-7 columns" class="left">
+                        <input value={{selectedDate}} id="AccountExpiryDate" type="date" onchange={{action 'assignDate' value="target.value"}}>
+                    </div>
+                </div>
+
+            </div>
+         </div>
+    </form>
+    <br>
+    <a href="#" class="button radius" {{action 'saveAccount'}}>Save</a>
+    <a href="#" class="button radius" {{action 'cancel'}}>Cancel</a>
+{{else}}
+
+    <div class="row">
+        <div class="large-8 large-centered columns alert-box info radius">
+            <p>This feature (ANU01) is not allowed for your account, please contact the system administrator for more information.</p>
+            <a href="#" class="button alert tiny" {{action 'cancel'}}>OK</a>
+        </div>
+    </div>
+
+{{/if}}
+{{else}}
+    <div class="row">
+        <div class="large-12 columns">
+            <br>
+            <a href="#" class="button round" {{action 'addNewAccount'}}>Add User</a>
+        </div>
+    </div>
+{{/if}}
+
+
+

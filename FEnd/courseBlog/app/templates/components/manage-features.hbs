@@ -1,0 +1,54 @@
+{{#if MF001IsPermitted }}
+{{#if isEditing }}
+    <h2>Add new system feature</h2>
+    <form>
+        <div class="row">
+            <div class="large-12 columns">
+                <label>Feature code
+                  {{input value=code type="text" }}
+                </label>
+                <label>Feature name
+                  {{input value=sysFeature type="text" }}
+                </label>
+            </div>
+        </div>
+    </form>
+    <br>
+    <a href="#" class="button radius" {{action 'save'}}>Save</a>
+    <a href="#" class="button radius" {{action 'cancel'}}>Cancel</a>
+{{else}}
+  {{#each rolePermissionModel as |oneFeature|}}
+      <div class="row">
+        <div class="large-10 large-centered columns">
+          <div class="large-2 columns">
+            {{oneFeature.code}}
+          </div>
+          <div class="large-5 columns">
+            {{oneFeature.sysFeature}}
+          </div>
+          <div class="large-3 columns">
+            {{delete-feature ID=oneFeature.id }}
+          </div>
+        </div>
+      </div>
+
+  {{/each}}
+  <div class="row">
+      <div class="large-12 columns">
+          <br>
+          <a href="#" class="button round" {{action 'addNewFeature'}}>Add System Feature</a>
+      </div>
+  </div>
+{{/if}}
+{{else}}
+
+    <div class="row">
+        <div class="large-8 large-centered columns alert-box info radius">
+            <br>
+            <h3>This feature (MF001) is not allowed for your account. </h3>
+            <h3>Please contact the system administrator for more information.</h3>
+
+        </div>
+    </div>
+
+{{/if}}
