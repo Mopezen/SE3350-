@@ -1,0 +1,33 @@
+<div class="row">
+	<ul class="button-group round">
+		<li><a href="#" class="button tiny" {{action 'manageFaculty'}}>Faculties</a></li>
+		<li><a href="#" class="button tiny" {{action 'manageAcademicProgramCode'}}>Academic Program Codes</a></li>
+		<li><a href="#" class="button tiny" {{action 'manageDepartment'}}>Departments</a></li>
+		<li><a href="#" class="button tiny"{{action 'manageLogicalExpression'}}>Logical Expressions</a></li>
+		<li><a href="#" class="button tiny"{{action 'manageCourseCode'}}>Course Codes</a></li>
+		<li><a href="#" class="button tiny"{{action 'manageDegreeCode'}}>DegreeCodes</a></li>
+		<li><a href="#" class="button tiny"{{action 'manageTermCode'}}>Term Codes</a></li>
+		<li><a href="#" class="button tiny"{{action 'manageAdmissionRule'}}>Admission Rules</a></li>
+		<li><a href="#" class="button tiny"{{action 'manageProgramAdministration'}}>Program Administrations</a></li>
+	</ul>		 
+</div>
+
+{{#if isManageFaculty}}
+	{{manage-faculty isManagingFaculty = true}}
+{{else if isManageAcademicProgramCode}}
+	{{manage-academicprogramcode isManagingAcademicProgramCode = true}}
+{{else if isManageDepartment}}
+	{{manage-department}}
+{{else if isManageLogicalExpression}}
+	{{manage-logicalexpression isManagingLogicalExpression = true}}
+{{else if isManageCourseCode}}
+	{{manage-course-code isManagingCourseCode = true}}
+{{else if isManageDegreeCode}}
+	{{manage-degree-code isManagingDegreeCode = true}}
+{{else if isManageTermCode}}
+	{{manage-term-code isManagingTermCode = true}}
+{{else if isManageAdmissionRule}}
+	{{manage-addmissionrule isManagingAdmissionRule = true}}
+{{else if isManageProgramAdministration}}
+	{{manage-programadministration isManagingProgramAdministration = true}}
+{{/if}}
