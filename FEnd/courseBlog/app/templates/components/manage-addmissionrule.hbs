@@ -30,15 +30,17 @@
                 {{#each AdmissionRuleModel as |oneAdmissionRule|}}
 
                     <div class="row">
-                      <li class="large-3 columns"> {{oneAdmissionRule.description}} <!-- {{delete-AdmissionRule ID=oneAdmissionRule.id }} --></li>
-                      
+                      <li class="large-3 columns"> {{oneAdmissionRule.description}} </li>
+                        <div class="large-2 columns">
+                          {{delete-addmissionrule ID=oneAdmissionRule.id }}
+                        </div>
                     </div>
                 {{/each}}
                   <div class="row">
                       <div class="large-12 columns">
                           <br> <br> <br>
                           <a href="#" class="button radius" {{action 'addNewAdmissionRule'}}>Add New Admission Rule</a>
-                          <a href="#" class="button radius" {{action 'doneAdmissionRule'}}>Done</a>
+                          <!-- <a href="#" class="button radius" {{action 'doneAdmissionRule'}}>Done</a> -->
                       </div>
                   </div>
               {{/if}}
@@ -46,10 +48,10 @@
         </div>
     </div>
 
-{{else}}
+<!-- {{else}}
     <div class="large-2 columns">
         <a href="#" class="button radius" {{action 'manageAdmissionRule' }}>Manage Admission Rules</a>
-    </div>
+    </div> -->
 {{/if}}
 
 
