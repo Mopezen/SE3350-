@@ -11,8 +11,25 @@ export default Ember.Component.extend({
   isManageTermCode: false,
   isManageAdmissionRule: false,
   isManageProgramAdministration: false,
-
+  isManageCommentCode: false,
   actions: {
+
+    manageCommentCode: function (){
+      /*Reset everything*/
+      this.set('isManageFaculty',false);
+      this.set('isManageAcademicProgramCode',false);
+      this.set('isManageDepartment',false);
+      this.set('isManageLogicalExpression',false);
+      this.set('isManageCourseCode',false);
+      this.set('isManageDegreeCode',false);
+      this.set('isManageTermCode',false);
+      this.set('isManageAdmissionRule',false);
+      this.set('isManageProgramAdministration',false);
+      this.set('isManageCommentCode',false);
+
+      this.set('isManageCommentCode',true);
+    },
+
     manageFaculty: function (){
       /*Reset everything*/
       this.set('isManageFaculty',false);
@@ -24,6 +41,7 @@ export default Ember.Component.extend({
       this.set('isManageTermCode',false);
       this.set('isManageAdmissionRule',false);
       this.set('isManageProgramAdministration',false);
+      this.set('isManageCommentCode',false);
 
       this.set('isManageFaculty',true);
     },
@@ -38,7 +56,7 @@ export default Ember.Component.extend({
       this.set('isManageTermCode',false);
       this.set('isManageAdmissionRule',false);
       this.set('isManageProgramAdministration',false);
-
+      this.set('isManageCommentCode',false);
 
       this.set('isManageAcademicProgramCode',true);
     },
@@ -53,7 +71,7 @@ export default Ember.Component.extend({
       this.set('isManageTermCode',false);
       this.set('isManageAdmissionRule',false);
       this.set('isManageProgramAdministration',false);
-
+      this.set('isManageCommentCode',false);
 
       this.set('isManageDepartment',true);
     },
@@ -68,7 +86,7 @@ export default Ember.Component.extend({
       this.set('isManageTermCode',false);
       this.set('isManageAdmissionRule',false);
       this.set('isManageProgramAdministration',false);
-
+      this.set('isManageCommentCode',false);
       this.set('isManageLogicalExpression',true);
     },
     manageCourseCode: function (){
@@ -82,7 +100,8 @@ export default Ember.Component.extend({
       this.set('isManageTermCode',false);
       this.set('isManageAdmissionRule',false);
       this.set('isManageProgramAdministration',false);
-
+      
+      this.set('isManageCommentCode',false);
       this.set('isManageCourseCode',true);
     },
     manageDegreeCode: function (){
@@ -96,7 +115,7 @@ export default Ember.Component.extend({
       this.set('isManageTermCode',false);
       this.set('isManageAdmissionRule',false);
       this.set('isManageProgramAdministration',false);
-
+      this.set('isManageCommentCode',false);
       this.set('isManageDegreeCode',true);
     },
     manageTermCode: function (){
@@ -110,7 +129,7 @@ export default Ember.Component.extend({
       this.set('isManageTermCode',false);
       this.set('isManageAdmissionRule',false);
       this.set('isManageProgramAdministration',false);
-
+      this.set('isManageCommentCode',false);
       this.set('isManageTermCode',true);
     },
     manageAdmissionRule: function (){
@@ -124,7 +143,7 @@ export default Ember.Component.extend({
       this.set('isManageTermCode',false);
       this.set('isManageAdmissionRule',false);
       this.set('isManageProgramAdministration',false);
-
+      this.set('isManageCommentCode',false);
       this.set('isManageAdmissionRule',true);
     },
     manageProgramAdministration: function (){
@@ -138,7 +157,7 @@ export default Ember.Component.extend({
       this.set('isManageTermCode',false);
       this.set('isManageAdmissionRule',false);
       this.set('isManageProgramAdministration',false);
-
+      this.set('isManageCommentCode',false);
       this.set('isManageProgramAdministration',true);
     },
   }

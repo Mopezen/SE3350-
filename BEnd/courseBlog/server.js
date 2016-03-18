@@ -151,12 +151,28 @@ var gradesSchema = mongoose.Schema({
     level: {type: mongoose.Schema.ObjectId, ref: ('ProgramRecordsModel')}
 });
 
+////////
+var distributionresultSchema = mongoose.Schema({
+    date: String, 
+    students: {type: mongoose.Schema.ObjectId, ref: ('StudentsModel')},
+    commentCode: [{type: mongoose.Schema.ObjectId, ref: 'CommentCodesModel'}]
+});
+
+
 var courseCodeSchema = mongoose.Schema({
     code: String, 
     number: String,
     name: String,
     unit: String,
     grade: [{type: mongoose.Schema.ObjectId, ref: 'GradesModel'}]
+});
+//
+var commentCodeSchema = mongoose.Schema({
+    code: String, 
+    progAction: String,
+    description: String,
+    notes: String,
+    distritutionresult: {type: mongoose.Schema.ObjectId, ref: 'DistributionResultsModel'}
 });
 
 var programRecordSchema = mongoose.Schema({
@@ -200,6 +216,10 @@ var AcademicProgramCodesModel = mongoose.model('academicprogramcode', academicpr
 var DepartmentsModel = mongoose.model('department',departmentsSchema);
 var FacultiesModel = mongoose.model('faculty',facultiesSchema);
 var GradesModel = mongoose.model('grade', gradesSchema);
+////
+var DistributionResultsModel = mongoose.model('distributionresult', distributionresultSchema);
+var CommentCodesModel = mongoose.model('commentCode', commentCodeSchema);
+////
 var CourseCodesModel = mongoose.model('courseCode', courseCodeSchema);
 var ProgramRecordsModel = mongoose.model('programRecord', programRecordSchema);
 var DegreeCodesModel = mongoose.model('degreeCode', degreeCodeSchema);
@@ -207,6 +227,8 @@ var TermCodesModel = mongoose.model('termCode', termCodeSchema);
 var LogicalExpressionsModel = mongoose.model('logicalexpression', logicalExpressionsSchema);
 var AdmissionRulesModel = mongoose.model('admissionrule', admissionrulesSchema);
 var ProgramAdministrationsModel = mongoose.model('programadministration', programadministrationsSchema);
+
+
 
 app.get('/students', function (request, response) {
     console.log('/students');
@@ -399,6 +421,21 @@ app.get('/grades', function (request, response) {
     });
 });
 
+////
+app.get('/distributionresults', function (request, response) {
+    console.log('/distributionresults');
+    GradesModel.find(function (error, distributionresults) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({'distributionresult': distributionresults});
+        }
+
+    });
+});
+
+
 app.get('/courseCodes', function (request, response) {
     console.log('/courseCodes');
     CourseCodesModel.find(function (error, courseCodes) {
@@ -410,6 +447,22 @@ app.get('/courseCodes', function (request, response) {
         }
     });
 });
+
+
+
+////
+app.get('/commentCodes', function (request, response) {
+    console.log('/commentCodes');
+    CommentCodesModel.find(function (error, commentCodes) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({'comment-code': commentCodes});   ////////bug maybe here
+        }
+    });
+});
+
 
 app.get('/programRecords', function (request, response) {
     console.log('/programRecords');
@@ -891,6 +944,21 @@ app.post('/grades', function (request, response) {
     });
 });
 
+////
+app.post('/distributionresults', function (request, response) {
+    var grade = new DistributionResultsModel(request.body.distributionresult); /// bug maybe here
+    grade.save(function (error) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.status(201).json({'distributionresult': grade});
+        }
+    });
+});
+
+
+
 app.post('/courseCodes', function (request, response) {
     var courseCode = new CourseCodesModel(request.body.courseCode);
     courseCode.save(function (error) {
@@ -902,6 +970,23 @@ app.post('/courseCodes', function (request, response) {
         }
     });
 });
+
+
+//////
+app.post('/commentCodes', function (request, response) {
+    var commentCode = new CommentCodesModel(request.body.commentCode);
+    commentCode.save(function (error) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.status(201).json({'commentCode': commentCode});
+        }
+    });
+});
+
+
+
 
 app.post('/programRecords', function (request, response) {
     var programRecord = new ProgramRecordsModel(request.body.programRecord);
@@ -1352,6 +1437,33 @@ app.put('/grades/:grade_id', function (request, response) {
     });
 });
 
+////
+app.put('/distributionresults/:distributionresult_id', function (request, response) {
+    // use our Posts model to find the post we want
+    GradesModel.findById(request.params.distributionresult_id, function (error, grade) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            // update the student info
+            distributionresult.date = request.body.distributionresult.date;
+            distributionresult.students = request.body.distributionresult.students;
+            distributionresult.commentCode = request.body.distributionresult.commentCode;
+            // save the student
+            distributionresult.save(function (error) {
+                if (error) {
+                    response.send({error: error});
+                }
+                else {
+                    response.status(201).json({'distributionresult': distributionresult});
+                }
+            });
+        }
+    });
+});
+
+
+
 app.put('/courseCodes/:courseCode_id', function (request, response) {
     // use our Posts model to find the post we want
     CourseCodesModel.findById(request.params.courseCode_id, function (error, courseCode) {
@@ -1378,6 +1490,35 @@ app.put('/courseCodes/:courseCode_id', function (request, response) {
         }
     });
 });
+
+
+/////
+app.put('/commentCodes/:commentCode_id', function (request, response) {
+    // use our Posts model to find the post we want
+    CommentsModel.findById(request.params.commentCode_id, function (error, commentCode) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            // update the student info
+            commentCode.code = request.body.commentCode.code;
+            commentCode.progAction = request.body.commentCode.progAction;
+            commentCode.description = request.body.commentCode.description;
+            commentCode.notes = request.body.commentCode.notes;
+
+            // save the student
+            commentCode.save(function (error) {
+                if (error) {
+                    response.send({error: error});
+                }
+                else {
+                    response.status(201).json({'commentCode': commentCode});
+                }
+            });
+        }
+    });
+});
+
 
 app.put('/programRecords/:programRecord_id', function (request, response) {
     // use our Posts model to find the post we want
@@ -1714,6 +1855,7 @@ app.delete('/courseCodes/:courseCode_id', function (request, response) {
 });
 
 
+
 app.delete('/academicprogramcodes/:academicprogramcodes_id', function (request, response) {
 
     AcademicProgramCodesModel.findById(request.params.academicprogramcodes_id, function (error, academicprogramcode) {
@@ -1750,6 +1892,7 @@ app.delete('/grades/:grade_id', function (request, response) {
     });
 
 });
+
 
 app.delete('/programRecords/:programRecord_id', function (request, response) {
 
@@ -1825,6 +1968,140 @@ app.get('/comments', function (request, response) {
     }
 
 });
+
+
+
+/////
+///// distribution result and comment code
+var distributionresultSchema = mongoose.Schema({
+    date: String, 
+    students: {type: mongoose.Schema.ObjectId, ref: ('StudentsModel')},
+    commentCode: [{type: mongoose.Schema.ObjectId, ref: 'CommentCodesModel'}]
+});
+
+var commentCodeSchema = mongoose.Schema({
+    code: String, 
+    progAction: String,
+    description: String,
+    notes: String,
+    distritutionresult: {type: mongoose.Schema.ObjectId, ref: 'DistributionResultsModel'}
+});
+
+
+
+
+app.get('/distributionresults', function (request, response) {
+    console.log('/distributionresults');
+    GradesModel.find(function (error, distributionresults) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({'distributionresult': distributionresults});
+        }
+
+    });
+});
+
+
+app.post('/distributionresults', function (request, response) {
+    var grade = new DistributionResultsModel(request.body.distributionresult); /// bug maybe here
+    grade.save(function (error) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.status(201).json({'distributionresult': grade});
+        }
+    });
+});
+
+app.post('/commentCodes', function (request, response) {
+    var courseCode = new CommentCodesModel(request.body.commentCode);
+    courseCode.save(function (error) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.status(201).json({'commentCode': commentCode});
+        }
+    });
+});
+
+app.put('/distributionresults/:distributionresult_id', function (request, response) {
+    // use our Posts model to find the post we want
+    GradesModel.findById(request.params.distributionresult_id, function (error, grade) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            // update the student info
+            distributionresult.date = request.body.distributionresult.date;
+            distributionresult.students = request.body.distributionresult.students;
+            distributionresult.commentCode = request.body.distributionresult.commentCode;
+            // save the student
+            distributionresult.save(function (error) {
+                if (error) {
+                    response.send({error: error});
+                }
+                else {
+                    response.status(201).json({'distributionresult': distributionresult});
+                }
+            });
+        }
+    });
+});
+
+
+app.put('/commentCodes/:commentCode_id', function (request, response) {
+    // use our Posts model to find the post we want
+    CommentsModel.findById(request.params.commentCode_id, function (error, commentCode) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            // update the student info
+            commentCode.code = request.body.commentCode.code;
+            commentCode.progAction = request.body.commentCode.progAction;
+            commentCode.description = request.body.commentCode.description;
+            commentCode.notes = request.body.commentCode.notes;
+
+            // save the student
+            commentCode.save(function (error) {
+                if (error) {
+                    response.send({error: error});
+                }
+                else {
+                    response.status(201).json({'commentCode': commentCode});
+                }
+            });
+        }
+    });
+});
+
+app.delete('/commentCodes/:commentCode_id', function (request, response) {
+
+    CommentCodesModel.findById(request.params.commentCode_id, function (error, commentCode) {
+        var deleted = commentCode;
+        CommentCodesModel.remove({_id: request.params.commentCode_id}, function (error) {
+                if (error) response.send(error);
+        });
+        response.status(200).json({commentCode: deleted});
+    });
+});
+
+app.delete('/distributionresults/:distributionresult_id', function (request, response) {
+
+    DistributionResultsModel.findById(request.params.distributionresult_id, function (error, grade) {
+        var deleted = distributionresult;
+        DistributionResultsModel.remove({_id: request.params.distributionresult_id}, function (error) {
+                if (error) response.send(error);
+        });
+        response.status(200).json({distributionresult: deleted});
+    });
+
+});
+
 
 
 

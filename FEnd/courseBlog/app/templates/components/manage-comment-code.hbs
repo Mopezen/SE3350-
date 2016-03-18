@@ -1,0 +1,86 @@
+{{#if isManagingCommentCode}}
+    <div class="row">
+        <div class="large-12 columns">
+            <h4 align="center"> Manage Comment Code</h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="large-10  large-centered columns">
+            <div class="panel">
+              {{#if isAddingNewCommentCode}}
+                  <h2>Add New Comment Code</h2>
+                  <form>
+                      <div class="row">
+                          <div class="large-12 columns">
+                              <label>Comment Code
+                                {{input value=code type="text" }}
+                              </label>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="large-12 columns">
+                              <label>ProgAction
+                                {{input value=progAction type="text" }}
+                              </label>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="large-12 columns">
+                              <label>Description
+                                {{input value=description type="text" }}
+                              </label>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="large-12 columns">
+                              <label>Notes
+                                {{input value=notes type="text" }}
+                              </label>
+                          </div>
+                      </div>
+                  </form>
+
+                   <div class="row">
+                   <div class="large-8 columns">
+                   <label>Choice:
+                   <select id="distResult">
+                    {{#each DistributionResultModel as |oneDistResult|}}
+                    <option value={{oneDistResult.id}}>{{oneDistResult.date}}</option>
+                    {{/each}}
+                   </select>
+                  </label>
+                  </div>
+                  </div>
+
+                  <div class="row">
+                      <div class="large-12 columns">
+                          <a href="#" class="button radius" {{action 'saveNewCommentCode'}}>Save</a>
+                          <a href="#" class="button radius" {{action 'cancelAddNewCommentCode'}}>Cancel</a>
+                      </div>
+                  </div>
+                  <br>
+              {{else}}
+
+                {{#each CommentCodeModel as |oneCommentCode|}}
+                    <div class="row">
+                        {{oneCommentCode.description}} {{delete-comment-code ID=oneCommentCode.id }}
+                    </div>
+                {{/each}}
+                  <div class="row">
+                      <div class="large-12 columns">
+                          <br> <br> <br>
+                          <a href="#" class="button radius" {{action 'addNewCommentCode'}}>Add New Comment Code</a>
+                          <!-- <a href="#" class="button radius" {{action 'doneCommentCode'}}>Done</a> -->
+                      </div>
+                  </div>
+              {{/if}}
+            </div>
+        </div>
+    </div>
+
+{{else}}
+    <div class="large-2 columns">
+        <a href="#" class="button radius" {{action 'manageCommentCode' }}>Manage Comment Code</a>
+    </div>
+{{/if}}
