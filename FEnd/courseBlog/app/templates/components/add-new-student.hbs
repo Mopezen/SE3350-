@@ -115,8 +115,7 @@
         <div class="row">
             <div class="large-12 columns">
                 {{yield}}
-                <br>
-                <a href="#" class="button round" {{action 'addNewStudent'}}>Add New Student</a>
+                <br>          
                 <ul class="circle">
                     <ul>
                       {{#each modelS as |oneStudent|}}
@@ -133,6 +132,7 @@
                       {{/each}}
                     </ul>
                 </ul>
+                <a href="#" class="button round" {{action 'addNewStudent'}}>Add New Student</a>
             </div>
         </div>
     {{else}}
