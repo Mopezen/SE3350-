@@ -44,10 +44,10 @@
                         <div class="row column log-in-form">
                             <h3 class="text-center">Log in to <br> *** Sample SAS ***</h3>
                             <label>User Name
-                              {{input value=name  type="text" placeholder="user name"}}
+                              {{input value=name  type="text" placeholder="user name" action='login'}}
                             </label>
                             <label>Password
-                              {{input value=password  type="password" placeholder="password"}}
+                              {{input value=password  type="password" placeholder="password" action='login'}}
                             </label>
                             <p><a href="#" class="button radius" {{action 'login'}}>Log In</a></p>
                             <p> {{errorMessage}}</p>
