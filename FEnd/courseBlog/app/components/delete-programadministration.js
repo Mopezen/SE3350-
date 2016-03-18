@@ -14,7 +14,7 @@ export default Ember.Component.extend({
 
         });
 
-        this.get('routing').transitionTo('students' );
+        this.get('routing').transitionTo('edit' );
       }
     }
   }

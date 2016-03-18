@@ -9,12 +9,12 @@ export default Ember.Component.extend({
     deleteAdmissionRule: function(id){
       var myStore = this.get('store');
       if (confirm ('Are you sure?')) {
-        myStore.findRecord('addmissionrule',id).then(function(addmissionrule) {
+        myStore.findRecord('admissionrule',id).then(function(addmissionrule) {
           addmissionrule.destroyRecord(); // => DELETE to /department/:department_id
 
         });
 
-        this.get('routing').transitionTo('students');
+        this.get('routing').transitionTo('edit');
       }
     }
   }
