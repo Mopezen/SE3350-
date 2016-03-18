@@ -27,6 +27,14 @@ export default Ember.Component.extend({
   itrprogramModel: Ember.computed('isEditing', function(){
       return this.get('store').findAll('itrprogram');
   }),
+   MST01IsPermitted: Ember.computed(function(){ //Manage system roles
+    var authentication = this.get('oudaAuth');
+    if (authentication.getName === "Root") {
+      return true;
+    } else {
+      return (authentication.get('userCList').indexOf("MST01") >= 0);
+    }
+  }),
   actions: {
     saveStudent: function () {
       var myStore = this.get('store');

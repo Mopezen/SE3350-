@@ -111,5 +111,35 @@
 
 
 {{else}}
-    <a href="#" class="button round" {{action 'addNewStudent'}}>Add a student</a>
+    {{#if MST01IsPermitted }}
+        <div class="row">
+            <div class="large-12 columns">
+                {{yield}}
+                <br>
+                <a href="#" class="button round" {{action 'addNewStudent'}}>Add New Student</a>
+                <ul class="circle">
+                    <ul>
+                      {{#each modelS as |oneStudent|}}
+                          <div class="large-6 columns">
+                              <li>
+                                {{#link-to 'student' oneStudent.id}}{{oneStudent.firstName}} {{oneStudent.lastName}}
+                                {{/link-to}}
+                              </li>
+                          </div>
+                          <div class="large-6 columns">
+                            {{delete-student ID=oneStudent.id}}
+                          </div>
+                          <div></div>
+                      {{/each}}
+                    </ul>
+                </ul>
+            </div>
+        </div>
+    {{else}}
+        <div>
+            <br>
+            <h3>Manage Students functionality (MST01) is not available for your account.</h3>
+            <h3>Please contact the system administrator for more details.</h3>
+        </div>
+    {{/if}}
 {{/if}}

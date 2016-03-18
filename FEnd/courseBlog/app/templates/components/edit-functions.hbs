@@ -9,6 +9,7 @@
 		<li><a href="#" class="button tiny"{{action 'manageTermCode'}}>Term Codes</a></li>
 		<li><a href="#" class="button tiny"{{action 'manageAdmissionRule'}}>Admission Rules</a></li>
 		<li><a href="#" class="button tiny"{{action 'manageProgramAdministration'}}>Program Administrations</a></li>
+		<li><a href="#" class="button tiny"{{action 'manageDistrubutionResults'}}>Distrubution Results</a></li>
 	</ul>		 
 </div>
 
@@ -17,7 +18,7 @@
 {{else if isManageAcademicProgramCode}}
 	{{manage-academicprogramcode isManagingAcademicProgramCode = true}}
 {{else if isManageDepartment}}
-	{{manage-department}}
+	{{manage-department isManagingDepartment = true}}
 {{else if isManageLogicalExpression}}
 	{{manage-logicalexpression isManagingLogicalExpression = true}}
 {{else if isManageCourseCode}}
@@ -30,4 +31,6 @@
 	{{manage-addmissionrule isManagingAdmissionRule = true}}
 {{else if isManageProgramAdministration}}
 	{{manage-programadministration isManagingProgramAdministration = true}}
+{{else if isManageDistrubutionResults}}
+	<!-- Get real name{{manage-distrubutionresults isManagingDistrubutionResults = true}} -->
 {{/if}}
