@@ -4,16 +4,7 @@ export default Ember.Component.extend({
   store: Ember.inject.service(),
   genders: null,
   routing: Ember.inject.service('-routing'),
-  init: function(){
-    this._super();
-    this.loadModels();
-  },
-  loadModels: function(){
-    this.genders = this.get('store').findAll('gender');
-    this.get('store').findAll('itrprogram');
-    this.get('store').findAll('academic-load');
-    this.rerender();
-  },
+
   genderID: null,
   academicLoadID: null,
   residencyID: null,
@@ -40,7 +31,7 @@ export default Ember.Component.extend({
       return this.get('store').findAll('city');
   }),
   itrprogramModel: Ember.computed('isEditing', function(){
-      return this.get('store').findAll('itrprogram');
+      return this.get('store').query('itrprogram',{student: this.get('selectedStudent.id')});
   }),
   isEditing: false,
   actions: {

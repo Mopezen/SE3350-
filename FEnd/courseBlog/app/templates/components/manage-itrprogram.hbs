@@ -1,38 +1,43 @@
-<form>
-  <div class="panel">
-    <h3>Program Chooses:</h3>
-    <div class="row">
-      <div class="large-12 columns">
-        <label>Order
-        {{input value=order id="order" type="number"}}
-        </label>
+{{#if isManagingITR}}
+  <form>
+    <div class="panel">
+      <h3>Program Chooses:</h3>
+      <div class="row">
+        <div class="large-12 columns">
+          <label>Order
+          {{input value=order id="order" type="number"}}
+          </label>
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="large-12 columns">
-        <label>ITR Program Eligibilty:
-          <select id="eligibilty">
-            <option value=true>Eligible</option>
-            <option value=false>Ineligible</option>
-          </select>
-        </label>
+      <div class="row">
+        <div class="large-12 columns">
+          <label>ITR Program Eligibilty:
+            <select id="eligibilty">
+              <option value=true>Eligible</option>
+              <option value=false>Ineligible</option>
+            </select>
+          </label>
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="large-8 columns">
-        <label>Choice:
-          <select id="program">
-            {{#each programModel as |oneProgram|}}
-              <option value={{oneProgram.id}}>{{oneProgram.name}}</option>
-            {{/each}}
-          </select>
-        </label>
+      <div class="row">
+        <div class="large-8 columns">
+          <label>Choice:
+            <select id="program">
+              {{#each programModel as |oneProgram|}}
+                <option value={{oneProgram.id}}>{{oneProgram.name}}</option>
+              {{/each}}
+            </select>
+          </label>
+        </div>
       </div>
+      <br>
+      <a href="#" class="button tiny" {{action 'saveNewITR'}}>Save</a>
+      <a href="#" class="button tiny" {{action 'doneITR'}}>Done</a>
     </div>
-    <br>
-    <a href="#" class="button tiny" {{action 'saveNewITR'}}>Save</a>
-  </div>
-</form>
+  </form>
+{{else}}
+  <a href="#" class="button tiny" {{action 'manageITR' ID}}>Manage ITR Choices</a>
+{{/if}}
 
 
 

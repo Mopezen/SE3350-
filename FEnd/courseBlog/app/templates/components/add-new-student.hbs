@@ -64,6 +64,7 @@
                 </label>
             </div>
         </div>
+        <br>
         {{manage-residency}}
         <div class="row">
             <div class="large-12 columns">
@@ -76,6 +77,7 @@
                 </label>
             </div>
         </div>
+        <br>
         {{manage-country}}
         <div class="row">
             <div class="large-12 columns">
@@ -88,6 +90,7 @@
                 </label>
             </div>
         </div>
+        <br>
         {{manage-province countryModel = countryCur}}
         <div class="row">
             <div class="large-12 columns">
@@ -100,10 +103,8 @@
                 </label>
             </div>
         </div>
+        <br>
         {{manage-city}}
-
-        <!-- {{manage-itrprogram}} -->
-
     </form>
     <br>
     <a href="#" class="button radius" {{action 'saveStudent'}}>Save</a>
@@ -118,17 +119,19 @@
                 <br>          
                 <ul class="circle">
                     <ul>
-                      {{#each modelS as |oneStudent|}}
+                      {{#each studentModel as |oneStudent|}}
                           <div class="large-6 columns">
                               <li>
                                 {{#link-to 'student' oneStudent.id}}{{oneStudent.firstName}} {{oneStudent.lastName}}
                                 {{/link-to}}
                               </li>
                           </div>
-                          <div class="large-6 columns">
+                          <div class="large-4 columns">
+                            {{manage-itrprogram currentStudent = oneStudent}}
+                          </div>
+                          <div class="large-2 columns">
                             {{delete-student ID=oneStudent.id}}
                           </div>
-                          <div></div>
                       {{/each}}
                     </ul>
                 </ul>

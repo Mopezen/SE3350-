@@ -6,6 +6,9 @@ export default Ember.Component.extend({
   routing: Ember.inject.service('-routing'),
   countryCur: null,
 
+  studentModel: Ember.computed('isEditing', function(){
+      return this.get('store').findAll('student');
+  }),
   genderModel: Ember.computed('isEditing', function(){
       return this.get('store').findAll('gender');
   }),
@@ -56,7 +59,7 @@ export default Ember.Component.extend({
         country: countrySelected,
         province: provinceSelected,
         city: citySelected,
-        itrprogram: []
+        ITRList: []
       });
       genderSelected.get('students').pushObject(newStudent);
       newStudent.save();

@@ -26,28 +26,28 @@
                           </div>
                       </div>
                       <div class="row">
-			            <div class="large-12 columns">
-			                <label>Choose the logical expression's parent:
-			                    <select id="logicalexpression">
-			                        {{#each LogicalExpressionModel as |oneLogicalExpression|}}
-			                            <option value={{oneLogicalExpression.id}}>{{oneLogicalExpression.booleanExp}}</option>
-			                        {{/each}}
-                                  <option value="#NOTHING">N/A</option>
-			                    </select>
-			                </label>
-			            </div>
-			        </div>
-                      <!-- <div class="row">
-			            <div class="large-12 columns">
-			                <label>Choose the logical expression's admission rule:
-			                    <select id="admissionrule">
-			                        {{#each admissionRuleModel as |oneAdmissionRule|}}
-			                            <option value={{oneAdmissionRule.id}}>{{oneAdmissionRule.description}}</option>
-			                        {{/each}}
-			                    </select>
-			                </label>
-			            </div>
-			        </div> -->
+      			         <div class="large-12 columns">
+        			                <label>Choose the logical expression's parent:
+        			                    <select id="logicalexpression">
+        			                        {{#each LogicalExpressionModel as |oneLogicalExpression|}}
+        			                            <option value={{oneLogicalExpression.id}}>{{oneLogicalExpression.booleanExp}}</option>
+        			                        {{/each}}
+                                          <option value="#NOTHING">N/A</option>
+        			                    </select>
+        			                </label>
+        			            </div>
+        			        </div>
+                      <div class="row">
+        			            <div class="large-12 columns">
+        			                <label>Choose the logical expression's admission rule:
+        			                    <select id="admissionrule">
+        			                        {{#each admissionRuleModel as |oneAdmissionRule|}}
+        			                            <option value={{oneAdmissionRule.id}}>{{oneAdmissionRule.description}}</option>
+        			                        {{/each}}
+        			                    </select>
+        			                </label>
+        			            </div>
+        			        </div>
                   </form>
                   <br>
                   <div class="row">
