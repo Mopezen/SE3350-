@@ -1,0 +1,22 @@
+<div class="large-12  large-centered columns">
+    <div class="panel">
+        <table>
+            <thead>
+                <tr>
+                    <th width="200">Student Name</th>
+                    <th width="150">Student Number</th>
+                    <th width="300">Results</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each studentModel as |oneStudent|}}
+                    <tr>
+                        <td>{{oneStudent.firstName}} {{oneStudent.lastName}}</td>
+                        <td>{{oneStudent.number}}</td>
+                        <td>{{calculateAverage oneStudent.id}}</td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>

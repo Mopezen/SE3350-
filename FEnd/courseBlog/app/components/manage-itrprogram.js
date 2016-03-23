@@ -25,7 +25,7 @@ export default Ember.Component.extend({
       this.get('currentStudent').get('ITRList').pushObject(newITR); 
       newITR.save().then(() => {
         this.set('isAddingNewITR', false);
-      }),
+      });
     },
 
     cancelAddNewITR() {
