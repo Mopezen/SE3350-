@@ -23,6 +23,7 @@ Router.map(function() {
   this.route('student', {path: 'students/:student_id'});
   this.route('edit');
   this.route('deleteAcademicLoad');
+  this.route('add-file');
 });
 
 
