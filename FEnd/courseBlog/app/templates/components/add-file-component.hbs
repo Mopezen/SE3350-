@@ -1,7 +1,8 @@
 
 <div class="row">
-	{{#file-picker fileLoaded="fileLoaded" accept=".xlsx" readAs="readAsBinaryString"}}
+	<!-- {{#file-picker fileLoaded="fileLoaded" accept=".xlsx" readAs="readAsBinaryString"}}
 		Drag here or click to upload a file
+<<<<<<< HEAD
 	{{/file-picker}}
 
 	<form action='studentInputFiles' method='POST' enctype='multipart/form-data'>
@@ -10,4 +11,11 @@
 	</form>
 
 	{{add-file-component url="/upload"}}
+=======
+	{{/file-picker}} -->
+
+	<input type="file" id="fileInput" />
+	<button {{action 'fileUpload'}}>Upload</button>
+	<!-- <div id='my_file_output'></div> -->
+>>>>>>> origin/JSON-Functionality
 </div>
