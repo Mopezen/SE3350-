@@ -2,7 +2,11 @@ var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var logger = require('./logger');
+var fs = require("fs");
 var app = express();
+var multer = require('multer');
+var upload = multer({ dest: 'uploads/' });
+var xlsx = require("node-xlsx");
 //var students = require('./routes/students');
 //var residencies = require('./routes/residencies');
 var users = require('./routes/users');
@@ -732,6 +736,33 @@ app.get('/termCodes/:termCode_id', function (request, response) {
             response.json({'termCode': termCode});
         }
     });
+});
+
+app.get('/studentInputFiles', function(request, response){
+    console.log("what");
+});
+app.post('/studentInputFiles',upload.single('file'), function(request, response, next){
+    console.log("hi");
+    var xlsx_json = require('C:/Users/Ryan/Documents/GitHub/SE3350-/BEnd/courseBlog/node_modules/xlsx-to-json')
+    fs.writeFile("C:/Users/Ryan/Desktop/students.xlsx", request.body);
+    //var data = request.body.studentInputFile.excelFile.data.substring(54);
+    //console.log(data.length);
+    //data[0].length;
+    //fs.writeFile("student.xlsx", request.file);
+    //fs.writeFile("student.txt", request.body.studentInputFile.excelFile.data);
+    xlsx_json({
+      input: "C:/Users/Ryan/Desktop/students.xlsx",
+      output: 'C:/Users/Ryan/Desktop/SAS-Data/test.json'
+    }, function(err, result) {
+      if(err) {
+        console.error(err);
+      }else {
+        console.log(result);
+      }
+
+    });
+
+
 });
 
 app.post('/students', function (request, response) {
