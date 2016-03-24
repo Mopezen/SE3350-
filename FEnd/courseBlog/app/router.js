@@ -24,6 +24,7 @@ Router.map(function() {
   this.route('edit');
   this.route('deleteAcademicLoad');
   this.route('add-file');
+  this.route('studentInputFile');
 });
 
 
