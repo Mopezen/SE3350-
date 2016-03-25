@@ -9,11 +9,11 @@
                 </tr>
             </thead>
             <tbody>
-                {{#each studentModel as |oneStudent|}}
+                {{#each distributionResults as |oneStudent|}}
                     <tr>
                         <td>{{oneStudent.firstName}} {{oneStudent.lastName}}</td>
                         <td>{{oneStudent.number}}</td>
-                        <td>{{calculateAverage oneStudent.id}}</td>
+                        <td>{{oneStudent.cumAverage}}<!-- {{calculateAverage oneStudent.id store}} --></td>
                     </tr>
                 {{/each}}
             </tbody>

@@ -1,0 +1,80 @@
+{{#if isManagingGrades}}
+	<div class="row">
+		<div class="large-12 columns">
+			<h4 align="center">Add A New Grade: {{selectedStudent.firstName}} {{selectedStudent.lastName}}</h4>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="large-10  large-centered columns">
+			<div class="panel">
+				{{#if isAddingNewGrade}}
+					<h2>Add New Grade</h2>
+					<form>
+						<div class="row">
+							<div class="large-6 columns">
+								<label>Mark
+									{{input value=mark type="number"}}
+								</label>
+							</div>
+							<div class="large-6 columns">
+								<label>Section
+									{{input value=section type="number"}}
+								</label>
+							</div>
+						</div>
+						<div class="row">
+    			            <div class="large-12 columns">
+    			                <label>Choose the course code:
+    			                    <select id="cCode">
+    			                        {{#each CourseCodeModel as |oneCC|}}
+    			                            <option value={{oneCC.id}}>{{oneCC.name}} - {{oneCC.code}}</option>
+    			                        {{/each}}
+    			                    </select>
+    			                </label>
+    			            </div>
+    			        </div>
+    			        <div class="row">
+    			            <div class="large-12 columns">
+    			                <label>Choose the program record:
+    			                    <select id="pRecord">
+    			                        {{#each ProgramRecordModel as |onePR|}}
+    			                            <option value={{onePR.id}}>{{onePR.level}} - {{onePR.status}}</option>
+    			                        {{/each}}
+    			                    </select>
+    			                </label>
+    			            </div>
+    			        </div>
+					</form>
+					<div class="row">
+						<div class="large-12 columns">
+							<a href="#" class="button radius" {{action 'saveNewGrade'}}>Save</a>
+							<a href="#" class="button radius" {{action 'cancelAddNewGrade'}}>Cancel</a>
+						</div>
+					</div>
+					<br>
+				{{else}}
+					<!-- {{#each AdmissionRuleModel as |oneAdmissionRule|}}
+						<div class="row">
+							<li class="large-3 columns"> {{oneAdmissionRule.description}} </li>
+							<div class="large-2 columns">
+								{{delete-addmissionrule ID=oneAdmissionRule.id }}
+							</div>
+						</div>
+					{{/each}} -->
+					<div class="row">
+						<div class="large-12 columns">
+							<br> <br> <br>
+							<a href="#" class="button radius" {{action 'addNewGrade'}}>Add New Grade</a>
+							<a href="#" class="button radius" {{action 'doneGrade'}}>Done</a>
+						</div>
+					</div>
+				{{/if}}
+			</div>
+		</div>
+	</div>
+{{else}}
+	<a href="#" class="button tiny" {{action 'manageGrade' }}>Add a grade</a>	
+{{/if}}
+
+

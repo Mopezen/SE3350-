@@ -12,6 +12,7 @@ var userRoles = require('./routes/usersRoles');
 var rolePermissions = require('./routes/rolePermissions');
 var logins = require('./routes/logins');
 var roots = require('./routes/roots');
+var async = require('async');
 
 mongoose.createConnection('mongodb://SE3350:ouda@ds059115.mongolab.com:59115/se3350');
 
@@ -45,6 +46,7 @@ var studentsSchema = mongoose.Schema({
     firstName: String,
     lastName: String,
     DOB: String,
+    cumAverage: Number,
     gender: {type: mongoose.Schema.ObjectId, ref: ('GendersModel')},
     studyLoad: {type: mongoose.Schema.ObjectId, ref: ('AcademicLoadsModel')},
     residency: {type: mongoose.Schema.ObjectId, ref: ('ResidenciesModel')},
@@ -111,9 +113,9 @@ var programadministrationsSchema = mongoose.Schema({
 
 var academicprogramcodesSchema = mongoose.Schema({
     name: String,
-    ITR: [{type: mongoose.Schema.ObjectId, ref: ('ITRProgramsModel')}],
-    dept: [{type: mongoose.Schema.ObjectId, ref: ('ProgramAdministrationsModel')}],
-    rule: [{type: mongoose.Schema.ObjectId, ref: ('AdmissionRulesModel')}]
+    ITR: [{type: mongoose.Schema.ObjectId, ref: 'ITRProgramsModel'}],
+    dept: [{type: mongoose.Schema.ObjectId, ref: 'ProgramAdministrationsModel'}],
+    rule: {type: mongoose.Schema.ObjectId, ref: 'AdmissionRulesModel'}
 });
 
 var departmentsSchema = mongoose.Schema({
@@ -144,11 +146,11 @@ var commentSchema = mongoose.Schema(
 );
 
 var gradesSchema = mongoose.Schema({
-    mark: String, // maybe change to float or double
-    section: String,
+    mark: Number, // maybe change to float or double
+    section: Number,
     students: {type: mongoose.Schema.ObjectId, ref: ('StudentsModel')},
-    courseNo: {type: mongoose.Schema.ObjectId, ref: ('CourseCodesModel')},
-    level: {type: mongoose.Schema.ObjectId, ref: ('ProgramRecordsModel')}
+    courseCode: {type: mongoose.Schema.ObjectId, ref: ('CourseCodesModel')},
+    programRecord: {type: mongoose.Schema.ObjectId, ref: ('ProgramRecordsModel')}
 });
 
 ////////
@@ -228,19 +230,181 @@ var LogicalExpressionsModel = mongoose.model('logicalexpression', logicalExpress
 var AdmissionRulesModel = mongoose.model('admissionrule', admissionrulesSchema);
 var ProgramAdministrationsModel = mongoose.model('programadministration', programadministrationsSchema);
 
-
-
 app.get('/students', function (request, response) {
     console.log('/students');
-    StudentsModel.find(function (error, students) {
-        if (error) {
-            response.send({error: error});
-        }
-        else {
-            response.json({student: students});
-        }
+    dist = request.query.dist;
+    if(dist){
+        var firstPass;
+        async.waterfall([
+            getAllStudents,
+            function(students,callback){
+                async.forEachOfSeries(students,function(item, key, callback2){
+                    console.log("Working on student w/ fName: " + students[key].firstName);      
+                    async.waterfall([
+                        async.apply(getAllITRChoices,students[key]),
+                        function(itrprograms,student,callback3){
+                            async.forEachOfSeries(itrprograms,function(item, key, callback4){
+                                console.log("Working on student: " + student.firstName + " on ITR:" + itrprograms[key].order);
+                                async.waterfall([
+                                    async.apply(getAcademicProgramCode,student,itrprograms[key].program),
+                                    getAdmissionRule,
+                                    getAllLogicalExpressions
+                                ],function(err,results){
+                                    var logicExps = results[0];
+                                    var curStudent = results[1];
+                                    console.log("Working on student: " + curStudent.firstName + " on logical EXP of length" + logicExps.length);
+                                    async.forEachOfSeries(logicExps,function(item, key, callback5){
+                                        var stringArray = logicExps[key].booleanExp.split(" ");
+                                        //TEMP EVALUATIONS
+                                        console.log(parseInt(curStudent.cumAverage));
+                                        console.log(stringArray[2]);
+                                        if(parseInt(curStudent.cumAverage) <= parseInt(stringArray[2])){
+                                            console.log("Student:" + curStudent.firstName + " " + curStudent.lastName + " failed!");
+                                        }else{
+                                            console.log("Student:" + curStudent.firstName + " " + curStudent.lastName + " accepted!"); 
+                                        }
+                                        callback5();
+                                    });
+                                    callback4();
+                                });
+                                
+                            });
+                            callback3(null);
+                        }
+                    ], function(err,results){
+                        callback2();
+                    });
+                });
+                callback(null);    
+            }
+        ], function (err, result) {
+            // result now equals 'done'
+        });
 
-    });
+
+
+        function getAllStudents(callback) {
+            //Get all the students ordered by their averages
+            console.log("Getting the students");
+            StudentsModel.find().sort({ cumAverage: -1 }).exec(function (error, students) {
+                if (error) {
+                    callback(error)
+                } else {
+                    callback(null,students);
+                }
+            });
+        };
+
+        function getAllITRChoices(student,callback){
+            console.log("Getting the ITR's for " + student.firstName);
+            ITRProgramsModel.find({'student': student.id}).sort({order: 1}).exec(function (error, itrprograms) {
+                if (error) {
+                    callback(error)
+                } else {
+                    callback(null,itrprograms,student);
+                }
+            });     
+        };
+
+        function getAcademicProgramCode(student,id,callback){
+            AcademicProgramCodesModel.findById(id, function(error, academicprogramcode) {
+                if (error) {
+                    callback(error);
+                } else {
+                    console.log("Working on student: " + student.firstName + " on program:" + academicprogramcode.name);
+                    callback(null,student,academicprogramcode);
+                }
+            });     
+        };
+
+        function getAdmissionRule(student,academicprogramcode,callback){
+            AdmissionRulesModel.findById(academicprogramcode.rule, function(error, admissionrule) {
+                if (error) {
+                    callback(error);
+                } else {
+                    //console.log(academicprogramcode.rule);
+                    console.log("Working on student: " + student.firstName + " on admission rule:" + admissionrule.description);
+                    callback(null,student,admissionrule);
+                }
+            });     
+        };
+
+        function getAllLogicalExpressions(student,admissionrule,callback){
+            console.log("Getting the logical expressions for " + admissionrule.description + " for student " + student.firstName);
+            LogicalExpressionsModel.find({'admissionRule': admissionrule.id}).exec(function (error, logicalexpression) {
+                if (error) {
+                    callback(error);
+                } else {
+                    console
+                    callback(null,[logicalexpression,student]);
+                }
+            });     
+        };
+        // function studentsAry(i,fn){
+        //     StudentsModel.find().sort({ cumAverage: -1 }).exec(function (error, students) {
+        //         if (error) {
+        //             console.log("ERROR!");
+        //             fn("ERROR");
+        //             //response.send({error: error});
+        //         } else {
+        //             fn(students);
+        //             //response.json({student: students});
+        //         }
+        //     });
+            
+        // };
+        
+        
+        // var i;
+        // studentsAry(i,function(students){
+        //     var _studentsArray = students
+        //     console.log(_studentsArray);
+        //     for(i = 0; i < _studentsArray.lenght; i++){
+        //         console.log(i);
+        //         console.log(_studentsArray[i]);
+        //         /*ITRAry(_studentsArray[i],function(ITRArray){
+        //             for(var b = 0; b < ITRArray.length; b++){
+        //                 console.log(ITRArray[b])
+        //                 APCModel(student,ITRArray[b].program,function(acaprogram){
+        //                     console.log(acaprogram);
+        //                 });    
+        //             }
+        //         });*/
+        //     }
+        // });
+        response.send({error: "TESTING"});
+        /*var _students = StudentsModel.find().sort({ cumAverage: -1 }).exec(function (error, students) {
+            if (error) {
+                console.log("ERROR!")
+                return "ERROR"
+                //response.send({error: error});
+            }
+            else {
+                for(var i = 0; i < students.length; i++){
+                    ITRProgramsModel.find({'student': students[i].id}).sort({order: 1}).exec(function (error, itrprograms) {
+                        for(var b = 0; b < itrprograms.length; b++){
+                            AcademicProgramCodesModel.findById(itrprograms[b].program, function(error, acaprograms){
+                                AdmissionRulesModel.findById(acaprograms.rule,function(error,admissionrule){
+                                    response.json({})
+                                });
+                            });
+                        }
+                    });
+                }
+                response.json({student: students});
+            }
+        });*/
+    }else{
+        StudentsModel.find(function (error, students) {
+            if (error) {
+                response.send({error: error});
+            }
+            else {
+                response.json({student: students});
+            }
+
+        });
+    }
 });
 
 app.get('/admissionrules', function (request, response) {
@@ -358,15 +522,29 @@ app.get('/posts', function (request, response) {
 
 app.get('/itrprograms', function (request, response) {
     console.log('/itrprograms');
-    ITRProgramsModel.find(function (error, itrprograms) {
-        if (error) {
-            response.send({error: error});
-        }
-        else {
-            response.json({'itrprogram': itrprograms});
-        }
+    student = request.query.student;
 
-    });
+    if(student){
+        ITRProgramsModel.find({'student': student},function (error, itrprograms) {
+            if (error) {
+                response.send({error: error});
+            }
+            else {
+                response.json({'itrprogram': itrprograms});
+            }
+
+        });
+    }else{
+        ITRProgramsModel.find(function (error, itrprograms) {
+            if (error) {
+                response.send({error: error});
+            }
+            else {
+                response.json({'itrprogram': itrprograms});
+            }
+
+        });
+    }
 });
 
 app.get('/academicprogramcodes', function (request, response) {
@@ -409,8 +587,10 @@ app.get('/faculties', function (request, response) {
 });
 
 app.get('/grades', function (request, response) {
-    console.log('/grades');
-    GradesModel.find(function (error, grades) {
+    console.log('/grades')
+    students = request.query.students;
+    if(students){
+       GradesModel.find({'students': students}, function (error, grades) {
         if (error) {
             response.send({error: error});
         }
@@ -418,13 +598,25 @@ app.get('/grades', function (request, response) {
             response.json({'grade': grades});
         }
 
-    });
+    });        
+   }
+
+   else {GradesModel.find(function (error, grades) {
+    if (error) {
+        response.send({error: error});
+    }
+    else {
+        response.json({'grade': grades});
+    }
+
+});
+    }
 });
 
 ////
 app.get('/distributionresults', function (request, response) {
     console.log('/distributionresults');
-    GradesModel.find(function (error, distributionresults) {
+    DistributionResultsModel.find(function (error, distributionresults) {
         if (error) {
             response.send({error: error});
         }
@@ -739,6 +931,7 @@ app.post('/students', function (request, response) {
         firstName: request.body.student.firstName,
         lastName: request.body.student.lastName,
         DOB: request.body.student.DOB,
+        cumAverage: request.body.student.cumAverage,
         gender: request.body.student.gender,
         studyLoad: request.body.student.studyLoad,
         residency: request.body.student.residency,
@@ -883,6 +1076,7 @@ app.post('/faculties', function (request, response) {
 });
 
 app.post('/academicprogramcodes', function (request, response) {
+    console.log(request.body.academicprogramcode);
     var academicprogramcode = new AcademicProgramCodesModel(request.body.academicprogramcode);
     academicprogramcode.save(function (error) {
         if (error) {
@@ -1061,6 +1255,7 @@ app.put('/students/:student_id', function (request, response) {
             student.DOB = request.body.student.DOB;
             student.firstName = request.body.student.firstName;
             student.lastName = request.body.student.lastName;
+            student.cumAverage = request.body.student.cumAverage;
             student.gender = request.body.student.gender;
             student.studyLoad = request.body.student.studyLoad;
             student.residency = request.body.student.residency;

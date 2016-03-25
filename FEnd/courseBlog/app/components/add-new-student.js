@@ -47,7 +47,6 @@ export default Ember.Component.extend({
       var countrySelected = myStore.peekRecord('country', this.$('#country')[0].value);
       var provinceSelected = myStore.peekRecord('province', this.$('#province')[0].value);
       var citySelected = myStore.peekRecord('city', this.$('#city')[0].value);
-      //var itrprogramSelected = myStore.peekRecord('itrprogram', this.$('#itrprogram')[0].value);
       var newStudent = myStore.createRecord('student', {
         number: this.get('number'),
         firstName: this.get('firstName'),
@@ -59,7 +58,8 @@ export default Ember.Component.extend({
         country: countrySelected,
         province: provinceSelected,
         city: citySelected,
-        ITRList: []
+        ITRList: [],
+        cumAverage: Math.random() * (100 - 1) + 1
       });
       genderSelected.get('students').pushObject(newStudent);
       newStudent.save();

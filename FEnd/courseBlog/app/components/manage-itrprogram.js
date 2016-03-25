@@ -6,6 +6,10 @@ export default Ember.Component.extend({
   isAddingNewITR: false,
   dataModel: null,
 
+  selectEle: [
+    {label: "Eligible", val: true},
+    {label: "Ineligible", val: false}
+  ],
   ITRModel: Ember.computed(function(){
     return this.get('store').findAll('itrprogram');
   }),

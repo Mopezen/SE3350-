@@ -12,5 +12,6 @@ export default DS.Model.extend({
   province: DS.belongsTo('province',{async: true}),
   city: DS.belongsTo('city',{async: true}),
   mark: DS.hasMany('grade',{async: true}),
-  ITRList: DS.hasMany('itrprogram',{async: true})
+  ITRList: DS.hasMany('itrprogram',{async: true}),
+  cumAverage: DS.attr(),
 });

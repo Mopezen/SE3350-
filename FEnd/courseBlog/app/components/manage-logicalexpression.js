@@ -30,7 +30,7 @@ export default Ember.Component.extend({
         logicalLink: this.get('logicalLink'),
         parent: parentLExp,
         children: [],
-        admissionrule: selectedAdmissionRule
+        admissionRule: selectedAdmissionRule
       }); 
       newLogicalExpression.save().then(() => {
         this.set('isAddingNewLogicalExpression', false);

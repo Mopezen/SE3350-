@@ -120,16 +120,19 @@
                 <ul class="circle">
                     <ul>
                       {{#each studentModel as |oneStudent|}}
-                          <div class="large-6 columns">
+                          <div class="large-5 columns">
                               <li>
                                 {{#link-to 'student' oneStudent.id}}{{oneStudent.firstName}} {{oneStudent.lastName}}
                                 {{/link-to}}
                               </li>
                           </div>
-                          <div class="large-4 columns">
+                          <div class="large-3 columns">
+                            {{manage-grades selectedStudent = oneStudent}}
+                          </div>
+                          <div class="large-3 columns">
                             {{manage-itrprogram currentStudent = oneStudent}}
                           </div>
-                          <div class="large-2 columns">
+                          <div class="large-1 columns">
                             {{delete-student ID=oneStudent.id}}
                           </div>
                       {{/each}}
