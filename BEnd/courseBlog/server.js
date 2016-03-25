@@ -252,7 +252,7 @@ app.get('/students', function (request, response) {
                                 ],function(err,results){
                                     var logicExps = results[0];
                                     var curStudent = results[1];
-                                    console.log("Working on student: " + curStudent.firstName + " on logical EXP of length" + logicExps.length);
+                                    console.log("Working on student: " + student.firstName + " on ITR:" + itrprograms[key].order);
                                     async.forEachOfSeries(logicExps,function(item, key, callback5){
                                         var stringArray = logicExps[key].booleanExp.split(" ");
                                         //TEMP EVALUATIONS
