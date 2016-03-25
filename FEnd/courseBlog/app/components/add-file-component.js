@@ -60,12 +60,33 @@ export default Ember.Component.extend({
 				wb = X.read(btoa(arr), {
 					type: 'base64'
 				});
+				console.log(f.name.split('.',1)[0]);
+				var namePlural = pluralize(f.name.split('.',1)[0]);
 				result = process_wb(wb);
 				var newJson = store.createRecord('student-input-file',{
-					jsonTxt: result
+					jsonTxt: result,
+					name: namePlural
 				});
 				newJson.save();
 			};
 			reader.readAsArrayBuffer(f);
 		}
+	}
+	function pluralize(single){
+		single = single.toLowerCase();
+		console.log(single);
+		var single2 = "";
+		if(single[single.length-1]=='y'){
+			for(var i=0;i<single.length-1;i++){
+				single2 = single2.concat(single[i]);
+			}
+			single2 = single2.concat("ies");
+
+		}
+		else{
+			single2 = single;
+			single2 = single2.concat("s");
+		}
+		console.log(single2);
+		return single2;
 	}
