@@ -1,3 +1,4 @@
+<!-- {{distributionResults}} -->
 <div class="large-12  large-centered columns">
     <div class="panel">
         <table>
@@ -9,11 +10,16 @@
                 </tr>
             </thead>
             <tbody>
-                {{#each distributionResults as |oneStudent|}}
+                {{#each studentModel as |oneDR|}}
                     <tr>
-                        <td>{{oneStudent.firstName}} {{oneStudent.lastName}}</td>
-                        <td>{{oneStudent.number}}</td>
-                        <td>{{oneStudent.cumAverage}}<!-- {{calculateAverage oneStudent.id store}} --></td>
+                        <td>{{oneDR.date}}</td>
+                        <td>{{oneDR.commentCode.description}}</td>
+                        <td>{{oneDR.students.firstName}}
+                            <!-- {{calculateAverage oneStudent.id store}}
+                        {{#each calculateAverage oneStudent.id store as |oneDR|}}
+                            {{oneDR.date}} {{oneDR.commentCode.description}}
+                        {{/each}} -->
+                        </td>
                     </tr>
                 {{/each}}
             </tbody>
