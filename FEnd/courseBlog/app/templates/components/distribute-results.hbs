@@ -1,4 +1,4 @@
-<!-- {{distributionResults}} -->
+{{distributionResults}}
 <div class="large-12  large-centered columns">
     <div class="panel">
         <table>
@@ -10,11 +10,11 @@
                 </tr>
             </thead>
             <tbody>
-                {{#each studentModel as |oneDR|}}
+                {{#each dModel as |oneDR|}}
                     <tr>
                         <td>{{oneDR.date}}</td>
-                        <td>{{oneDR.commentCode.description}}</td>
-                        <td>{{oneDR.students.firstName}}
+                        <td>{{oneDR.students.number}}</td>
+                        <td>{{oneDR.commentCode.code}}
                             <!-- {{calculateAverage oneStudent.id store}}
                         {{#each calculateAverage oneStudent.id store as |oneDR|}}
                             {{oneDR.date}} {{oneDR.commentCode.description}}

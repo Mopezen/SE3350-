@@ -158,7 +158,7 @@ var gradesSchema = mongoose.Schema({
 var distributionresultSchema = mongoose.Schema({
     date: String, 
     students: {type: mongoose.Schema.ObjectId, ref: ('StudentsModel')},
-    commentCode: [{type: mongoose.Schema.ObjectId, ref: 'CommentCodesModel'}]
+    commentCode: {type: mongoose.Schema.ObjectId, ref: ('CommentCodesModel')}
 });
 
 
@@ -263,7 +263,7 @@ app.get('/students', function (request, response) {
                                         //TEMP EVALUATIONS
                                         console.log(parseInt(curStudent.cumAverage));
                                         console.log(stringArray[2]);
-                                        if(parseInt(curStudent.cumAverage) <= parseInt(stringArray[2])){
+                                        if(parseInt(curStudent[logicExps.logicalLink]) <= parseInt(stringArray[2])){
                                             console.log("Student:" + curStudent.firstName + " " + curStudent.lastName + " failed!");
                                             isAccepted = false;
                                         }else{
