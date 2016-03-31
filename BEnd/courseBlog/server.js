@@ -2,11 +2,7 @@ var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var logger = require('./logger');
-var fs = require("fs");
 var app = express();
-var multer = require('multer');
-var upload = multer({ dest: 'uploads/' });
-var xlsx = require("node-xlsx");
 //var students = require('./routes/students');
 //var residencies = require('./routes/residencies');
 var users = require('./routes/users');
@@ -20,10 +16,9 @@ var async = require('async');
 
 mongoose.createConnection('mongodb://SE3350:ouda@ds059115.mongolab.com:59115/se3350');
 
-//VVVVVVVVVVVV
 
 
-//^^^^^^^^^^^
+
 app.use(function (request, response, next) {
     response.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
     response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -1021,47 +1016,6 @@ app.get('/termCodes/:termCode_id', function (request, response) {
             response.json({'termCode': termCode});
         }
     });
-});
-
-app.get('/studentInputFiles', function(request, response){
-    console.log("what");
-});
-app.post('/studentInputFiles', function(request, response){
-    console.log("hi");
-    var name = request.body.studentInputFile.name;
-    console.log(name);
-    var json = request.body.studentInputFile.jsonTxt;
-    json2 = json["MOCK_DATA (1)"];
-    if(json2 == null){
-        json = json["SAS Data"];
-    }
-    else{
-        json = json2;
-    }
-    console.log(json);
-    var MongoClient = require('mongodb').MongoClient;
-    var assert = require('assert');
-    var ObjectId = require('mongodb').ObjectID;
-    var url = 'mongodb://ryan:ryan@ds059115.mlab.com:59115/se3350';
-
-    var insertDocument = function(db, callback) {
-       db.collection(name).insert(json, function(err, result) {
-        assert.equal(err, null);
-        console.log("Inserted a document into the "+name+" collection.");
-        callback();
-      });
-    };
-
-    MongoClient.connect(url, function(err, db) {
-      assert.equal(null, err);
-      insertDocument(db, function() {
-          db.close();
-      });
-    });
-
-
-
-
 });
 
 app.post('/students', function (request, response) {
