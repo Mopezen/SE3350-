@@ -16,6 +16,7 @@ var userRoles = require('./routes/usersRoles');
 var rolePermissions = require('./routes/rolePermissions');
 var logins = require('./routes/logins');
 var roots = require('./routes/roots');
+var async = require('async');
 
 mongoose.createConnection('mongodb://SE3350:ouda@ds059115.mongolab.com:59115/se3350');
 
@@ -50,6 +51,7 @@ var studentsSchema = mongoose.Schema({
     firstName: String,
     lastName: String,
     DOB: String,
+    cumAverage: Number,
     gender: {type: mongoose.Schema.ObjectId, ref: ('GendersModel')},
     studyLoad: {type: mongoose.Schema.ObjectId, ref: ('AcademicLoadsModel')},
     residency: {type: mongoose.Schema.ObjectId, ref: ('ResidenciesModel')},
@@ -116,9 +118,10 @@ var programadministrationsSchema = mongoose.Schema({
 
 var academicprogramcodesSchema = mongoose.Schema({
     name: String,
-    ITR: [{type: mongoose.Schema.ObjectId, ref: ('ITRProgramsModel')}],
-    dept: [{type: mongoose.Schema.ObjectId, ref: ('ProgramAdministrationsModel')}],
-    rule: [{type: mongoose.Schema.ObjectId, ref: ('AdmissionRulesModel')}]
+    ITR: [{type: mongoose.Schema.ObjectId, ref: 'ITRProgramsModel'}],
+    dept: [{type: mongoose.Schema.ObjectId, ref: 'ProgramAdministrationsModel'}],
+    rule: {type: mongoose.Schema.ObjectId, ref: 'AdmissionRulesModel'},
+    CC: {type: mongoose.Schema.ObjectId, ref: 'CommentCodesModel'}
 });
 
 var departmentsSchema = mongoose.Schema({
@@ -149,18 +152,18 @@ var commentSchema = mongoose.Schema(
 );
 
 var gradesSchema = mongoose.Schema({
-    mark: String, // maybe change to float or double
-    section: String,
+    mark: Number, // maybe change to float or double
+    section: Number,
     students: {type: mongoose.Schema.ObjectId, ref: ('StudentsModel')},
-    courseNo: {type: mongoose.Schema.ObjectId, ref: ('CourseCodesModel')},
-    level: {type: mongoose.Schema.ObjectId, ref: ('ProgramRecordsModel')}
+    courseCode: {type: mongoose.Schema.ObjectId, ref: ('CourseCodesModel')},
+    programRecord: {type: mongoose.Schema.ObjectId, ref: ('ProgramRecordsModel')}
 });
 
 ////////
 var distributionresultSchema = mongoose.Schema({
     date: String, 
     students: {type: mongoose.Schema.ObjectId, ref: ('StudentsModel')},
-    commentCode: [{type: mongoose.Schema.ObjectId, ref: 'CommentCodesModel'}]
+    commentCode: {type: mongoose.Schema.ObjectId, ref: ('CommentCodesModel')}
 });
 
 
@@ -177,7 +180,8 @@ var commentCodeSchema = mongoose.Schema({
     progAction: String,
     description: String,
     notes: String,
-    distritutionresult: {type: mongoose.Schema.ObjectId, ref: 'DistributionResultsModel'}
+    distritutionresult: [{type: mongoose.Schema.ObjectId, ref: 'DistributionResultsModel'}],
+    APC: {type: mongoose.Schema.ObjectId, ref: ('AcademicProgramCodesModel')}
 });
 
 var programRecordSchema = mongoose.Schema({
@@ -223,7 +227,7 @@ var FacultiesModel = mongoose.model('faculty',facultiesSchema);
 var GradesModel = mongoose.model('grade', gradesSchema);
 ////
 var DistributionResultsModel = mongoose.model('distributionresult', distributionresultSchema);
-var CommentCodesModel = mongoose.model('commentCode', commentCodeSchema);
+var CommentCodesModel = mongoose.model('commentcode', commentCodeSchema);
 ////
 var CourseCodesModel = mongoose.model('courseCode', courseCodeSchema);
 var ProgramRecordsModel = mongoose.model('programRecord', programRecordSchema);
@@ -233,19 +237,254 @@ var LogicalExpressionsModel = mongoose.model('logicalexpression', logicalExpress
 var AdmissionRulesModel = mongoose.model('admissionrule', admissionrulesSchema);
 var ProgramAdministrationsModel = mongoose.model('programadministration', programadministrationsSchema);
 
-
-
 app.get('/students', function (request, response) {
     console.log('/students');
-    StudentsModel.find(function (error, students) {
-        if (error) {
-            response.send({error: error});
-        }
-        else {
-            response.json({student: students});
-        }
+    dist = request.query.dist;
+    if(dist){
+        var studentArray = []
+        async.waterfall([
+            getAllStudents,
+            function(students,callback){
+                async.forEachOfSeries(students,function(item, key, callback2){
+                    console.log("Working on student w/ fName: " + students[key].firstName);
+                    studentArray.push([students[key],0]);      
+                    async.waterfall([
+                        async.apply(getAllITRChoices,students[key]),
+                        function(itrprograms,student,callback3){
+                            async.forEachOfSeries(itrprograms,function(item, key, callback4){
+                                console.log("Working on student: " + student.firstName + " on ITR:" + itrprograms[key].program);
+                                async.waterfall([
+                                    async.apply(getAcademicProgramCode,student,itrprograms[key].program),
+                                    getAdmissionRule,
+                                    getAllLogicalExpressions
+                                ],function(err,results){
+                                    var logicExps = results[0];
+                                    var curStudent = results[1];
+                                    var programName = results[2];
+                                    var isAccepted = true;
+                                    console.log("Working on student: " + curStudent.firstName + " on logicial exp: " + logicExps[0].booleanExp);
+                                    async.forEachOfSeries(logicExps,function(item, key, callback5){
+                                        var stringArray = logicExps[key].booleanExp.split(" ");
+                                        //TEMP EVALUATIONS
+                                        console.log(parseInt(curStudent.cumAverage));
+                                        console.log(stringArray[2]);
+                                        if(parseInt(curStudent[logicExps.logicalLink]) <= parseInt(stringArray[2])){
+                                            console.log("Student:" + curStudent.firstName + " " + curStudent.lastName + " failed!");
+                                            isAccepted = false;
+                                        }else{
+                                            console.log("Student:" + curStudent.firstName + " " + curStudent.lastName + " accepted!");
+                                        }
+                                        callback5();
+                                    }, function(){
+                                        if (isAccepted){
+                                            async.series([
+                                                function(callbackTemp){
+                                                    /*CommentCodesModel.find({'APC': programName}).exec(function (error, _commentCode) {
+                                                        if (error) {
+                                                            callbackTemp(null,null);
+                                                        } else {
+                                                            callbackTemp(null,_commentCode);
+                                                        }
+                                                    });*/
+                                                    if(programName === "B.E.Sc. Chemical Engineering"){
+                                                        CommentCodesModel.find({'APC': programName}).exec(function (error, _commentCode) {
+                                                            if (error) {
+                                                                callbackTemp(null,null);
+                                                            } else {
+                                                                callbackTemp(null,_commentCode);
+                                                            }
+                                                        });
+                                                    }else if(programName === "B.E.Sc. Civil Engineering"){
+                                                        CommentCodesModel.find({'code': "EV"}).exec(function (error, _commentCode) {
+                                                            if (error) {
+                                                                callbackTemp(null,null);
+                                                            } else {
+                                                                callbackTemp(null,_commentCode);
+                                                            }
+                                                        });
+                                                    }else if(programName === "B.E.Sc. Electrical Engineering"){
+                                                        CommentCodesModel.find({'code': "EE"}).exec(function (error, _commentCode) {
+                                                            if (error) {
+                                                                callbackTemp(null,null);
+                                                            } else {
+                                                                callbackTemp(null,_commentCode);
+                                                            }
+                                                        });
+                                                    }else if(programName === "B.E.Sc. Mechanical Engineering"){
+                                                        CommentCodesModel.find({'code': "EM"}).exec(function (error, _commentCode) {
+                                                            if (error) {
+                                                                callbackTemp(null,null);
+                                                            } else {
+                                                                callbackTemp(null,_commentCode);
+                                                            }
+                                                        });
+                                                    }else if(programName === "B.E.Sc. Computer Engineering (Electronic Devices for Ubiquitous Computing)"){
+                                                        CommentCodesModel.find({'code': "EC"}).exec(function (error, _commentCode) {
+                                                            if (error) {
+                                                                callbackTemp(null,null);
+                                                            } else {
+                                                                callbackTemp(null,_commentCode);
+                                                            }
+                                                        });
+                                                    }else if(programName === "B.E.Sc. Computer Engineering (Software Systems for Ubiquitous Computing)"){
+                                                        CommentCodesModel.find({'code': "EC"}).exec(function (error, _commentCode) {
+                                                            if (error) {
+                                                                callbackTemp(null,null);
+                                                            } else {
+                                                                callbackTemp(null,_commentCode);
+                                                            }
+                                                        });
+                                                    }else if(programName === "B.E.Sc. Software Engineering"){
+                                                        CommentCodesModel.find({'code': "EF"}).exec(function (error, _commentCode) {
+                                                            if (error) {
+                                                                callbackTemp(null,null);
+                                                            } else {
+                                                                callbackTemp(null,_commentCode);
+                                                            }
+                                                        });
+                                                    }else if(programName === "B.E.Sc. Integrated Engineering"){
+                                                        CommentCodesModel.find({'code': "EI"}).exec(function (error, _commentCode) {
+                                                            if (error) {
+                                                                callbackTemp(null,null);
+                                                            } else {
+                                                                callbackTemp(null,_commentCode);
+                                                            }
+                                                        });
+                                                    }else if(programName === "B.E.Sc Mechatronic Systems Engineering"){
+                                                        CommentCodesModel.find({'code': "ED"}).exec(function (error, _commentCode) {
+                                                            if (error) {
+                                                                callbackTemp(null,null);
+                                                            } else {
+                                                                callbackTemp(null,_commentCode);
+                                                            }
+                                                        });
+                                                    } 
+                                                }
+                                                ],
+                                                // optional callback
+                                                function(err, results){
+                                                    var commentC = results[0];
+                                                    var curDate = new Date();
+                                                    var grade = new DistributionResultsModel({
+                                                        date: curDate.toDateString(),
+                                                        students: curStudent.id,
+                                                        commentCode: commentC
+                                                    }); 
+                                                    grade.save();
+                                                });
 
-    });
+                                        }else{
+                                            async.series([
+                                                function(callbackTemp){
+                                                    CommentCodesModel.find({'code': "P5"}).exec(function (error, _commentCode) {
+                                                        if (error) {
+                                                            callbackTemp(null,null);
+
+                                                        } else {
+                                                            callbackTemp(null, _commentCode);
+                                                        }
+                                                    });   
+                                                }
+                                            ],
+                                            // optional callback
+                                            function(err, results){
+                                                var commentC = results[0];
+                                                var curDate = new Date();
+                                                var grade = new DistributionResultsModel({
+                                                    date: curDate.toDateString(),
+                                                    students: curStudent.id,
+                                                    commentCode: commentC
+                                                }); 
+                                                grade.save();
+                                            });
+                                        }
+                                        callback4();
+                                    });         
+                                });
+                            },function(){
+                               callback3(null); 
+                            });       
+                        }
+                    ], function(err,results){
+                        console.log(results)
+                        callback2();
+                    });
+                });
+                callback(null);    
+            }
+        ], function (err, result) {
+            // result now equals 'done'
+        });
+
+
+
+        function getAllStudents(callback) {
+            console.log("Getting the students");
+            StudentsModel.find().sort({ cumAverage: -1 }).exec(function (error, students) {
+                if (error) {
+                    callback(error)
+                } else {
+                    callback(null,students);
+                }
+            });
+        };
+
+        function getAllITRChoices(student,callback){
+            console.log("Getting the ITR's for " + student.firstName);
+            ITRProgramsModel.find({'student': student.id}).sort({order: 1}).exec(function (error, itrprograms) {
+                if (error) {
+                    callback(error)
+                } else {
+                    callback(null,itrprograms,student);
+                }
+            });     
+        };
+
+        function getAcademicProgramCode(student,id,callbackAca){
+            AcademicProgramCodesModel.findById(id, function(error, academicprogramcode) {
+                if (error) {
+                    callback(error);
+                } else {
+                    console.log("Working on student: " + student.firstName + " on program:" + academicprogramcode.name);
+                    callbackAca(null,student,academicprogramcode);
+                }
+            });     
+        };
+
+        function getAdmissionRule(student,academicprogramcode,callback){
+            AdmissionRulesModel.findById(academicprogramcode.rule, function(error, admissionrule) {
+                if (error) {
+                    callback(error);
+                } else {
+                    console.log("Working on student: " + student.firstName + " on admission rule:" + admissionrule.description);
+                    callback(null,student,admissionrule,academicprogramcode);
+                }
+            });     
+        };
+
+        function getAllLogicalExpressions(student,admissionrule,program,callback){
+            console.log("Getting the logical expressions for " + admissionrule.description + " for student " + student.firstName);
+            LogicalExpressionsModel.find({'admissionRule': admissionrule.id}).exec(function (error, logicalexpression) {
+                if (error) {
+                    callback(error);
+                } else {
+                    console
+                    callback(null,[logicalexpression,student,program]);
+                }
+            });     
+        };
+        response.send({error: "TESTING"}); 
+    }else{
+        StudentsModel.find(function (error, students) {
+            if (error) {
+                response.send({error: error});
+            }
+            else {
+                response.json({student: students});
+            }
+
+        });
+    }
 });
 
 app.get('/admissionrules', function (request, response) {
@@ -363,15 +602,29 @@ app.get('/posts', function (request, response) {
 
 app.get('/itrprograms', function (request, response) {
     console.log('/itrprograms');
-    ITRProgramsModel.find(function (error, itrprograms) {
-        if (error) {
-            response.send({error: error});
-        }
-        else {
-            response.json({'itrprogram': itrprograms});
-        }
+    student = request.query.student;
 
-    });
+    if(student){
+        ITRProgramsModel.find({'student': student},function (error, itrprograms) {
+            if (error) {
+                response.send({error: error});
+            }
+            else {
+                response.json({'itrprogram': itrprograms});
+            }
+
+        });
+    }else{
+        ITRProgramsModel.find(function (error, itrprograms) {
+            if (error) {
+                response.send({error: error});
+            }
+            else {
+                response.json({'itrprogram': itrprograms});
+            }
+
+        });
+    }
 });
 
 app.get('/academicprogramcodes', function (request, response) {
@@ -414,8 +667,10 @@ app.get('/faculties', function (request, response) {
 });
 
 app.get('/grades', function (request, response) {
-    console.log('/grades');
-    GradesModel.find(function (error, grades) {
+    console.log('/grades')
+    students = request.query.students;
+    if(students){
+       GradesModel.find({'students': students}, function (error, grades) {
         if (error) {
             response.send({error: error});
         }
@@ -423,14 +678,27 @@ app.get('/grades', function (request, response) {
             response.json({'grade': grades});
         }
 
-    });
+    });        
+   }
+
+   else {GradesModel.find(function (error, grades) {
+    if (error) {
+        response.send({error: error});
+    }
+    else {
+        response.json({'grade': grades});
+    }
+
+});
+    }
 });
 
 ////
 app.get('/distributionresults', function (request, response) {
     console.log('/distributionresults');
-    GradesModel.find(function (error, distributionresults) {
+    DistributionResultsModel.find(function (error, distributionresults) {
         if (error) {
+            console.log("HI");
             response.send({error: error});
         }
         else {
@@ -642,6 +910,19 @@ app.get('/faculties/:faculty_id', function (request, response) {
     });
 });
 
+app.get('/commentCodes/:commentCode_id', function (request, response) {
+    console.log('/commentCodes/:commentCode_id');
+    CommentCodesModel.findById(request.params.commentCode_id, function (error, commentcode) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            console.log(commentcode);
+            response.json({'comment-code': commentcode});
+        }
+    });
+});
+
 app.get('/departments/:department_id', function (request, response) {
     console.log('/departments/:department_id');
     DepartmentsModel.findById(request.params.department_id, function (error, department) {
@@ -785,6 +1066,7 @@ app.post('/students', function (request, response) {
         firstName: request.body.student.firstName,
         lastName: request.body.student.lastName,
         DOB: request.body.student.DOB,
+        cumAverage: request.body.student.cumAverage,
         gender: request.body.student.gender,
         studyLoad: request.body.student.studyLoad,
         residency: request.body.student.residency,
@@ -929,6 +1211,7 @@ app.post('/faculties', function (request, response) {
 });
 
 app.post('/academicprogramcodes', function (request, response) {
+    console.log(request.body.academicprogramcode);
     var academicprogramcode = new AcademicProgramCodesModel(request.body.academicprogramcode);
     academicprogramcode.save(function (error) {
         if (error) {
@@ -1107,6 +1390,7 @@ app.put('/students/:student_id', function (request, response) {
             student.DOB = request.body.student.DOB;
             student.firstName = request.body.student.firstName;
             student.lastName = request.body.student.lastName;
+            student.cumAverage = request.body.student.cumAverage;
             student.gender = request.body.student.gender;
             student.studyLoad = request.body.student.studyLoad;
             student.residency = request.body.student.residency;

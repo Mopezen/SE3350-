@@ -6,5 +6,6 @@ export default DS.Model.extend({
 	progAction: DS.attr(),
 	description: DS.attr(),
 	notes: DS.attr(),
-	distributionResult: DS.belongsTo('distributionresult', { async: true })
+	distributionResult: DS.hasMany('distributionresult', { async: true }),
+	APC: DS.belongsTo('academicprogramcode',{ async: true })
 });

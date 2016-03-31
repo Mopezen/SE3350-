@@ -10,7 +10,7 @@ export default Ember.Component.extend({
     return this.get('store').findAll('logicalexpression');
   }),
   admissionRuleModel: Ember.computed(function(){
-      //return this.get('store').findAll('admissionrule');
+      return this.get('store').findAll('admissionrule');
   }),
   actions: {
     saveNewLogicalExpression: function (){
@@ -24,13 +24,13 @@ export default Ember.Component.extend({
       }else{
       	parentLExp = null;
       }
-      //var selectedAdmissionRule = myStore.peekRecord('admissionrule', this.$('#admissionrule')[0].value);
+      var selectedAdmissionRule = myStore.peekRecord('admissionrule', this.$('#admissionrule')[0].value);
       var newLogicalExpression = myStore.createRecord('logicalexpression', {
         booleanExp: this.get('booleanExp'),
         logicalLink: this.get('logicalLink'),
         parent: parentLExp,
         children: [],
-        //admissionrule: selectedAdmissionRule
+        admissionRule: selectedAdmissionRule
       }); 
       newLogicalExpression.save().then(() => {
         this.set('isAddingNewLogicalExpression', false);

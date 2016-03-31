@@ -6,6 +6,10 @@ export default Ember.Component.extend({
   isAddingNewITR: false,
   dataModel: null,
 
+  selectEle: [
+    {label: "Eligible", val: true},
+    {label: "Ineligible", val: false}
+  ],
   ITRModel: Ember.computed(function(){
     return this.get('store').findAll('itrprogram');
   }),
@@ -15,14 +19,12 @@ export default Ember.Component.extend({
   actions: {
     saveNewITR: function (){
       var myStore = this.get('store');
-      //var ele = this.get('eligibilty').value
       var programSelected = myStore.peekRecord('academicprogramcode', this.$('#program')[0].value);
       var newITR = myStore.createRecord('itrprogram', {
         order: this.get('order'),
         program: programSelected,
         eligibilty: this.$('#eligibilty')[0].value,
         student: this.get('currentStudent'),
-        rule: null
       });
       this.get('currentStudent').get('ITRList').pushObject(newITR); 
       newITR.save().then(() => {

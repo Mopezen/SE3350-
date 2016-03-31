@@ -5,5 +5,5 @@ export default DS.Model.extend({
 	logicalLink: DS.attr(),
   	children: DS.hasMany('logicalexpression', { async: true, inverse: 'parent'}),
   	parent: DS.belongsTo('logicalexpression', { async: true, inverse: 'children'}),
-  	//admissionRule: DS.belongsTo('admissionrule', { async: true })
+  	admissionRule: DS.belongsTo('admissionrule', { async: true })
 });

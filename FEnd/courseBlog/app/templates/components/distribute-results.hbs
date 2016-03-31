@@ -1,0 +1,28 @@
+{{distributionResults}}
+<div class="large-12  large-centered columns">
+    <div class="panel">
+        <table>
+            <thead>
+                <tr>
+                    <th width="200">Student Name</th>
+                    <th width="150">Student Number</th>
+                    <th width="300">Results</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each dModel as |oneDR|}}
+                    <tr>
+                        <td>{{oneDR.date}}</td>
+                        <td>{{oneDR.students.number}}</td>
+                        <td>{{oneDR.commentCode.code}}
+                            <!-- {{calculateAverage oneStudent.id store}}
+                        {{#each calculateAverage oneStudent.id store as |oneDR|}}
+                            {{oneDR.date}} {{oneDR.commentCode.description}}
+                        {{/each}} -->
+                        </td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>
