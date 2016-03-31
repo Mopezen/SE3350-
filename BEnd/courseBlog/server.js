@@ -261,6 +261,7 @@ app.get('/students', function (request, response) {
                                     var logicExps = results[0];
                                     var curStudent = results[1];
                                     var programName = results[2];
+                                    var gradeStudent = Array();
                                     var isAccepted = true;
                                     console.log("Working on student: " + curStudent.firstName + " on logicial exp: " + logicExps[0].booleanExp);
                                     async.forEachOfSeries(logicExps,function(item, key, callback5){
@@ -268,7 +269,10 @@ app.get('/students', function (request, response) {
                                         //TEMP EVALUATIONS
                                         console.log(parseInt(curStudent.cumAverage));
                                         console.log(stringArray[2]);
-                                        if(parseInt(curStudent[logicExps.logicalLink]) <= parseInt(stringArray[2])){
+                                        /*if(logicExps[key].logicalLink.indexOf('-') !== -1){
+                                            var _gradeString = logicExps[key].logicalLink.split("-")
+                                        }*/
+                                        if(parseInt(curStudent[logicExps[key].logicalLink]) <= parseInt(stringArray[2])){
                                             console.log("Student:" + curStudent.firstName + " " + curStudent.lastName + " failed!");
                                             isAccepted = false;
                                         }else{
