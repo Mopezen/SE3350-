@@ -486,6 +486,43 @@ app.get('/students', function (request, response) {
     }
 });
 
+app.get('/studentInputFiles', function(request, response){
+    console.log("what");
+});
+app.post('/studentInputFiles', function(request, response){
+    console.log("hi");
+    var name = request.body.studentInputFile.name;
+    console.log(name);
+    var json = request.body.studentInputFile.jsonTxt;
+    json2 = json["MOCK_DATA (1)"];
+    if(json2 == null){
+        json = json["SAS Data"];
+    }
+    else{
+        json = json2;
+    }
+    console.log(json);
+    var MongoClient = require('mongodb').MongoClient;
+    var assert = require('assert');
+    var ObjectId = require('mongodb').ObjectID;
+    var url = 'mongodb://ryan:ryan@ds059115.mlab.com:59115/se3350';
+
+    var insertDocument = function(db, callback) {
+       db.collection(name).insert(json, function(err, result) {
+        assert.equal(err, null);
+        console.log("Inserted a document into the "+name+" collection.");
+        callback();
+      });
+    };
+
+    MongoClient.connect(url, function(err, db) {
+      assert.equal(null, err);
+      insertDocument(db, function() {
+          db.close();
+      });
+    });
+});
+
 app.get('/admissionrules', function (request, response) {
     console.log('/admissionrules');
     AdmissionRulesModel.find(function (error, admissionrules) {
