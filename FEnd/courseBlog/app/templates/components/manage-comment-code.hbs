@@ -44,9 +44,9 @@
                    <div class="row">
                    <div class="large-8 columns">
                    <label>Choice:
-                   <select id="distResult">
-                    {{#each DistributionResultModel as |oneDistResult|}}
-                    <option value={{oneDistResult.id}}>{{oneDistResult.date}}</option>
+                   <select id="APC">
+                    {{#each APCModel as |oneAPC|}}
+                    <option value={{oneAPC.id}}>{{oneAPC.name}}</option>
                     {{/each}}
                    </select>
                   </label>

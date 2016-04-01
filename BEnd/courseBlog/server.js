@@ -2,7 +2,11 @@ var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var logger = require('./logger');
+var fs = require("fs");
 var app = express();
+var multer = require('multer');
+var upload = multer({ dest: 'uploads/' });
+var xlsx = require("node-xlsx");
 //var students = require('./routes/students');
 //var residencies = require('./routes/residencies');
 var users = require('./routes/users');
@@ -236,13 +240,12 @@ app.get('/students', function (request, response) {
     console.log('/students');
     dist = request.query.dist;
     if(dist){
-        var studentArray = []
+        var studentArray = new Array();
         async.waterfall([
             getAllStudents,
             function(students,callback){
                 async.forEachOfSeries(students,function(item, key, callback2){
-                    console.log("Working on student w/ fName: " + students[key].firstName);
-                    studentArray.push([students[key],0]);      
+                    console.log("Working on student w/ fName: " + students[key].firstName);    
                     async.waterfall([
                         async.apply(getAllITRChoices,students[key]),
                         function(itrprograms,student,callback3){
@@ -258,36 +261,67 @@ app.get('/students', function (request, response) {
                                     var programName = results[2];
                                     var gradeStudent = Array();
                                     var isAccepted = true;
-                                    console.log("Working on student: " + curStudent.firstName + " on logicial exp: " + logicExps[0].booleanExp);
+                                    var isExtra = false;
                                     async.forEachOfSeries(logicExps,function(item, key, callback5){
+                                        console.log("Working on student: " + curStudent.firstName + " on logicial exp: " + logicExps[key].booleanExp);
                                         var stringArray = logicExps[key].booleanExp.split(" ");
                                         //TEMP EVALUATIONS
                                         console.log(parseInt(curStudent.cumAverage));
                                         console.log(stringArray[2]);
-                                        /*if(logicExps[key].logicalLink.indexOf('-') !== -1){
-                                            var _gradeString = logicExps[key].logicalLink.split("-")
-                                        }*/
-                                        if(parseInt(curStudent[logicExps[key].logicalLink]) <= parseInt(stringArray[2])){
-                                            console.log("Student:" + curStudent.firstName + " " + curStudent.lastName + " failed!");
-                                            isAccepted = false;
+                                        if(logicExps[key].logicalLink.indexOf('-') !== -1){
+                                            var _gradeString = logicExps[key].logicalLink.split("-");
+                                            var consider = _gradeString[1];
+                                            _gradeString = _gradeString[0].split(" ");
+                                            _gradeString = _gradeString[1];
+                                            var greaterThan = stringArray[2];
+                                            console.log(_gradeString);
+                                            console.log(greaterThan);
+                                            async.waterfall([
+                                                async.apply(getSingleCourseCode,_gradeString,curStudent),
+                                                getSingleGrade,
+                                            ],function(err,results){
+                                                console.log("HI THIS IS MARK " + results.mark);
+                                                if(parseInt(results.mark) <= parseInt(greaterThan)){
+                                                    if(consider !== "C"){
+                                                        console.log("Student:" + curStudent.firstName + " " + curStudent.lastName + " is below the threshold but still being considered!");
+                                                        studentArray.push([curStudent,programName]);
+                                                        isExtra = true;
+                                                    }else{
+                                                        console.log("Student:" + curStudent.firstName + " " + curStudent.lastName + " failed!"); 
+                                                    }
+                                                    isAccepted = false; 
+                                                }else{
+                                                    console.log(programName);
+                                                    console.log("Student:" + curStudent.firstName + " " + curStudent.lastName + " accepted!"); 
+                                                }               
+                                                callback5();
+                                            });                                            
                                         }else{
-                                            console.log("Student:" + curStudent.firstName + " " + curStudent.lastName + " accepted!");
+                                           if(parseInt(curStudent[logicExps[key].logicalLink]) <= parseInt(stringArray[2])){
+                                                console.log("Student:" + curStudent.firstName + " " + curStudent.lastName + " failed!");
+                                                isAccepted = false;
+                                            }else{
+                                                console.log("Student:" + curStudent.firstName + " " + curStudent.lastName + " accepted!");
+                                            }
+                                            callback5(); 
                                         }
-                                        callback5();
                                     }, function(){
                                         if (isAccepted){
                                             async.series([
                                                 function(callbackTemp){
-                                                    /*CommentCodesModel.find({'APC': programName}).exec(function (error, _commentCode) {
+                                                    CommentCodesModel.find({'APC': programName.id}).exec(function (error, _commentCode) {
                                                         if (error) {
+                                                            console(error);
                                                             callbackTemp(null,null);
                                                         } else {
                                                             callbackTemp(null,_commentCode);
                                                         }
-                                                    });*/
-                                                    if(programName === "B.E.Sc. Chemical Engineering"){
-                                                        CommentCodesModel.find({'APC': programName}).exec(function (error, _commentCode) {
+                                                    });
+                                            
+                                                    /*if(programName.name === "B.E.Sc. Chemical Engineering"){
+                                                        CommentCodesModel.find({'code': "EB"}).exec(function (error, _commentCode) {
                                                             if (error) {
+                                                                console.log(error)
                                                                 callbackTemp(null,null);
                                                             } else {
                                                                 callbackTemp(null,_commentCode);
@@ -357,7 +391,7 @@ app.get('/students', function (request, response) {
                                                                 callbackTemp(null,_commentCode);
                                                             }
                                                         });
-                                                    } 
+                                                    }*/ 
                                                 }
                                                 ],
                                                 // optional callback
@@ -367,12 +401,17 @@ app.get('/students', function (request, response) {
                                                     var grade = new DistributionResultsModel({
                                                         date: curDate.toDateString(),
                                                         students: curStudent.id,
-                                                        commentCode: commentC
+                                                        commentCode: commentC.id
                                                     }); 
-                                                    grade.save();
+                                                    grade.save(function(error){
+                                                        if(error){
+                                                            console.log(error);
+                                                        }
+                                                    });
+                                                    console.log("DIST SAVE ----------------------------------------------------------")
                                                 });
 
-                                        }else{
+                                        }else if(!isAccepted && !isExtra){
                                             async.series([
                                                 function(callbackTemp){
                                                     CommentCodesModel.find({'code': "P5"}).exec(function (error, _commentCode) {
@@ -395,6 +434,7 @@ app.get('/students', function (request, response) {
                                                     commentCode: commentC
                                                 }); 
                                                 grade.save();
+                                                console.log("DIST SAVE Normal " + curStudent.firstName + " ----------------------------------------------------------")
                                             });
                                         }
                                         callback4();
@@ -405,36 +445,66 @@ app.get('/students', function (request, response) {
                             });       
                         }
                     ], function(err,results){
-                        console.log(results)
                         callback2();
                     });
-                });
-                callback(null);    
+                },function(){
+                    callback(null); 
+                });   
             }
         ], function (err, result) {
-            // result now equals 'done'
+            if(studentArray.length > 0){
+                 async.forEachOfSeries(studentArray,function(item, key, callbackRedo){
+                    var myStudent = studentArray[key][0];
+                    var pName = studentArray[key][1]
+                    console.log("Working on extra students:" + myStudent.firstName + " on program " + pName.name);
+                    async.series([
+                        function(callbackTemp){
+                            CommentCodesModel.find({'APC': pName.id}).exec(function (error, _commentCode) {
+                                if (error) {
+                                    console(error);
+                                    callbackTemp(null,null);
+                                } else {
+                                    callbackTemp(null,_commentCode);
+                                }
+                            });   
+                        }
+                    ],
+                    // optional callback
+                    function(err, results){
+                        var commentC = results[0];
+                        var curDate = new Date();
+                        var grade = new DistributionResultsModel({
+                            date: curDate.toDateString(),
+                            students: myStudent.id,
+                            commentCode: commentC.id
+                        }); 
+                        grade.save();
+                        console.log("DIST SAVE Extra"  + myStudent.firstName + " ----------------------------------------------------------")
+                    }); 
+                 });
+            }
         });
 
 
 
-        function getAllStudents(callback) {
+        function getAllStudents(callbackS) {
             console.log("Getting the students");
             StudentsModel.find().sort({ cumAverage: -1 }).exec(function (error, students) {
                 if (error) {
-                    callback(error)
+                    callbackS(error)
                 } else {
-                    callback(null,students);
+                    callbackS(null,students);
                 }
             });
         };
 
-        function getAllITRChoices(student,callback){
+        function getAllITRChoices(student,callbackITR){
             console.log("Getting the ITR's for " + student.firstName);
             ITRProgramsModel.find({'student': student.id}).sort({order: 1}).exec(function (error, itrprograms) {
                 if (error) {
-                    callback(error)
+                    callbackITR(error)
                 } else {
-                    callback(null,itrprograms,student);
+                    callbackITR(null,itrprograms,student);
                 }
             });     
         };
@@ -442,7 +512,7 @@ app.get('/students', function (request, response) {
         function getAcademicProgramCode(student,id,callbackAca){
             AcademicProgramCodesModel.findById(id, function(error, academicprogramcode) {
                 if (error) {
-                    callback(error);
+                    callbackAca(error);
                 } else {
                     console.log("Working on student: " + student.firstName + " on program:" + academicprogramcode.name);
                     callbackAca(null,student,academicprogramcode);
@@ -450,25 +520,48 @@ app.get('/students', function (request, response) {
             });     
         };
 
-        function getAdmissionRule(student,academicprogramcode,callback){
+        function getAdmissionRule(student,academicprogramcode,callbackADA){
             AdmissionRulesModel.findById(academicprogramcode.rule, function(error, admissionrule) {
                 if (error) {
-                    callback(error);
+                    callbackADA(error);
                 } else {
                     console.log("Working on student: " + student.firstName + " on admission rule:" + admissionrule.description);
-                    callback(null,student,admissionrule,academicprogramcode);
+                    callbackADA(null,student,admissionrule,academicprogramcode);
                 }
             });     
         };
 
-        function getAllLogicalExpressions(student,admissionrule,program,callback){
+        function getAllLogicalExpressions(student,admissionrule,program,callbackLE){
             console.log("Getting the logical expressions for " + admissionrule.description + " for student " + student.firstName);
             LogicalExpressionsModel.find({'admissionRule': admissionrule.id}).exec(function (error, logicalexpression) {
                 if (error) {
-                    callback(error);
+                    callbackLE(error);
                 } else {
-                    console
-                    callback(null,[logicalexpression,student,program]);
+                    callbackLE(null,[logicalexpression,student,program]);
+                }
+            });     
+        };
+
+        function getSingleCourseCode(code,curStudent,callbackCC){
+            console.log("Getting the our course code for number " + code);
+            CourseCodesModel.findOne({'number': code}).exec(function(error,_cc){
+                if (error) {
+                    callbackCC(error);
+                } else {
+                    console.log(_cc)
+                    callbackCC(null,_cc,curStudent);
+                }
+            });     
+        };
+
+        function getSingleGrade(courseCode,curStudent,callbackG){
+            console.log("Getting the grade for course:" + courseCode.name);
+            GradesModel.findOne({'courseCode': courseCode.id, 'students': curStudent.id}).exec(function(error,grade){
+                if (error) {
+                    callbackG(error);
+                } else {
+                    console.log(grade)
+                    callbackG(null,grade);
                 }
             });     
         };

@@ -9,20 +9,21 @@ export default Ember.Component.extend({
   CommentCodeModel: Ember.computed(function(){
     return this.get('store').findAll('comment-code');
   }),
-  DistributionResultModel: Ember.computed(function(){
-    return this.get('store').findAll('distributionresult');
+  APCModel: Ember.computed(function(){
+    return this.get('store').findAll('academicprogramcode');
   }),
   actions: {
     saveNewCommentCode: function (){
       var myStore = this.get('store');
-      var distributionResult1 = myStore.peekRecord('distributionresult', this.$('#distResult')[0].value);
+      var _APC = myStore.peekRecord('academicprogramcode', this.$('#APC')[0].value);
       var newCommentCode = myStore.createRecord('comment-code', {
 
         code: this.get('code'),
         progAction: this.get('progAction'),
         description: this.get('description'),
         notes: this.get('notes'),
-        distributionResult: distributionResult1      
+        distributionResult: [],
+        APC: _APC
       });
       newCommentCode.save().then(() => {
         this.set('isAddingNewCommentCode', false);

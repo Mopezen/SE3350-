@@ -61,7 +61,6 @@ export default Ember.Component.extend({
         ITRList: [],
         cumAverage: Math.random() * (100 - 1) + 1
       });
-      genderSelected.get('students').pushObject(newStudent);
       newStudent.save();
       this.set('isEditing', false);
       this.get('routing').transitionTo('students');
