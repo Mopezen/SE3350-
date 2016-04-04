@@ -26,6 +26,10 @@ Router.map(function() {
   this.route('distribute');
   this.route('add-file');
   this.route('help');
+  this.route('departments');
+  this.route('department', {path: 'departments/:department_id'});
+  this.route('faculties');
+  this.route('faculty', {path: 'faculties/:faculty_id'});
 });
 
 

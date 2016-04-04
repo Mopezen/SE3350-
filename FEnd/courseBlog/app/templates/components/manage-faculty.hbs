@@ -35,7 +35,7 @@
                 {{#each facultyModel as |oneFaculty|}}
 
                     <div class="row">
-                        {{oneFaculty.name}} {{delete-Faculty ID=oneFaculty.id }}
+                    {{#link-to 'faculties' oneStudent.id}} {{oneFaculty.name}} {{/link-to}}{{delete-Faculty ID=oneFaculty.id }}
                     </div>
                 {{/each}}
 
