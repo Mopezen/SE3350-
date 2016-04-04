@@ -20,9 +20,6 @@ var async = require('async');
 
 mongoose.createConnection('mongodb://SE3350:ouda@ds059115.mongolab.com:59115/se3350');
 
-
-
-
 app.use(function (request, response, next) {
     response.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
     response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
