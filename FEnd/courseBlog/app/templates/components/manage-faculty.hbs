@@ -8,6 +8,11 @@
     <div class="row">
         <div class="large-10  large-centered columns">
             <div class="panel">
+                <div class="row">
+                    <div class="large-12 columns">
+                        <a href="#" class="button radius" {{action 'addNewFaculty'}}>Add New Faculty</a>
+                    </div>
+                </div>
               {{#if isAddingNewFaculty}}
                   <h2>Add New Faculty</h2>
                   <form>
@@ -33,13 +38,7 @@
                         {{oneFaculty.name}} {{delete-Faculty ID=oneFaculty.id }}
                     </div>
                 {{/each}}
-                  <div class="row">
-                      <div class="large-12 columns">
-                          <br> <br> <br>
-                          <a href="#" class="button radius" {{action 'addNewFaculty'}}>Add New Faculty</a>
-                          <!-- <a href="#" class="button radius" {{action 'doneFaculty'}}>Done</a> -->
-                      </div>
-                  </div>
+
               {{/if}}
             </div>
         </div>

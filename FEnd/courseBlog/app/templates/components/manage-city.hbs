@@ -8,6 +8,12 @@
     <div class="row">
         <div class="large-10  large-centered columns">
             <div class="panel">
+                <div class="row">
+                    <div class="large-12 columns">
+                        <a href="#" class="button radius" {{action 'addNewAdmissionRule'}}>Add New Admission Rule</a>
+                        <!-- <a href="#" class="button radius" {{action 'doneAdmissionRule'}}>Done</a> -->
+                    </div>
+                </div>
               {{#if isAddingNewCity}}
                   <h2>Add New City</h2>
                   <form>
@@ -37,13 +43,6 @@
                         </div>
                     </div>
                 {{/each}}
-                  <div class="row">
-                      <div class="large-12 columns">
-                          <br> <br> <br>
-                          <a href="#" class="button radius" {{action 'addNewCity'}}>Add New City</a>
-                          <a href="#" class="button radius" {{action 'doneCity'}}>Done</a>
-                      </div>
-                  </div>
               {{/if}}
             </div>
         </div>
