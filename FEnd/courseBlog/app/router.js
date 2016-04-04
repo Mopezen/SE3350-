@@ -25,7 +25,6 @@ Router.map(function() {
   this.route('deleteAcademicLoad');
   this.route('distribute');
   this.route('add-file');
-  this.route('help');
 });
 
 

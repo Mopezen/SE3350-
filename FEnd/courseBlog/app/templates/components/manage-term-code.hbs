@@ -8,12 +8,6 @@
     <div class="row">
         <div class="large-10  large-centered columns">
             <div class="panel">
-                <div class="row">
-                    <div class="large-12 columns">
-                        <a href="#" class="button radius" {{action 'addNewTermCode'}}>Add New Term</a>
-                        <!-- <a href="#" class="button radius" {{action 'doneTermCode'}}>Done</a> -->
-                    </div>
-                </div>
               {{#if isAddingNewTermCode}}
                   <h2>Add New Term</h2>
                   <form>
@@ -39,6 +33,13 @@
                         {{oneTermCode.name}} {{delete-term-code ID=oneTermCode.id }}
                     </div>
                 {{/each}}
+                  <div class="row">
+                      <div class="large-12 columns">
+                          <br> <br> <br>
+                          <a href="#" class="button radius" {{action 'addNewTermCode'}}>Add New Term</a>
+                          <!-- <a href="#" class="button radius" {{action 'doneTermCode'}}>Done</a> -->
+                      </div>
+                  </div>
               {{/if}}
             </div>
         </div>
