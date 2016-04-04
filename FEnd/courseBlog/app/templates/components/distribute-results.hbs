@@ -1,4 +1,8 @@
-{{distributionResults}}
+<div class="row">
+    <div class= "large-1 large-centered columns">
+        <a href="#" class="button" {{action 'distributionResults'}}>Distribute Students</a>
+    </div>
+</div>
 <div class="large-12  large-centered columns">
     <div class="panel">
         <table>
@@ -10,16 +14,11 @@
                 </tr>
             </thead>
             <tbody>
-                {{#each dModel as |oneDR|}}
+                {{#each studentModel as |oneDR|}}
                     <tr>
                         <td>{{oneDR.date}}</td>
                         <td>{{oneDR.students.number}}</td>
-                        <td>{{oneDR.commentCode}}
-                            <!-- {{calculateAverage oneStudent.id store}}
-                        {{#each calculateAverage oneStudent.id store as |oneDR|}}
-                            {{oneDR.date}} {{oneDR.commentCode.description}}
-                        {{/each}} -->
-                        </td>
+                        <td>{{oneDR.commentCode.description}}</td>
                     </tr>
                 {{/each}}
             </tbody>

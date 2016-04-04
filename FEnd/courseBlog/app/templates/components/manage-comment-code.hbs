@@ -45,8 +45,9 @@
                    <div class="large-8 columns">
                    <label>Choice:
                    <select id="APC">
+                      <option value="NOTHING">N/A</option>
                     {{#each APCModel as |oneAPC|}}
-                    <option value={{oneAPC.id}}>{{oneAPC.name}}</option>
+                      <option value={{oneAPC.id}}>{{oneAPC.name}}</option>
                     {{/each}}
                    </select>
                   </label>

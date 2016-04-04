@@ -18,16 +18,31 @@
                   <h2>Add New LogicalExpression</h2>
                   <form>
                       <div class="row">
-                          <div class="large-12 columns">
-                              <label>Boolean Expression
-                                {{input value=booleanExp type="text" }}
+                          <div class="large-9 columns">
+                              <label>Compare operation
+                                <select id="BExp1">
+                                          <option value=">= ">Greater Than</option>
+                                          <option value="<= ">Less Than</option>
+                                  </select>
                               </label>
+                          </div>
+                          <div class="large-3 columns">
+                            <label>Value to compare
+                              {{input value=BExp2 type="number"}}
+                            </label>
                           </div>
                       </div>
                       <div class="row">
                           <div class="large-12 columns">
-                              <label>Logical Link
-                                {{input value=logicalLink type="text" }}
+                              <label>Choose the logical expression's logical link:
+                                  <select id="logicallink">
+                                          <option value="cumAverage">Student's Average</option>
+                                      {{#each CourseModel as |oneCourse|}}
+                                          <option value="{{oneCourse.number}}">{{oneCourse.name}}</option>
+                                          <option value="{{oneCourse.number}}-C">{{oneCourse.name}} - Consideration</option>
+                                      {{/each}}
+                                          <option value="#NOTHING">N/A</option>
+                                  </select>
                               </label>
                           </div>
                       </div>
