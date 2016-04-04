@@ -111,6 +111,7 @@
             <li>City: {{selectedStudent.city.name}}</li>
             <li>Gender: {{selectedStudent.gender.name}}</li>
             <li>Academic Load: {{selectedStudent.studyLoad.name}}</li>
+            <li>Average: {{selectedStudent.cumAverage}}</li>
             {{#each selectedStudent.ITRList as |oneITR|}}
                 <li>Program Choice Number {{oneITR.order}} = {{oneITR.program.name}}</li>
             {{/each}}         

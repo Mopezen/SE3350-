@@ -8,12 +8,6 @@
     <div class="row">
         <div class="large-10  large-centered columns">
             <div class="panel">
-                <div class="row">
-                    <div class="large-12 columns">
-                        <a href="#" class="button radius" {{action 'addNewCountry'}}>Add New Country</a>
-                        <a href="#" class="button radius" {{action 'doneCountry'}}>Done</a>
-                    </div>
-                </div>
               {{#if isAddingNewCountry}}
                   <h2>Add New Country</h2>
                   <form>
@@ -43,6 +37,13 @@
                         </div>
                     </div>
                 {{/each}}
+                  <div class="row">
+                      <div class="large-12 columns">
+                          <br> <br> <br>
+                          <a href="#" class="button radius" {{action 'addNewCountry'}}>Add New Country</a>
+                          <a href="#" class="button radius" {{action 'doneCountry'}}>Done</a>
+                      </div>
+                  </div>
               {{/if}}
             </div>
         </div>

@@ -8,12 +8,6 @@
     <div class="row">
         <div class="large-10  large-centered columns">
             <div class="panel">
-                <div class="row">
-                    <div class="large-12 columns">
-                        <a href="#" class="button radius" {{action 'addNewAcademicLoad'}}>Add new Academic Load</a>
-                        <a href="#" class="button radius" {{action 'doneAcademicLoad'}}>Done</a>
-                    </div>
-                </div>
               {{#if isAddingNewAcademicProgramCode}}
                   <h2>Add New AcademicProgramCode Program</h2>
                   <form>
@@ -34,7 +28,7 @@
                                   </select>
                               </label>
                           </div>
-                      </div>
+                      </div> 
                   </form>
                   <div class="row">
                       <div class="large-12 columns">
@@ -54,6 +48,13 @@
                         </div>
                     </div>
                 {{/each}}
+                  <div class="row">
+                      <div class="large-12 columns">
+                          <br> <br> <br>
+                          <a href="#" class="button radius" {{action 'addNewAcademicProgramCode'}}>Add New Academic Program Code</a>
+                          <!-- <a href="#" class="button radius" {{action 'doneAcademicProgramCode'}}>Done</a> -->
+                      </div>
+                  </div>
               {{/if}}
             </div>
         </div>
