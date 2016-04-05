@@ -55,7 +55,11 @@ var studentsSchema = mongoose.Schema({
     province: {type: mongoose.Schema.ObjectId, ref: ('ProvincesModel')},
     city: {type: mongoose.Schema.ObjectId, ref: ('CitiesModel')},
     ITRList: [{type: mongoose.Schema.ObjectId, ref: 'ITRProgramsModel'}],
-    mark: [{type: mongoose.Schema.ObjectId, ref: 'GradesModel'}]
+    mark: [{type: mongoose.Schema.ObjectId, ref: 'GradesModel'}],
+    admBase:[{type: mongoose.Schema.ObjectId, ref: 'BasisOfAdmissionModel'}],
+    HSGrade:[{type: mongoose.Schema.ObjectId, ref: 'HighschoolAdmissionAverageModel'}],
+    awardInfo:[{type: mongoose.Schema.ObjectId, ref: 'ScholarAndAwardCodeModel'}],
+    hSchool:[{type: mongoose.Schema.ObjectId, ref: 'ScondarySchoolModel'}]
 });
 
 var gendersSchema = mongoose.Schema({
