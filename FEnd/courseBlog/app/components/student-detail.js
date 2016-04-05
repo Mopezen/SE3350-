@@ -12,6 +12,8 @@ export default Ember.Component.extend({
   provinceID: null,
   cityID: null,
   itrprogramID: null,
+  addingAward: false,
+  addingSchool: false,
   genderModel : Ember.computed('isEditing', function(){
       return this.get('store').findAll('gender');
   }),
@@ -32,6 +34,12 @@ export default Ember.Component.extend({
   }),
   itrprogramModel: Ember.computed('isEditing', function(){
       return this.get('store').query('itrprogram',{student: this.get('selectedStudent.id')});
+  }),
+  SAWC: Ember.computed(function(){
+      return this.get('store').findAll('scholarandawardcode');
+  }),
+  SecondarySchool: Ember.computed(function(){
+      return this.get('store').findAll('secondaryschool');
   }),
   isEditing: false,
   actions: {
@@ -99,7 +107,34 @@ export default Ember.Component.extend({
     },
     cancel: function(){
       this.get('routing').transitionTo('students');
+    },
+    addAward: function(){
+      this.set('addingAward',true);
+    },
+    saveAward: function(){
+      var _currentStudent = this.get('selectedStudent.awardInfo');
+      var myStore = this.get('store');
+      this.set('addingAward',false);
+      _currentStudent.addObject(myStore.peekRecord('scholarandawardcode', this.$('#award')[0].value));
+      console.log(_currentStudent.length);
+      myStore.findRecord('student',this.get('selectedStudent.id')).then(function(student) {
+        student.set('awardInfo',_currentStudent);
+        student.save();  // => PATCH to /posts/:post_id
+      });
+    },
+    addSecondarySchool: function(){
+      this.set('addingSchool',true);
+    },
+    saveSecondarySchool: function(){
+      var _currentStudent = this.get('selectedStudent.hSchool');
+      var myStore = this.get('store');
+      this.set('addingSchool',false);
+      _currentStudent.addObject(myStore.peekRecord('secondaryschool', this.$('#school')[0].value));
+      console.log(_currentStudent.length);
+      myStore.findRecord('student',this.get('selectedStudent.id')).then(function(student) {
+        student.set('hSchool',_currentStudent);
+        student.save();  // => PATCH to /posts/:post_id
+      });
     }
-
   }
 });

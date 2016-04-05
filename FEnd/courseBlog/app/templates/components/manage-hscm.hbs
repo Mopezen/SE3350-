@@ -1,0 +1,91 @@
+{{#if isManagingHSCM}}
+	<div class="row">
+		<div class="large-12 columns">
+			<h4 align="center">Manage High School Courses Marks</h4>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="large-10  large-centered columns">
+			<div class="panel">
+				{{#if isAddingNewHSCM}}
+					<h2>Add A New High School Courses Mark</h2>
+					<form>
+						<div class="row">
+							<div class="large-12 columns">
+								<label>Level
+									{{input value=level type="text" }}
+								</label>
+							</div>
+						</div>
+						<div class="row">
+							<div class="large-12 columns">
+								<label>Source
+									{{input value=source type="text" }}
+								</label>
+							</div>
+						</div>
+						<div class="row">
+							<div class="large-12 columns">
+								<label>Unit
+									{{input value=unit type="text" }}
+								</label>
+							</div>
+						</div>
+						<div class="row">
+							<div class="large-12 columns">
+								<label>Grade
+									{{input value=grade type="number" }}
+								</label>
+							</div>
+						</div>
+						<div class="row">
+							<div class="large-12 columns">
+								<label>Choose the high school courses mark's secondary school link:
+									<select id="school">
+										{{#each SecondarySchoolModel as |oneSS|}}
+											<option value="{{oneSS.id}}">{{oneSS.name}}</option>
+										{{/each}}
+									</select>
+								</label>
+							</div>
+						</div>
+						<div class="row">
+							<div class="large-12 columns">
+								<label>Choose the high school courses mark's high school subject link:
+									<select id="subject">
+										{{#each HSSModel as |oneHSS|}}
+											<option value="{{oneHSS.id}}">{{oneHSS.name}}</option>
+										{{/each}}
+									</select>
+								</label>
+							</div>
+						</div>
+					</form>
+					<div class="row">
+						<div class="large-12 columns">
+							<a href="#" class="button radius" {{action 'saveNewHSCM'}}>Save</a>
+							<a href="#" class="button radius" {{action 'cancelAddNewHSCM'}}>Cancel</a>
+						</div>
+					</div>
+					<br>
+				{{else}}
+					{{#each HSCMModel as |oneHSCM|}}
+						<div class="row">
+							{{oneHSCM.level}} {{oneHSCM.source}} <!-- {{delete-Faculty ID=oneFaculty.id }} -->
+						</div>
+					{{/each}}
+					<div class="row">
+						<div class="large-12 columns">
+							<br> <br> <br>
+							<a href="#" class="button radius" {{action 'addNewHSCM'}}>Add A High School Courses Mark</a>
+							<!-- <a href="#" class="button radius" {{action 'doneFaculty'}}>Done</a> -->
+						</div>
+					</div>
+				{{/if}}
+			</div>
+		</div>
+	</div>
+{{/if}}
+
+

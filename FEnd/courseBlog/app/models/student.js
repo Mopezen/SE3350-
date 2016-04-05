@@ -14,8 +14,8 @@ export default DS.Model.extend({
   mark: DS.hasMany('grade',{async: true}),
   ITRList: DS.hasMany('itrprogram',{async: true}),
   cumAverage: DS.attr(),
-  admBase: DS.hasMany('basisofadmisson',{async: true} ),
+  admBase: DS.hasMany('basisofadmission',{async: true} ),
   HSGrade : DS.belongsTo('highschooladmissionaverage',{async: true}),
   awardInfo : DS.hasMany('scholarandawardcode',{async: true} ),
-  hSchool : DS.hasMany('scondaryschool',{async: true} ),
+  hSchool : DS.hasMany('secondaryschool',{async: true} )
 });

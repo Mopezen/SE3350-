@@ -114,9 +114,30 @@
             <li>Average: {{selectedStudent.cumAverage}}</li>
             {{#each selectedStudent.ITRList as |oneITR|}}
                 <li>Program Choice Number {{oneITR.order}} = {{oneITR.program.name}}</li>
-            {{/each}}         
+            {{/each}}    
+            {{#each selectedStudent.awardInfo as |oneAward|}}
+                <li>Award: {{oneAward.name}}</li>
+            {{/each}}      
         </ul>
     </ul>
+    <br>
+
+    {{#if addingAward}}
+        <div class="row">
+            <div class="large-12 columns">
+                <label>Select an award to add give/place with {{selectedStudent.name}}:
+                    <select id="award">
+                        {{#each SAWC as |oneSWAC|}}
+                            <option value={{oneSWAC.id}}>{{oneSWAC.name}}</option>
+                        {{/each}}
+                    </select>
+                </label>
+            </div>
+        </div>
+        <a href="#" class="button radius" {{action 'saveAward'}}>Save award</a>
+    {{else}}
+        <a href="#" class="button radius" {{action 'addAward'}}>Add an award</a>
+    {{/if}}
     <br>
     <a href="#" class="button radius" {{action 'edit'}}>Edit</a>
     <a href="#" class="button radius" {{action 'cancel'}}>Cancel</a>

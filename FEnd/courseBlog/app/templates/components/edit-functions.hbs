@@ -18,6 +18,16 @@
 	</ul>		 
 </div>
 
+<div class="row">
+	<ul class="expanded button-group round">
+		<li><a href="#" class="button"{{action 'manageSWAC'}}>Scholar And Award Codes</a></li>
+		<li><a href="#" class="button"{{action 'manageSecondarySchool'}}>Secondary Schools</a></li>
+		<li><a href="#" class="button"{{action 'manageHSCM'}}>High School Course Marks</a></li>
+		<li><a href="#" class="button"{{action 'manageHSS'}}>High School Subjects</a></li>
+	</ul>		 
+</div>
+
+
 {{#if isManageFaculty}}
 	{{manage-faculty isManagingFaculty = true}}
 {{else if isManageAcademicProgramCode}}
@@ -38,4 +48,12 @@
 	{{manage-programadministration isManagingProgramAdministration = true}}
 {{else if isManageCommentCode}}
 	{{manage-comment-code isManagingCommentCode = true}}
+{{else if isManageSWAC}}
+	{{manage-swac isManagingSWAC = true}}
+{{else if isManageSecondarySchool}}
+	{{manage-secondaryschool isManagingSecondarySchool = true}}
+{{else if isManageHSCM}}
+	{{manage-hscm isManagingHSCM = true}}
+{{else if isManageHSS}}
+	{{manage-hss isManagingHSS = true}}
 {{/if}}

@@ -59,6 +59,8 @@ export default Ember.Component.extend({
         province: provinceSelected,
         city: citySelected,
         ITRList: [],
+        awardInfo: [],
+        hSchool: [],
         cumAverage: Math.random() * (100 - 1) + 1
       });
       newStudent.save();

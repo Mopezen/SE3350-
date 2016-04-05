@@ -56,10 +56,10 @@ var studentsSchema = mongoose.Schema({
     city: {type: mongoose.Schema.ObjectId, ref: ('CitiesModel')},
     ITRList: [{type: mongoose.Schema.ObjectId, ref: 'ITRProgramsModel'}],
     mark: [{type: mongoose.Schema.ObjectId, ref: 'GradesModel'}],
-    admBase:[{type: mongoose.Schema.ObjectId, ref: 'BasisOfAdmissionModel'}],
-    HSGrade:[{type: mongoose.Schema.ObjectId, ref: 'HighschoolAdmissionAverageModel'}],
-    awardInfo:[{type: mongoose.Schema.ObjectId, ref: 'ScholarAndAwardCodeModel'}],
-    hSchool:[{type: mongoose.Schema.ObjectId, ref: 'ScondarySchoolModel'}]
+    admBase:[{type: mongoose.Schema.ObjectId, ref: 'BasisOfAdmissionsModel'}],
+    HSGrade:{type: mongoose.Schema.ObjectId, ref: ('HighSchoolAdmissionAveragesModel')},
+    awardInfo:[{type: mongoose.Schema.ObjectId, ref: 'ScholarAndAwardCodesModel'}],
+    hSchool:[{type: mongoose.Schema.ObjectId, ref: 'SecondarySchoolsModel'}]
 });
 
 var gendersSchema = mongoose.Schema({
@@ -211,6 +211,59 @@ var logicalExpressionsSchema = mongoose.Schema({
     admissionRule: {type: mongoose.Schema.ObjectId, ref: 'AdmissionRulesModel'}
 });
 
+var logicalExpressionsSchema = mongoose.Schema({
+    booleanExp: String,
+    logicalLink: String,
+    children: [{type: mongoose.Schema.ObjectId, ref: 'LogicalExpressionsModel'}],
+    parent: {type: mongoose.Schema.ObjectId, ref: 'LogicalExpressionsModel'},
+    admissionRule: {type: mongoose.Schema.ObjectId, ref: 'AdmissionRulesModel'}
+});
+
+var ScholarAndAwardCodesSchema = mongoose.Schema({
+    name: String,
+    students: [{type: mongoose.Schema.ObjectId, ref: 'StudentsModel'}],
+});
+
+var SecondarySchoolsSchema = mongoose.Schema({
+    name: String,
+    students: [{type: mongoose.Schema.ObjectId, ref: 'StudentsModel'}],
+    courseInfo: [{type: mongoose.Schema.ObjectId, ref: 'HighSchoolCoursesMarksModel'}]
+});
+
+var HighSchoolCoursesMarksSchema = mongoose.Schema({
+    level: String,
+    source: String,
+    unit: String,
+    grade: Number,
+    subject: {type: mongoose.Schema.ObjectId, ref: 'HighSchoolSubjectsModel'},
+    school: {type: mongoose.Schema.ObjectId, ref: 'SecondarySchoolsModel'}
+});
+
+var HighSchoolSubjectsSchema = mongoose.Schema({
+    name: String,
+    description: String,
+    HSCM: [{type: mongoose.Schema.ObjectId, ref: 'HighSchoolCoursesMarksModel'}],
+});
+
+var BasisOfAdmissionCodesSchema = mongoose.Schema({
+    name: String,
+    BOA: {type: mongoose.Schema.ObjectId, ref: ('BasisOfAdmissionsModel')},
+});
+
+var BasisOfAdmissionsSchema = mongoose.Schema({
+    date: String,
+    comment: String,
+    basisCode: {type: mongoose.Schema.ObjectId, ref: ('BasisOfAdmissionCodesModel')},
+    student: {type: mongoose.Schema.ObjectId, ref: ('StudentsModel')}
+});
+
+var HighSchoolAdmissionAveragesSchema = mongoose.Schema({
+    first: Number,
+    midYear: Number,
+    final: Number,
+    student: {type: mongoose.Schema.ObjectId, ref: ('StudentsModel')},
+});
+
 var StudentsModel = mongoose.model('student', studentsSchema);
 var PostsModel = mongoose.model('post', postsSchema);
 var CommentsModel = mongoose.model('comment', commentSchema);
@@ -236,6 +289,14 @@ var TermCodesModel = mongoose.model('termCode', termCodeSchema);
 var LogicalExpressionsModel = mongoose.model('logicalexpression', logicalExpressionsSchema);
 var AdmissionRulesModel = mongoose.model('admissionrule', admissionrulesSchema);
 var ProgramAdministrationsModel = mongoose.model('programadministration', programadministrationsSchema);
+var ScholarAndAwardCodesModel = mongoose.model('scholarandawardcode', ScholarAndAwardCodesSchema);
+var SecondarySchoolsModel = mongoose.model('secondaryschool', SecondarySchoolsSchema);
+var HighSchoolCoursesMarksModel = mongoose.model('highschoolcoursesmark', HighSchoolCoursesMarksSchema);
+var HighSchoolSubjectsModel = mongoose.model('highschoolsubject', HighSchoolSubjectsSchema);
+var HighSchoolAdmissionAveragesModel = mongoose.model('highschooladmissionaverage', HighSchoolAdmissionAveragesSchemad);
+var BasisOfAdmissionsModel = mongoose.model('basisofadmission', BasisOfAdmissionsSchema);
+var BasisOfAdmissionCodesModel = mongoose.model('basisofadmissioncode', BasisOfAdmissionCodesSchema);
+
 
 app.get('/students', function (request, response) {
     console.log('/students');
@@ -673,6 +734,123 @@ app.get('/admissionrules', function (request, response) {
     });
 });
 
+app.get('/basisofadmissioncodes', function (request, response) {
+    console.log('/basisofadmissioncodes');
+    BasisOfAdmissionCodesModel.find(function (error, BOAC) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({basisofadmissioncode: BOAC});
+        }
+
+    });
+});
+
+app.get('/basisofadmissions', function (request, response) {
+    console.log('/basisofadmissions');
+    BasisOfAdmissionsModel.find(function (error, BOA) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({basisofadmission: BOA});
+        }
+
+    });
+});
+
+app.get('/basisofadmissions', function (request, response) {
+    console.log('/basisofadmissions');
+    BasisOfAdmissionsModel.find(function (error, BOA) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({basisofadmission: BOA});
+        }
+
+    });
+});
+
+app.get('/highschooladmissionaverages', function (request, response) {
+    console.log('/highschooladmissionaverages');
+    HighSchoolAdmissionAveragesModel.find(function (error, HSAA) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({highschooladmissionaverage: HSAA});
+        }
+
+    });
+});
+
+app.get('/highschoolsubjects', function (request, response) {
+    console.log('/highschoolsubjects');
+    HighSchoolSubjectsModel.find(function (error, HSchoolSubjects) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({highschoolsubject: HSchoolSubjects});
+        }
+
+    });
+});
+
+app.get('/highschoolsubjects', function (request, response) {
+    console.log('/highschoolsubjects');
+    HighSchoolSubjectsModel.find(function (error, HSchoolSubjects) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({highschoolsubject: HSchoolSubjects});
+        }
+
+    });
+});
+
+app.get('/highschoolcoursesmarks', function (request, response) {
+    console.log('/highschoolcoursesmarks');
+    HighSchoolCoursesMarksModel.find(function (error, HSchoolMarks) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({highschoolcoursesmark: HSchoolMarks});
+        }
+
+    });
+});
+
+app.get('/secondaryschools', function (request, response) {
+    console.log('/secondaryschools');
+    SecondarySchoolsModel.find(function (error, SecSchools) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({secondaryschool: SecSchools});
+        }
+
+    });
+});
+
+app.get('/scholarandawardcodes', function (request, response) {
+    console.log('/scholarandawardcodes');
+    ScholarAndAwardCodesModel.find(function (error, SAWC) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({scholarandawardcode: SAWC});
+        }
+
+    });
+});
+
 app.get('/programadministrations', function (request, response) {
     console.log('/programadministrations');
     ProgramAdministrationsModel.find(function (error, programadministrations) {
@@ -970,6 +1148,94 @@ app.get('/students/:student_id', function (request, response) {
     });
 });
 
+app.get('/basisofadmissioncodes/:basisofadmissioncode_id', function (request, response) {
+    console.log('/basisofadmissioncodes/:basisofadmissioncode_id');
+    BasisOfAdmissionCodesModel.findById(request.params.basisofadmissioncode_id, function (error, BOAC) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({basisofadmissioncode: BOAC});
+        }
+    });
+});
+
+app.get('/basisofadmissions/:basisofadmission_id', function (request, response) {
+    console.log('/basisofadmissions/:basisofadmission_id');
+    BasisofAdmissionsModel.findById(request.params.basisofadmission_id, function (error, BOA) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({basisofadmission: BOA});
+        }
+    });
+});
+
+app.get('/highschooladmissionaverages/:highschooladmissionaverage_id', function (request, response) {
+    console.log('/highschooladmissionaverages/:highschooladmissionaverage_id');
+    HighSchoolAdmissionAveragesModel.findById(request.params.highschooladmissionaverage_id, function (error, HSAA) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({highschooladmissionaverage: HSAA});
+        }
+    });
+});
+
+app.get('/highschoolsubjects/:highschoolsubject_id', function (request, response) {
+    console.log('/highschoolsubjects/:highschoolsubject_id');
+    HighSchoolSubjectsModel.findById(request.params.highschoolsubject_id, function (error, HSchoolSubject) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({highschoolsubject: HSchoolSubject});
+        }
+    });
+});
+
+app.get('/highschoolcoursesmarks/:highschoolcoursesmark_id', function (request, response) {
+    console.log('/highschoolcoursesmarks/:highschoolcoursesmark_id');
+    HighSchoolCoursesMarksModel.findById(request.params.highschoolcoursesmark_id,function (error, HSchoolMark) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({highschoolcoursesmark: HSchoolMark});
+        }
+
+    });
+});
+
+app.get('/secondaryschools/:secondaryschool_id', function (request, response) {
+    console.log('/secondaryschools/:secondaryschool_id');
+    SecondarySchoolsModel.findById(request.params.secondaryschool_id,function (error, SecSchool) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({secondaryschool: SecSchool});
+        }
+
+    });
+});
+
+app.get('/scholarandawardcodes/:scholarandawardcode_id', function (request, response) {
+    console.log('/scholarandawardcodes/:scholarandawardcode_id');
+    ScholarAndAwardCodesModel.findById(request.params.scholarandawardcode_id,function (error, SAWC) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({scholarandawardcode: SAWC});
+        }
+
+    });
+});
+
+
 app.get('/genders/:gender_id', function (request, response) {
     console.log('/genders/:gender_id');
     GendersModel.findById(request.params.gender_id, function (error, gender) {
@@ -1242,6 +1508,55 @@ app.post('/posts', function (request, response) {
     });
 });
 
+app.post('/highschooladmissionaverages', function (request, response) {
+    var HSAA = new HighSchoolAdmissionAveragesModel({
+        first: request.body.highschooladmissionaverage.first,
+        midYear: request.body.highschooladmissionaverage.midYear,
+        final: request.body.highschooladmissionaverage.final,
+        grade11: request.body.highschooladmissionaverage.grade11
+    });
+    HSAA.save(function (error) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.status(201).json({highschooladmissionaverage: HSAA});
+        }
+    });
+});
+
+app.post('/basisofadmissions', function (request, response) {
+    var BOA = new BasisOfAdmissionsModel({
+        date: request.body.basisofadmission.date,
+        comment: request.body.basisofadmission.comment,
+        student: request.body.basisofadmission.student
+    });
+    BOA.save(function (error) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.status(201).json({baissofadmission: BOA});
+        }
+    });
+});
+
+app.post('/basisofadmissioncodes', function (request, response) {
+    var BOAC = new BasisOfAdmissionCodesModel({
+        name: request.body.basisofadmissioncode.date,
+        : request.body.basisofadmissioncode.comment,
+        student: request.body.basisofadmission.student
+    });
+    BOA.save(function (error) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.status(201).json({baissofadmission: BOA});
+        }
+    });
+});
+
 app.post('/genders', function (request, response) {
     var gender = new GendersModel(request.body.gender);
     gender.save(function (error) {
@@ -1250,6 +1565,54 @@ app.post('/genders', function (request, response) {
         }
         else {
             response.status(201).json({gender: gender});
+        }
+    });
+});
+
+app.post('/highschoolsubjects', function (request, response) {
+    var HSS = new HighSchoolSubjectsModel(request.body.highschoolsubject);
+    HSS.save(function (error) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.status(201).json({highschoolsubject: HSS});
+        }
+    });
+});
+
+app.post('/highschoolcoursesmarks', function (request, response) {
+    var HSCM = new HighSchoolCoursesMarksModel(request.body.highschoolcoursesmark);
+    HSCM.save(function (error) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.status(201).json({highschoolcoursesmark: HSCM});
+        }
+    });
+});
+
+app.post('/secondaryschools', function (request, response) {
+    var SS = new SecondarySchoolsModel(request.body.secondaryschool);
+    SS.save(function (error) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.status(201).json({secondaryschool: SS});
+        }
+    });
+});
+
+app.post('/scholarandawardcodes', function (request, response) {
+    var SAWC = new ScholarAndAwardCodesModel(request.body.scholarandawardcode);
+    SAWC.save(function (error) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.status(201).json({scholarandawardcode: SAWC});
         }
     });
 });
@@ -1525,6 +1888,7 @@ app.put('/students/:student_id', function (request, response) {
         }
         else {
             // update the student info
+            console.log(request.body.student.awardInfo);
             student.number = request.body.student.number;
             student.DOB = request.body.student.DOB;
             student.firstName = request.body.student.firstName;
@@ -1538,6 +1902,9 @@ app.put('/students/:student_id', function (request, response) {
             student.city = request.body.student.city;
             student.grade = request.body.student.grade;
             student.ITRList = request.body.student.ITRList;
+            student.awardInfo = request.body.student.awardInfo;
+            student.hSchool = request.body.student.hSchool;
+
             // save the student
             student.save(function (error) {
                 if (error) {
@@ -2203,6 +2570,47 @@ app.delete('/students/:student_id', function (request, response) {
     });
 
 });
+
+app.delete('/highschoolsubjects/:highschoolsubject_id', function (request, response) {
+    HighSchoolSubjectsModel.findById(request.params.highschoolsubject_id, function (error, HSS) {
+        var deleted = HSS;
+        HighSchoolSubjectsModel.remove({_id: request.params.highschoolsubject_id}, function (error) {
+                if (error) response.send(error);
+        });
+        response.status(200).json({highschoolsubject: deleted});
+    });
+});
+
+app.delete('/highschoolcoursesmarks/:highschoolcoursesmark_id', function (request, response) {
+    HighSchoolCoursesMarksModel.findById(request.params.highschoolcoursesmark_id, function (error, HSCM) {
+        var deleted = HSCM;
+        HighSchoolCoursesMarksModel.remove({_id: request.params.highschoolcoursesmark_id}, function (error) {
+                if (error) response.send(error);
+        });
+        response.status(200).json({highschoolcoursesmark: deleted});
+    });
+});
+
+app.delete('/secondaryschools/:secondaryschool_id', function (request, response) {
+    SecondarySchoolsModel.findById(request.params.secondaryschool_id, function (error, SS) {
+        var deleted = SS;
+        SecondarySchoolsModel.remove({_id: request.params.secondaryschool_id}, function (error) {
+                if (error) response.send(error);
+        });
+        response.status(200).json({secondaryschool: deleted});
+    });
+});
+
+app.delete('/scholarandawardcodes/:scholarandawardcode_id', function (request, response) {
+    ScholarAndAwardCodesModel.findById(request.params.scholarandawardcode_id, function (error, SAWC) {
+        var deleted = SAWC;
+        ScholarAndAwardCodesModel.remove({_id: request.params.scholarandawardcode_id}, function (error) {
+                if (error) response.send(error);
+        });
+        response.status(200).json({scholarandawardcode: deleted});
+    });
+});
+
 
 app.delete('/faculties/:faculty_id', function (request, response) {
 

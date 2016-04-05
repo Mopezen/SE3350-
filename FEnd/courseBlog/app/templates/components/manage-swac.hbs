@@ -1,0 +1,48 @@
+{{#if isManagingSWAC}}
+	<div class="row">
+		<div class="large-12 columns">
+			<h4 align="center">Manage Scholar And Award Codes</h4>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="large-10  large-centered columns">
+			<div class="panel">
+				{{#if isAddingNewSWAC}}
+					<h2>Add A New Scholar And Award Code</h2>
+					<form>
+						<div class="row">
+							<div class="large-12 columns">
+								<label>Name
+									{{input value=name type="text" }}
+								</label>
+							</div>
+						</div>
+					</form>
+					<div class="row">
+						<div class="large-12 columns">
+							<a href="#" class="button radius" {{action 'saveNewSWAC'}}>Save</a>
+							<a href="#" class="button radius" {{action 'cancelAddNewSWAC'}}>Cancel</a>
+						</div>
+					</div>
+					<br>
+				{{else}}
+					{{#each SWACModel as |oneSWAC|}}
+						<div class="row">
+							{{oneSWAC.name}} <!-- {{delete-Faculty ID=oneFaculty.id }} -->
+						</div>
+					{{/each}}
+					<div class="row">
+						<div class="large-12 columns">
+							<br> <br> <br>
+							<a href="#" class="button radius" {{action 'addNewSWAC'}}>Add A New Scholar And Award Code</a>
+							<!-- <a href="#" class="button radius" {{action 'doneFaculty'}}>Done</a> -->
+						</div>
+					</div>
+				{{/if}}
+			</div>
+		</div>
+	</div>
+{{/if}}
+
+

@@ -1,0 +1,55 @@
+{{#if isManagingHSS}}
+	<div class="row">
+		<div class="large-12 columns">
+			<h4 align="center">Manage High School Subjects</h4>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="large-10  large-centered columns">
+			<div class="panel">
+				{{#if isAddingNewHSS}}
+					<h2>Add A New High School Subject</h2>
+					<form>
+						<div class="row">
+							<div class="large-12 columns">
+								<label>Name
+									{{input value=name type="text" }}
+								</label>
+							</div>
+						</div>
+						<div class="row">
+							<div class="large-12 columns">
+								<label>Description
+									{{input value=description type="text" }}
+								</label>
+							</div>
+						</div>
+					</form>
+					<div class="row">
+						<div class="large-12 columns">
+							<a href="#" class="button radius" {{action 'saveNewHSS'}}>Save</a>
+							<a href="#" class="button radius" {{action 'cancelAddNewHSS'}}>Cancel</a>
+						</div>
+					</div>
+					<br>
+				{{else}}
+					{{#each HSSModel as |oneHSS|}}
+						<div class="row">
+							{{oneHSS.name}} <!-- {{delete-Faculty ID=oneFaculty.id }} -->
+						</div>
+					{{/each}}
+					<div class="row">
+						<div class="large-12 columns">
+							<br> <br> <br>
+							<a href="#" class="button radius" {{action 'addNewHSS'}}>Add A New High School Subject</a>
+							<!-- <a href="#" class="button radius" {{action 'doneFaculty'}}>Done</a> -->
+						</div>
+					</div>
+				{{/if}}
+			</div>
+		</div>
+	</div>
+{{/if}}
+
+
