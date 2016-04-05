@@ -211,6 +211,7 @@ var logicalExpressionsSchema = mongoose.Schema({
     admissionRule: {type: mongoose.Schema.ObjectId, ref: 'AdmissionRulesModel'}
 });
 
+
 var logicalExpressionsSchema = mongoose.Schema({
     booleanExp: String,
     logicalLink: String,
@@ -296,7 +297,6 @@ var HighSchoolSubjectsModel = mongoose.model('highschoolsubject', HighSchoolSubj
 var HighSchoolAdmissionAveragesModel = mongoose.model('highschooladmissionaverage', HighSchoolAdmissionAveragesSchemad);
 var BasisOfAdmissionsModel = mongoose.model('basisofadmission', BasisOfAdmissionsSchema);
 var BasisOfAdmissionCodesModel = mongoose.model('basisofadmissioncode', BasisOfAdmissionCodesSchema);
-
 
 app.get('/students', function (request, response) {
     console.log('/students');
@@ -1467,6 +1467,42 @@ app.get('/termCodes/:termCode_id', function (request, response) {
     });
 });
 
+app.get('/basisofadmissioncodes/:basisofadmissioncode_id', function (request, response) {
+    console.log('/basisofadmissioncodes/:basisofadmissioncode_id');
+    BasisOfAdmissionCodesModel.findById(request.params.basisofadmissioncode_id, function (error, basisofadmissioncode) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({'basisofadmissioncode': basisofadmissioncode});
+        }
+    });
+});
+
+app.get('/basisofadmissions/:basisofadmissions_id', function (request, response) {
+    console.log('/basisofadmissions/:basisofadmissions_id');
+    BasisOfAdmissionsModel.findById(request.params.basisofadmissions_id, function (error, basisofadmissions) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({'basisofadmissions': basisofadmissions});
+        }
+    });
+});
+
+app.get('/highschooladmissionaverages/:highschooladmissionaverages_id', function (request, response) {
+    console.log('/highschooladmissionaverages/:highschooladmissionaverages_id');
+    HighSchoolAdmissionAveragesModel.findById(request.params.highschooladmissionaverages_id, function (error, highschooladmissionaverages) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.json({'highschooladmissionaverages': highschooladmissionaverages});
+        }
+    });
+});
+
 app.post('/students', function (request, response) {
     var student = new StudentsModel({
         number: request.body.student.number,
@@ -1481,7 +1517,11 @@ app.post('/students', function (request, response) {
         province: request.body.student.province,
         city: request.body.student.city,
         mark: request.body.student.mark,
-        ITRList: request.body.student.ITRList
+        ITRList: request.body.student.ITRList,
+        admBase: request.body.student.admBase,
+        HSGrade : request.body.student.HSGrade,
+        awardInfo : request.body.student.awardInfo,
+        hSchool : request.body.student.hSchool,
     });
     student.save(function (error) {
         if (error) {
@@ -1855,6 +1895,42 @@ app.post('/termCodes', function (request, response) {
     });
 });
 
+app.post('/highschooladmissionaverages', function (request, response) {
+    var highschooladmissionaverages = new HighSchoolAdmissionAveragesModel(request.body.highschooladmissionaverages);
+    highschooladmissionaverages.save(function (error) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.status(201).json({'highschooladmissionaverages': highschooladmissionaverages});
+        }
+    });
+});
+
+app.post('/basisofadmissions', function (request, response) {
+    var basisofadmissions = new BasisOfAdmissionsModel(request.body.basisofadmissions);
+    basisofadmissions.save(function (error) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.status(201).json({'basisofadmissions': basisofadmissions});
+        }
+    });
+});
+
+app.post('/basisofadmissioncodes', function (request, response) {
+    var basisofadmissioncodes = new BasisOfAdmissionCodesModel(request.body.basisofadmissioncodes);
+    basisofadmissioncodes.save(function (error) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            response.status(201).json({'basisofadmissioncodes': basisofadmissioncodes});
+        }
+    });
+});
+
 app.put('/posts/:post_id', function (request, response) {
     // use our Posts model to find the post we want
     PostsModel.findById(request.params.post_id, function (error, post) {
@@ -1904,7 +1980,8 @@ app.put('/students/:student_id', function (request, response) {
             student.ITRList = request.body.student.ITRList;
             student.awardInfo = request.body.student.awardInfo;
             student.hSchool = request.body.student.hSchool;
-
+            student.admBase= request.body.student.admBase;
+            student.HSGrade = request.body.student.HSGrade;
             // save the student
             student.save(function (error) {
                 if (error) {
@@ -2432,6 +2509,80 @@ app.put('/termCodes/:termCode_id', function (request, response) {
     });
 });
 
+app.put('/basisofadmissioncodes/:basisofadmissioncode_id', function (request, response) {
+    // use our Posts model to find the post we want
+    BasisOfAdmissionCodesModel.findById(request.params.basisofadmissioncode_id, function (error, basisofadmissioncode) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            // update the student info
+            basisofadmissioncode.name = request.body.basisofadmissioncode.name;
+            basisofadmissioncode.bsdidofadmission = request.body.basisofadmissioncode.bsdidofadmission;
+
+            // save the student
+            basisofadmissioncode.save(function (error) {
+                if (error) {
+                    response.send({error: error});
+                }
+                else {
+                    response.status(201).json({'basisofadmissioncode': basisofadmissioncode});
+                }
+            });
+        }
+    });
+});
+
+app.put('/basisofadmissions/:basisofadmission_id', function (request, response) {
+    // use our Posts model to find the post we want
+    BasisOfAdmissionsModel.findById(request.params.basisofadmission_id, function (error, basisofadmission) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            // update the student info
+            basisofadmission.date = request.body.basisofadmission.date;
+            basisofadmission.comment = request.body.basisofadmission.comment;
+            basisofadmission.basisCode = request.body.basisofadmission.basisCode;
+
+            // save the student
+            basisofadmission.save(function (error) {
+                if (error) {
+                    response.send({error: error});
+                }
+                else {
+                    response.status(201).json({'basisofadmission': basisofadmission});
+                }
+            });
+        }
+    });
+});
+
+app.put('/highschooladmissionaverages/:highschooladmissionaverage_id', function (request, response) {
+    // use our Posts model to find the post we want
+    HighSchoolAdmissionAveragesModel.findById(request.params.highschooladmissionaverage_id, function (error, highschooladmissionaverage) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            // update the student info
+            highschooladmissionaverage.first = request.body.highschooladmissionaverage.date;
+            highschooladmissionaverage.mid = request.body.highschooladmissionaverage.comment;
+            highschooladmissionaverage.final = request.body.highschooladmissionaverage.basisCode;
+            highschooladmissionaverage.grade11 = request.body.highschooladmissionaverage.grade11;
+            // save the student
+            highschooladmissionaverage.save(function (error) {
+                if (error) {
+                    response.send({error: error});
+                }
+                else {
+                    response.status(201).json({'highschooladmissionaverage': highschooladmissionaverage});
+                }
+            });
+        }
+    });
+});
+
 app.patch('/students/:student_id', function (request, response) {
     // use our students model to find the post we want
     StudentsModel.findById(request.params.student_id, function (error, student) {
@@ -2803,6 +2954,42 @@ app.delete('/termCodes/:termCode_id', function (request, response) {
                 if (error) response.send(error);
         });
         response.status(200).json({termCode: deleted});
+    });
+
+});
+
+app.delete('/highschooladmissionaverages/:highschooladmissionaverage_id', function (request, response) {
+
+    HighSchoolAdmissionAveragesModel.findById(request.params.highschooladmissionaverage_id, function (error, highschooladmissionaverage) {
+        var deleted = highschooladmissionaverags;
+        HighSchoolAdmissionAveragesModel.remove({_id: request.params.highschooladmissionaverage_id}, function (error) {
+            if (error) response.send(error);
+        });
+        response.status(200).json({highschooladmissionaverage: deleted});
+    });
+
+});
+
+app.delete('/basisofadmissions/:basisofadmission_id', function (request, response) {
+
+    BasisOfAdmissionsModel.findById(request.params.basisofadmission_id, function (error, basisofadmission) {
+        var deleted = basisofadmission;
+        BasisOfAdmissionsModel.remove({_id: request.params.basisofadmission_id}, function (error) {
+            if (error) response.send(error);
+        });
+        response.status(200).json({basisofadmission: deleted});
+    });
+
+});
+
+app.delete('/basisofadmissioncodes/:basisofadmissioncode_id', function (request, response) {
+
+    BasisOfAdmissionCodesModel.findById(request.params.basisofadmissioncode_id, function (error, basisofadmissioncode) {
+        var deleted = basisofadmissioncode;
+        BasisOfAdmissionCodesModel.remove({_id: request.params.basisofadmissioncode_id}, function (error) {
+            if (error) response.send(error);
+        });
+        response.status(200).json({basisofadmissioncode: deleted});
     });
 
 });
