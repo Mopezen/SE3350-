@@ -262,6 +262,7 @@ var HighSchoolAdmissionAveragesSchema = mongoose.Schema({
     first: Number,
     midYear: Number,
     final: Number,
+    grade11: Number,
     student: {type: mongoose.Schema.ObjectId, ref: ('StudentsModel')},
 });
 
@@ -294,7 +295,7 @@ var ScholarAndAwardCodesModel = mongoose.model('scholarandawardcode', ScholarAnd
 var SecondarySchoolsModel = mongoose.model('secondaryschool', SecondarySchoolsSchema);
 var HighSchoolCoursesMarksModel = mongoose.model('highschoolcoursesmark', HighSchoolCoursesMarksSchema);
 var HighSchoolSubjectsModel = mongoose.model('highschoolsubject', HighSchoolSubjectsSchema);
-var HighSchoolAdmissionAveragesModel = mongoose.model('highschooladmissionaverage', HighSchoolAdmissionAveragesSchemad);
+var HighSchoolAdmissionAveragesModel = mongoose.model('highschooladmissionaverage', HighSchoolAdmissionAveragesSchema);
 var BasisOfAdmissionsModel = mongoose.model('basisofadmission', BasisOfAdmissionsSchema);
 var BasisOfAdmissionCodesModel = mongoose.model('basisofadmissioncode', BasisOfAdmissionCodesSchema);
 
@@ -1549,12 +1550,7 @@ app.post('/posts', function (request, response) {
 });
 
 app.post('/highschooladmissionaverages', function (request, response) {
-    var HSAA = new HighSchoolAdmissionAveragesModel({
-        first: request.body.highschooladmissionaverage.first,
-        midYear: request.body.highschooladmissionaverage.midYear,
-        final: request.body.highschooladmissionaverage.final,
-        grade11: request.body.highschooladmissionaverage.grade11
-    });
+    var HSAA = new HighSchoolAdmissionAveragesModel(request.body.highschooladmissionaverage);
     HSAA.save(function (error) {
         if (error) {
             response.send({error: error});
@@ -1566,33 +1562,28 @@ app.post('/highschooladmissionaverages', function (request, response) {
 });
 
 app.post('/basisofadmissions', function (request, response) {
-    var BOA = new BasisOfAdmissionsModel({
-        date: request.body.basisofadmission.date,
-        comment: request.body.basisofadmission.comment,
-        student: request.body.basisofadmission.student
-    });
+    var BOA = new BasisOfAdmissionsModel(request.body.basisofadmission);
     BOA.save(function (error) {
         if (error) {
             response.send({error: error});
         }
         else {
-            response.status(201).json({baissofadmission: BOA});
+            response.status(201).json({basisofadmission: BOA});
         }
     });
 });
 
 app.post('/basisofadmissioncodes', function (request, response) {
     var BOAC = new BasisOfAdmissionCodesModel({
-        name: request.body.basisofadmissioncode.date,
-        : request.body.basisofadmissioncode.comment,
-        student: request.body.basisofadmission.student
+        name: request.body.basisofadmissioncode.name,
+        BOA: request.body.basisofadmissioncode.BOA,
     });
-    BOA.save(function (error) {
+    BOAC.save(function (error) {
         if (error) {
             response.send({error: error});
         }
         else {
-            response.status(201).json({baissofadmission: BOA});
+            response.status(201).json({basisofadmissioncode: BOAC});
         }
     });
 });
@@ -1895,42 +1886,6 @@ app.post('/termCodes', function (request, response) {
     });
 });
 
-app.post('/highschooladmissionaverages', function (request, response) {
-    var highschooladmissionaverages = new HighSchoolAdmissionAveragesModel(request.body.highschooladmissionaverages);
-    highschooladmissionaverages.save(function (error) {
-        if (error) {
-            response.send({error: error});
-        }
-        else {
-            response.status(201).json({'highschooladmissionaverages': highschooladmissionaverages});
-        }
-    });
-});
-
-app.post('/basisofadmissions', function (request, response) {
-    var basisofadmissions = new BasisOfAdmissionsModel(request.body.basisofadmissions);
-    basisofadmissions.save(function (error) {
-        if (error) {
-            response.send({error: error});
-        }
-        else {
-            response.status(201).json({'basisofadmissions': basisofadmissions});
-        }
-    });
-});
-
-app.post('/basisofadmissioncodes', function (request, response) {
-    var basisofadmissioncodes = new BasisOfAdmissionCodesModel(request.body.basisofadmissioncodes);
-    basisofadmissioncodes.save(function (error) {
-        if (error) {
-            response.send({error: error});
-        }
-        else {
-            response.status(201).json({'basisofadmissioncodes': basisofadmissioncodes});
-        }
-    });
-});
-
 app.put('/posts/:post_id', function (request, response) {
     // use our Posts model to find the post we want
     PostsModel.findById(request.params.post_id, function (error, post) {
@@ -2037,6 +1992,78 @@ app.put('/academicLoads/:academicLoad_id', function (request, response) {
                 }
                 else {
                     response.status(201).json({'academic-load': academicLoad});
+                }
+            });
+        }
+    });
+});
+
+app.put('/highschooladmissionaverages/:highschooladmissionaverage_id', function (request, response) {
+    HighSchoolAdmissionAveragesModel.findById(request.params.highschooladmissionaverage_id, function (error, HSAA) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            // update the student info
+            HSAA.first = request.body.highschooladmissionaverage.date;
+            HSAA.midYear = request.body.highschooladmissionaverage.midYear;
+            HSAA.final = request.body.highschooladmissionaverage.final;
+            HSAA.grade11 = request.body.highschooladmissionaverage.grade11;
+            HSAA.student = request.body.highschooladmissionaverage.student;
+            // save the student
+            HSAA.save(function (error) {
+                if (error) {
+                    response.send({error: error});
+                }
+                else {
+                    response.status(201).json({'highschooladmissionaverage': HSAA});
+                }
+            });
+        }
+    });
+});
+
+app.put('/basisofadmissions/:basisofadmission_id', function (request, response) {
+    BasisofAdmissionsModel.findById(request.params.basisofadmission_id, function (error, BOA) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            // update the student info
+            BOA.date = request.body.basisofadmission.date;
+            BOA.comment = request.body.basisofadmission.comment;
+            BOA.basisCode = request.body.basisofadmission.basisCode;
+            BOA.student = request.body.basisofadmission.student
+            // save the student
+            BOA.save(function (error) {
+                if (error) {
+                    response.send({error: error});
+                }
+                else {
+                    response.status(201).json({'basisofadmission': BOA});
+                }
+            });
+        }
+    });
+});
+
+app.put('/basisofadmissioncodes/:basisofadmissioncode_id', function (request, response) {
+    BasisOfAdmissionCodesModel.findById(request.params.basisofadmissioncode_id, function (error, BOAC) {
+        if (error) {
+            response.send({error: error});
+        }
+        else {
+            // update the student info
+            console.log(request.body.basisofadmissioncode);
+            BOAC.BOA = request.body.basisofadmissioncode.BOA;
+            BOAC.name = request.body.basisofadmissioncode.name;
+            // save the student
+            BOAC.save(function (error) {
+                if (error) {
+                    response.send({error: error});
+                }
+                else {
+                    response.status(201).json({'basisofadmissioncode': BOAC});
                 }
             });
         }

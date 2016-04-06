@@ -138,6 +138,71 @@
     {{else}}
         <a href="#" class="button radius" {{action 'addAward'}}>Add an award</a>
     {{/if}}
+
+    <br>
+
+    {{#if addingBasisOfAdmission}}
+        <div class="row">
+            <div class="large-12 columns">
+                <label>Date:
+                    {{input value=date type="text" }}
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="large-12 columns">
+                <label>Comment:
+                    {{input value=comment type="text" }}
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="large-12 columns">
+                <label>Code Name:
+                    {{input value=name type="text" }}
+                </label>
+            </div>
+        </div>
+        <a href="#" class="button radius" {{action 'saveBOA'}}>Save basis of admission</a>
+    {{else}}
+        <a href="#" class="button radius" {{action 'addBOA'}}>Add a basis of admission for this student</a>
+    {{/if}}
+
+    <br>
+
+    {{#if addingHSAA}}
+        <div class="row">
+            <div class="large-12 columns">
+                <label>First Year:
+                    {{input value=first type="number" }}
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="large-12 columns">
+                <label>Mid Year Grade:
+                    {{input value=midYear type="number" }}
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="large-12 columns">
+                <label>Final:
+                    {{input value=final type="number" }}
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="large-12 columns">
+                <label>Grade 11:
+                    {{input value=grade11 type="number" }}
+                </label>
+            </div>
+        </div>
+        <a href="#" class="button radius" {{action 'saveHSAA'}}>Save High School Admission Average</a>
+    {{else}}
+        <a href="#" class="button radius" {{action 'addHSAA'}}>Add a Save High School Admission Average for this student</a>
+    {{/if}}
     <br>
     <a href="#" class="button radius" {{action 'edit'}}>Edit</a>
     <a href="#" class="button radius" {{action 'cancel'}}>Cancel</a>

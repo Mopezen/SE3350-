@@ -14,6 +14,8 @@ export default Ember.Component.extend({
   itrprogramID: null,
   addingAward: false,
   addingSchool: false,
+  addingBasisOfAdmission: false,
+  addingHSAA: false,
   genderModel : Ember.computed('isEditing', function(){
       return this.get('store').findAll('gender');
   }),
@@ -116,7 +118,6 @@ export default Ember.Component.extend({
       var myStore = this.get('store');
       this.set('addingAward',false);
       _currentStudent.addObject(myStore.peekRecord('scholarandawardcode', this.$('#award')[0].value));
-      console.log(_currentStudent.length);
       myStore.findRecord('student',this.get('selectedStudent.id')).then(function(student) {
         student.set('awardInfo',_currentStudent);
         student.save();  // => PATCH to /posts/:post_id
@@ -130,9 +131,59 @@ export default Ember.Component.extend({
       var myStore = this.get('store');
       this.set('addingSchool',false);
       _currentStudent.addObject(myStore.peekRecord('secondaryschool', this.$('#school')[0].value));
-      console.log(_currentStudent.length);
       myStore.findRecord('student',this.get('selectedStudent.id')).then(function(student) {
         student.set('hSchool',_currentStudent);
+        student.save();  // => PATCH to /posts/:post_id
+      });
+    },
+    addBOA: function(){
+      this.set('addingBasisOfAdmission',true);
+    },
+    saveBOA: function(){
+      var _currentStudent = this.get('selectedStudent');
+      var myStore = this.get('store');
+      var self = this;
+
+      var newBOAC = myStore.createRecord('basisofadmissioncode',{
+        name: this.get('name'),
+        BOA: null
+      });
+
+      newBOAC.save().then(function(BOAC){
+        console.log(BOAC.id);
+        var newBOC = myStore.createRecord('basisofadmission',{
+          date: self.get('date'),
+          comment: self.get('comment'),
+          student: _currentStudent,
+          basisCode: BOAC
+        });
+        newBOC.save().then(function(BOC){
+          console.log(BOC.id);
+          myStore.findRecord('basisofadmissioncode',BOAC.id).then(function(_newBOAC) {
+            _newBOAC.set('BOA',BOC);
+            _newBOAC.save();  // => PATCH to /posts/:post_id
+          });
+        });
+      });
+      this.set('addingBasisOfAdmission',false);
+    },
+    addHSAA: function(){
+      this.set('addingHSAA',true);
+    },
+    saveHSAA: function(){
+      var _currentStudent = this.get('selectedStudent');
+      var myStore = this.get('store');
+      this.set('addingHSAA',false);
+      var newgrades = myStore.createRecord('highschooladmissionaverage',{
+        first: this.get('first'),
+        midYear: this.get('midYear'),
+        final: this.get('final'),
+        grade11: this.get('grade11'),
+        student: _currentStudent
+      });
+      newgrades = newgrades.save();
+      myStore.findRecord('student',this.get('selectedStudent.id')).then(function(student) {
+        student.set('HSGrade',newgrades);
         student.save();  // => PATCH to /posts/:post_id
       });
     }
